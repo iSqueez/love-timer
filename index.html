@@ -499,29 +499,43 @@
       position: relative;
     }
 
-    .lyric-text {
-      font-size: 17px;
-      font-weight: 500;
-      text-align: center;
-      line-height: 1.5;
-      transition: opacity 0.5s ease, transform 0.5s ease;
-      opacity: 0;
-      transform: translateY(15px) scale(0.97);
-      will-change: opacity, transform;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.5);
-      padding: 14px 18px;
-      border-radius: 18px;
-      background: linear-gradient(160deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      max-width: 100%;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-    }
-    .lyric-text.show {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
+ .lyric-text {
+  font-size: 17px;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.5;
+
+  opacity: 0;
+  transform: translateY(12px) scale(0.96);
+  filter: blur(6px);
+
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.55s ease;
+
+  will-change: opacity, transform, filter;
+
+  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  padding: 14px 18px;
+  border-radius: 18px;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.04)
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  max-width: 100%;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+.lyric-text.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
 
     .song-progress {
       width: 90%;
