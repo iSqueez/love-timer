@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Мы вместе ❤️</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      min-height: 100%;
+      width: 100%;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: white;
+      overflow-x: hidden;
+      position: relative;
+      transition: background 1.5s ease;
+    }
+
+    body.theme-day {
+      background:
+        radial-gradient(ellipse 90% 60% at 50% 0%, rgba(255, 200, 220, 0.4) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 60% at 50% 100%, rgba(106, 5, 114, 0.5) 0%, transparent 60%),
+        linear-gradient(160deg, #ff6b9d 0%, #c44569 45%, #6a0572 100%);
+    }
+    body.theme-night {
+      background:
+        radial-gradient(ellipse 90% 60% at 50% 0%, rgba(120, 80, 200, 0.35) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 60% at 50% 100%, rgba(30, 10, 60, 0.7) 0%, transparent 60%),
+        linear-gradient(160deg, #1a1a3e 0%, #2d1b4e 45%, #0d0518 100%);
+    }
+    body.theme-evening {
+      background:
+        radial-gradient(ellipse 90% 60% at 50% 0%, rgba(255, 180, 120, 0.4) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 60% at 50% 100%, rgba(106, 30, 92, 0.5) 0%, transparent 60%),
+        linear-gradient(160deg, #ff8a5b 0%, #d64d6d 45%, #4a1e5c 100%);
+    }
+
+    /* Фоновые сердечки */
+    .heart-bg {
+      position: fixed;
+      font-size: 20px;
+      opacity: 0;
+      bottom: -50px;
+      animation: floatUp linear infinite;
+      pointer-events: none;
+      z-index: 1;
+      will-change: transform, opacity;
+    }
+    @keyframes floatUp {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.18; }
+      90%  { opacity: 0.18; }
+      100% { transform: translateY(calc(-100vh - 100px)) rotate(360deg); opacity: 0; }
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 360px;
+    }
+
+    /* Заголовок с эффектом */
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      text-align: center;
+      background: linear-gradient(90deg, #ffffff, #ffe4f0, #ffd700, #ffe4f0, #ffffff);
+      background-size: 300% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: titleShimmer 5s linear infinite;
+      filter: drop-shadow(0 2px 12px rgba(0,0,0,0.35));
+      letter-spacing: 0.5px;
+    }
+    @keyframes titleShimmer {
+      0%   { background-position: 0% center; }
+      100% { background-position: 300% center; }
+    }
+    .subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 26px;
+      text-align: center;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    /* Таймер */
+    .timer {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 26px;
+      width: 100%;
+    }
+    .time-block {
+      position: relative;
+      background: linear-gradient(160deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 18px 10px;
+      text-align: center;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+    .time-block::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 50%;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.15), transparent);
+      pointer-events: none;
+    }
+    .time-value {
+      font-size: 34px;
+      font-weight: 800;
+      display: block;
+      line-height: 1;
+      margin-bottom: 5px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .time-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      opacity: 0.85;
+      font-weight: 600;
+      position: relative;
+    }
+
+    /* Основные кнопки */
+    button {
+      position: relative;
+      background: linear-gradient(135deg, #ffffff 0%, #ffe4f0 100%);
+      color: #c44569;
+      border: none;
+      border-radius: 50px;
+      padding: 16px 32px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(196, 69, 105, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      transition: transform 0.2s, box-shadow 0.2s;
+      width: 100%;
+      margin-bottom: 14px;
+      overflow: hidden;
+      letter-spacing: 0.3px;
+    }
+    button::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+      transition: left 0.6s;
+    }
+    button:hover::after { left: 100%; }
+    button:active {
+      transform: scale(0.96);
+      box-shadow: 0 4px 12px rgba(196, 69, 105, 0.3);
+    }
+
+    .reset-btn {
+      background: rgba(255, 255, 255, 0.12);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    }
+    .reset-btn::after { display: none; }
+    .reset-btn:active {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(0.96);
+    }
+
+    /* Карточка с посланием */
+    .message-card {
+      position: relative;
+      background: linear-gradient(160deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.1) 100%);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 24px;
+      padding: 24px 22px;
+      width: 100%;
+      text-align: center;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.2);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      font-weight: 500;
+    }
+    .message-card.show { opacity: 1; transform: translateY(0); }
+    .message-card.special {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.4), rgba(255, 105, 180, 0.4));
+      border: 2px solid rgba(255, 215, 0, 0.8);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4); }
+      50%      { box-shadow: 0 0 50px rgba(255, 215, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.4); }
+    }
+
+    .counter {
+      margin-top: 14px;
+      font-size: 13px;
+      opacity: 0.85;
+      text-align: center;
+      font-weight: 500;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.3);
+    }
+
+    /* Кнопка музыки */
+    .music-btn {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1.5px solid rgba(255, 255, 255, 0.5);
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+    }
+    .music-btn:active { transform: scale(0.9); }
+
+    .progress-wrap {
+      width: 100%;
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .progress-label { font-size: 12px; opacity: 0.85; font-weight: 500; }
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ffb6c1, #ffd700);
+      border-radius: 3px;
+      transition: width 0.5s ease;
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+    }
+
+    .burst-heart {
+      position: fixed;
+      pointer-events: none;
+      z-index: 999;
+      will-change: transform, opacity;
+    }
+
+    /* === КНОПКА НАЗАД === */
+    .back-btn {
+      position: fixed;
+      top: calc(16px + env(safe-area-inset-top, 0px));
+      left: calc(16px + env(safe-area-inset-left, 0px));
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1.5px solid rgba(255, 255, 255, 0.6);
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 99999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
+      transition: transform 0.2s, background 0.2s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      pointer-events: auto;
+    }
+    .back-btn.show { display: flex; }
+    .back-btn:active {
+      transform: scale(0.9);
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    /* === ВТОРАЯ СТРАНИЦА === */
+    #page2 {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        radial-gradient(ellipse 90% 60% at 50% 0%, rgba(255, 107, 157, 0.4) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 60% at 50% 100%, rgba(106, 5, 114, 0.55) 0%, transparent 60%),
+        linear-gradient(180deg, #2a0f3d 0%, #1a0a2e 45%, #0d0518 100%);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding: 70px 20px 40px 20px;
+      scroll-behavior: smooth;
+    }
+    #page2.active { display: flex; }
+
+    /* Центральный контейнер, чтобы контент не растягивался */
+    #page2 .inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 380px;
+      margin: auto 0;
+      position: relative;
+      z-index: 1;
+      padding-bottom: 10px;
+    }
+
+    /* Свечение */
+    #page2::before {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255, 107, 157, 0.45) 0%, rgba(255, 107, 157, 0.1) 40%, transparent 70%);
+      animation: glowPulse 5s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(20px);
+    }
+    @keyframes glowPulse {
+      0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+      50%      { transform: translateX(-50%) scale(1.4); opacity: 1; }
+    }
+
+    /* Звёзды */
+    #page2::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(2.5px 2.5px at 15% 25%, #ffffff, transparent 60%),
+        radial-gradient(2px 2px at 65% 15%, #ffe4f0, transparent 60%),
+        radial-gradient(3px 3px at 85% 35%, #ffd700, transparent 60%),
+        radial-gradient(2px 2px at 30% 60%, #ffffff, transparent 60%),
+        radial-gradient(2.5px 2.5px at 75% 75%, #ffb6c1, transparent 60%),
+        radial-gradient(2px 2px at 10% 80%, #ffffff, transparent 60%),
+        radial-gradient(3px 3px at 50% 45%, #ffffff, transparent 60%),
+        radial-gradient(2px 2px at 90% 90%, #ffd700, transparent 60%),
+        radial-gradient(2px 2px at 40% 10%, #ffffff, transparent 60%),
+        radial-gradient(2.5px 2.5px at 20% 45%, #ffb6c1, transparent 60%),
+        radial-gradient(2px 2px at 60% 85%, #ffffff, transparent 60%),
+        radial-gradient(2px 2px at 5% 50%, #ffffff, transparent 60%),
+        radial-gradient(2.5px 2.5px at 95% 20%, #ffe4f0, transparent 60%),
+        radial-gradient(2px 2px at 70% 55%, #ffd700, transparent 60%);
+      animation: twinkle 3s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.95;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.55; }
+      50%      { opacity: 1; }
+    }
+
+    /* Фото-рамка — адаптивная */
+    .photo-frame {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, #ff6b9d, #ffd700, #c44569, #ff6b9d);
+      padding: 5px;
+      animation: framePulse 3s ease-in-out infinite;
+      flex-shrink: 0;
+      box-shadow: 0 0 40px rgba(255, 107, 157, 0.6), 0 0 80px rgba(255, 107, 157, 0.3);
+    }
+    @keyframes framePulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(255, 107, 157, 0.6), 0 0 80px rgba(255, 107, 157, 0.3); }
+      50%      { transform: scale(1.04); box-shadow: 0 0 55px rgba(255, 107, 157, 0.9), 0 0 100px rgba(255, 107, 157, 0.5); }
+    }
+    .photo-frame img {
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #1a0a2e;
+      position: relative;
+      z-index: 2;
+    }
+
+    .frame-heart {
+      position: absolute;
+      font-size: 18px;
+      z-index: 3;
+      animation: heartBeat 1.6s ease-in-out infinite;
+      filter: drop-shadow(0 0 8px rgba(255, 100, 150, 0.9));
+      pointer-events: none;
+      line-height: 1;
+    }
+    @keyframes heartBeat {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50%      { transform: translate(-50%, -50%) scale(1.35); }
+    }
+    .frame-heart.h1 { top: 0;    left: 50%;   animation-delay: 0s; }
+    .frame-heart.h2 { top: 14%;  left: 93%;   animation-delay: 0.2s; }
+    .frame-heart.h3 { top: 50%;  left: 100%;  animation-delay: 0.4s; }
+    .frame-heart.h4 { top: 86%;  left: 93%;   animation-delay: 0.6s; }
+    .frame-heart.h5 { top: 100%; left: 50%;   animation-delay: 0.8s; }
+    .frame-heart.h6 { top: 86%;  left: 7%;    animation-delay: 1.0s; }
+    .frame-heart.h7 { top: 50%;  left: 0;     animation-delay: 1.2s; }
+    .frame-heart.h8 { top: 14%;  left: 7%;    animation-delay: 1.4s; }
+
+    .page2-title {
+      font-size: 20px;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 16px;
+      text-shadow: 0 0 20px rgba(255, 100, 150, 0.7), 0 2px 8px rgba(0,0,0,0.4);
+      background: linear-gradient(90deg, #ffd700, #ff6b9d, #ffd700, #ff6b9d, #ffd700);
+      background-size: 300% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 4s linear infinite;
+      letter-spacing: 0.5px;
+    }
+    @keyframes shimmer {
+      0%   { background-position: 0% center; }
+      100% { background-position: 300% center; }
+    }
+
+    .lyric-container {
+      width: 100%;
+      max-width: 340px;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      padding: 0 4px;
+      position: relative;
+    }
+
+    .lyric-text {
+      font-size: 17px;
+      font-weight: 500;
+      text-align: center;
+      line-height: 1.5;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      opacity: 0;
+      transform: translateY(15px) scale(0.97);
+      will-change: opacity, transform;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+      padding: 14px 18px;
+      border-radius: 18px;
+      background: linear-gradient(160deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      max-width: 100%;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+    .lyric-text.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .song-progress {
+      width: 90%;
+      max-width: 320px;
+      height: 5px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 3px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+    }
+    .song-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff6b9d, #ffd700, #ff6b9d);
+      background-size: 200% auto;
+      border-radius: 3px;
+      transition: width 0.3s linear;
+      animation: progressShine 2s linear infinite;
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+    }
+    @keyframes progressShine {
+      0%   { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    /* === ФИНАЛЬНЫЙ ЭКРАН === */
+    .final-screen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at center, rgba(74, 30, 92, 0.95) 0%, rgba(26, 26, 62, 0.98) 60%, rgba(13, 5, 24, 1) 100%);
+      z-index: 300;
+      padding: 30px 20px;
+      text-align: center;
+      animation: finalFade 1s ease;
+      overflow-y: auto;
+    }
+    .final-screen.active { display: flex; }
+    @keyframes finalFade {
+      from { opacity: 0; transform: scale(0.95); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .final-heart {
+      font-size: 80px;
+      animation: bigHeartBeat 1.4s ease-in-out infinite;
+      filter: drop-shadow(0 0 30px rgba(255, 100, 150, 0.9));
+      margin-bottom: 18px;
+    }
+    @keyframes bigHeartBeat {
+      0%, 100% { transform: scale(1); }
+      25%      { transform: scale(1.15); }
+      50%      { transform: scale(1); }
+      75%      { transform: scale(1.12); }
+    }
+
+    .final-title {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      background: linear-gradient(90deg, #ffd700, #ff6b9d, #ffd700, #ff6b9d, #ffd700);
+      background-size: 300% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 3s linear infinite;
+    }
+
+    .final-text {
+      font-size: 16px;
+      line-height: 1.6;
+      opacity: 0.95;
+      max-width: 320px;
+      margin-bottom: 32px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .final-text strong {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 18px;
+      background: linear-gradient(90deg, #ffd700, #ff6b9d);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .final-btn {
+      background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 15px 32px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(255, 100, 150, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transition: transform 0.2s;
+      margin-bottom: 12px;
+      width: auto;
+      min-width: 220px;
+      letter-spacing: 0.3px;
+    }
+    .final-btn:active { transform: scale(0.95); }
+
+    .final-btn.secondary {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    }
+
+    .final-burst-heart {
+      position: fixed;
+      pointer-events: none;
+      z-index: 999;
+      will-change: transform, opacity;
+    }
+
+    /* На маленьких экранах — уменьшаем фото */
+    @media (max-height: 700px) {
+      .photo-frame { width: 150px; height: 150px; margin-bottom: 16px; }
+      .photo-frame img { width: 140px; height: 140px; }
+      .page2-title { font-size: 18px; margin-bottom: 12px; }
+      .lyric-text { font-size: 15px; padding: 10px 14px; }
+      .lyric-container { min-height: 70px; margin-bottom: 12px; }
+      #page2 { padding-top: 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="back-btn" id="backBtn">←</button>
+  <button class="music-btn" id="musicBtn" title="Музыка">🔇</button>
+
+  <div class="content">
+    <h1>❤️ Мы вместе уже ❤️</h1>
+    <p class="subtitle">Каждая секунда с тобой — счастье</p>
+
+    <div class="timer">
+      <div class="time-block"><span class="time-value" id="days">0</span><span class="time-label">Дней</span></div>
+      <div class="time-block"><span class="time-value" id="hours">0</span><span class="time-label">Часов</span></div>
+      <div class="time-block"><span class="time-value" id="minutes">0</span><span class="time-label">Минут</span></div>
+      <div class="time-block"><span class="time-value" id="seconds">0</span><span class="time-label">Секунд</span></div>
+    </div>
+
+    <button id="loveBtn">💌 Скажи мне что-то тёплое</button>
+    <button class="reset-btn" id="openPage2" style="background: rgba(255,100,150,0.35); border-color: rgba(255,150,180,0.7);">
+      💖 Для тебя
+    </button>
+    <button class="reset-btn" id="resetBtn">🔄 Сбросить счётчик</button>
+
+    <div class="message-card" id="messageCard"></div>
+
+    <p class="counter" id="counter"></p>
+
+    <div class="progress-wrap" id="progressWrap" style="display:none;">
+      <p class="progress-label" id="progressLabel">🎁 До сюрприза осталось 10</p>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+  </div>
+
+  <!-- === ВТОРАЯ СТРАНИЦА === -->
+  <div id="page2">
+    <div class="inner">
+      <div class="photo-frame">
+        <img src="photo1.jpg" alt="Твое фото">
+        <span class="frame-heart h1">❤️</span>
+        <span class="frame-heart h2">💖</span>
+        <span class="frame-heart h3">❤️</span>
+        <span class="frame-heart h4">💖</span>
+        <span class="frame-heart h5">❤️</span>
+        <span class="frame-heart h6">💖</span>
+        <span class="frame-heart h7">❤️</span>
+        <span class="frame-heart h8">💖</span>
+      </div>
+
+      <h2 class="page2-title">Она — удача, я бегу за ней 💫</h2>
+
+      <div class="lyric-container">
+        <p class="lyric-text" id="lyricText"></p>
+      </div>
+
+      <div class="song-progress">
+        <div class="song-progress-fill" id="songFill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ФИНАЛЬНЫЙ ЭКРАН -->
+  <div class="final-screen" id="finalScreen">
+    <div class="final-heart">❤️</div>
+    <h2 class="final-title">Ты — моя удача</h2>
+    <p class="final-text">
+      Я бегу за тобой каждый день.<br>
+      Спасибо, что ты рядом.<br>
+      <strong>Я люблю тебя ❤️</strong>
+    </p>
+    <button class="final-btn" id="replayBtn">🔁 Послушать ещё раз</button>
+    <button class="final-btn secondary" id="finalExitBtn">🚪 Выйти</button>
+  </div>
+
+  <audio id="bgMusic" loop preload="auto">
+    <source src="https://klopec.ru/sounds/2023-11/sound_125753.mp3" type="audio/mpeg">
+  </audio>
+
+  <audio id="songPlayer" preload="auto">
+    <source src="music-love.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    if (window.Telegram && window.Telegram.WebApp) {
+      const tg = window.Telegram.WebApp;
+      tg.ready();
+      tg.expand();
+    }
+
+    const START_DATE = new Date(2026, 7, 19, 21, 34);
+
+    function updateTimer() {
+      const diff = new Date() - START_DATE;
+      const days    = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours   = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor(diff / 1000) % 60;
+
+      document.getElementById('days').textContent    = days;
+      document.getElementById('hours').textContent   = String(hours).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+    }
+    updateTimer();
+    setInterval(updateTimer, 1000);
+
+    const MESSAGES = [
+      "Ты — моё самое большое счастье 💖",
+      "Я люблю тебя больше всего на свете ❤️",
+      "Каждый день с тобой — это подарок 🎁",
+      "Ты самая красивая, самая умная и самая любимая ✨",
+      "С тобой я стал счастливее 🥰",
+      "Ты — лучшее, что случилось со мной 💗",
+      "Обнимаю тебя крепко-крепко прямо сейчас 🤗",
+      "Твой смех — моя любимая музыка 🎵",
+      "Я думаю о тебе каждую секунду ⏳❤️",
+      "Ты — моё вдохновение и моя вселенная 🌌",
+      "Спасибо, что ты рядом. Это бесценно 💎",
+      "Мне с тобой тепло даже в самый холодный день ❄️❤️",
+      "Ты делаешь этот мир лучше просто тем, что в нём есть 🌍",
+      "Я выбирал бы тебя снова и снова, в каждой жизни ♾️",
+      "Ты — мой дом, куда хочется возвращаться 🏡",
+      "Люблю тебя до Луны и обратно 🌙",
+      "Ты моя самая любимая причина улыбаться 😊",
+      "С тобой даже обычный день — приключение 🚀",
+      "Твои глаза — моё любимое место на земле 👀✨",
+      "Я самый счастливый, потому что ты — моя 💍",
+      "Ты — моя половинка, моя судьба, моё всё 💞",
+      "Хочу прожить с тобой тысячу лет и ещё один день 🕰️",
+      "Каждый раз, когда вижу тебя, влюбляюсь заново 💘",
+      "Ты — моя самая сладкая привычка 🍫",
+      "Рядом с тобой я настоящий 🌟",
+      "Ты — моё солнце, даже когда за окном дождь ☀️",
+      "Спасибо, что выбрала меня 💕",
+      "Ты — причина, по которой я верю в чудеса 🦋",
+      "Моё сердце бьётся быстрее, когда ты рядом 💓",
+      "Ты — моя вечная любовь и моя нежность 🤍",
+      "Если бы я мог загадать одно желание — я бы загадал тебя снова 🌠",
+      "Твоя улыбка освещает мой день ярче солнца ☀️💖",
+      "С тобой я понял, что такое настоящее счастье 💫",
+      "Ты — моя мелодия, которая никогда не надоест 🎶",
+      "Никогда не забывай: ты очень, очень любима 💝",
+      "Ты — моя самая лучшая случайность в жизни 🎲❤️",
+      "С тобой я хочу встретить старость 👵👴",
+      "Ты — моя тихая гавань в любой шторм ⛵",
+      "Я люблю в тебе всё: и смех, и глаза, и даже как ты злишься 🥺",
+      "Ты — моё любимое время года, моя весна 🌸",
+      "Без тебя мой мир был бы чёрно-белым 🎨",
+      "Ты — моя самая нежная мысль перед сном 🌛",
+      "С тобой я научился любить по-настоящему 💞",
+      "Ты — та, с кем я хочу делить каждое утро ☕",
+      "Твоя нежность — моё самое любимое лекарство 💊❤️",
+      "Ты моя самая лучшая половина 🧩",
+      "Я благодарен судьбе за каждый день с тобой 🙏",
+      "Ты — моё сердце, моя душа, мой мир 🌎💖",
+      "С тобой я готов на всё, даже на глупости 🤪❤️",
+      "Ты — моя навсегда, и это самое главное 💍✨"
+    ];
+
+    const SPECIAL_MESSAGE = "🎁 Ты дошла до самого главного...<br><br>Я люблю тебя больше жизни. Ты — моё всё. Никогда не сомневайся в этом. Навсегда твой ❤️";
+
+    let shownCount = parseInt(localStorage.getItem('loveCount') || '0');
+    let usedIndexes = JSON.parse(localStorage.getItem('usedIndexes') || '[]');
+    let specialShown = localStorage.getItem('specialShown') === 'true';
+
+    const card = document.getElementById('messageCard');
+    const btn = document.getElementById('loveBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const counter = document.getElementById('counter');
+    const progressWrap = document.getElementById('progressWrap');
+    const progressLabel = document.getElementById('progressLabel');
+    const progressFill = document.getElementById('progressFill');
+
+    function updateCounterText() {
+      if (shownCount === 0) {
+        counter.textContent = "Нажми на кнопку — и получи послание 💌";
+      } else if (shownCount === 1) {
+        counter.textContent = "Ты открыла 1 послание 💗";
+      } else {
+        counter.textContent = `Ты открыла ${shownCount} посланий 💗`;
+      }
+    }
+
+    function updateProgress() {
+      const left = Math.max(0, 10 - shownCount);
+      if (specialShown) {
+        progressWrap.style.display = 'none';
+      } else {
+        progressWrap.style.display = 'flex';
+        progressLabel.textContent = `🎁 До сюрприза осталось: ${left}`;
+        progressFill.style.width = Math.min(100, (shownCount / 10) * 100) + '%';
+      }
+    }
+
+    updateCounterText();
+    updateProgress();
+
+    function getRandomMessage() {
+      if (usedIndexes.length >= MESSAGES.length) usedIndexes.length = 0;
+      let idx;
+      do { idx = Math.floor(Math.random() * MESSAGES.length); }
+      while (usedIndexes.includes(idx));
+      usedIndexes.push(idx);
+      localStorage.setItem('usedIndexes', JSON.stringify(usedIndexes));
+      return MESSAGES[idx];
+    }
+
+    btn.addEventListener('click', () => {
+      if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+      }
+      playMusicOnFirstClick();
+      card.classList.remove('show', 'special');
+
+      setTimeout(() => {
+        if (shownCount >= 10 && !specialShown) {
+          card.innerHTML = SPECIAL_MESSAGE;
+          card.classList.add('show', 'special');
+          specialShown = true;
+          localStorage.setItem('specialShown', 'true');
+          progressWrap.style.display = 'none';
+          burstHearts(30);
+          btn.textContent = '💖 Ещё послание!';
+        } else {
+          card.textContent = getRandomMessage();
+          card.classList.add('show');
+          btn.textContent = '💖 Ещё послание!';
+          burstHearts(12);
+        }
+      }, 200);
+
+      shownCount++;
+      localStorage.setItem('loveCount', shownCount);
+      updateCounterText();
+      updateProgress();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      if (!confirm('Сбросить счётчик посланий и сюрприз?')) return;
+      shownCount = 0;
+      usedIndexes = [];
+      specialShown = false;
+      localStorage.removeItem('loveCount');
+      localStorage.removeItem('usedIndexes');
+      localStorage.removeItem('specialShown');
+      card.classList.remove('show', 'special');
+      card.textContent = '';
+      btn.textContent = '💌 Скажи мне что-то тёплое';
+      updateCounterText();
+      updateProgress();
+      if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+      }
+    });
+
+    // 🎵 Музыка главной
+    const music = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicBtn');
+    let musicStarted = false;
+    let musicOn = localStorage.getItem('musicOn') !== 'false';
+    music.volume = 0.25;
+
+    function updateMusicIcon() {
+      musicBtn.textContent = musicOn ? '🔊' : '🔇';
+    }
+    updateMusicIcon();
+
+    function playMusicOnFirstClick() {
+      if (!musicStarted && musicOn) {
+        music.play().catch(() => {});
+        musicStarted = true;
+      }
+    }
+
+    musicBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      musicOn = !musicOn;
+      localStorage.setItem('musicOn', musicOn);
+      if (musicOn) {
+        music.play().catch(() => {});
+        musicStarted = true;
+      } else {
+        music.pause();
+      }
+      updateMusicIcon();
+    });
+
+    function unlockAudio() {
+      music.play().then(() => {
+        music.pause();
+        music.currentTime = 0;
+      }).catch(() => {});
+      document.removeEventListener('touchstart', unlockAudio);
+      document.removeEventListener('click', unlockAudio);
+    }
+    document.addEventListener('touchstart', unlockAudio, { once: true });
+    document.addEventListener('click', unlockAudio, { once: true });
+
+    function burstHearts(count = 12) {
+      const emojis = ['❤️', '💖', '💕', '💗', '💓', '💞', '✨'];
+      const rect = btn.getBoundingClientRect();
+      const originX = rect.left + rect.width / 2;
+      const originY = rect.top + rect.height / 2;
+
+      for (let i = 0; i < count; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'burst-heart';
+        heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        heart.style.left = originX + 'px';
+        heart.style.top = originY + 'px';
+        heart.style.fontSize = (18 + Math.random() * 18) + 'px';
+        heart.style.transform = 'translate(-50%, -50%) scale(1)';
+        heart.style.opacity = '1';
+        heart.style.transition = 'transform 1.2s cubic-bezier(0.25, 0.8, 0.4, 1), opacity 1.2s ease-out';
+        document.body.appendChild(heart);
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 100 + Math.random() * 180;
+        const x = Math.cos(angle) * distance;
+        const y = Math.sin(angle) * distance - 100;
+
+        setTimeout(() => {
+          heart.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(1.5) rotate(${Math.random() * 360}deg)`;
+          heart.style.opacity = '0';
+        }, 20);
+        setTimeout(() => heart.remove(), 1400);
+      }
+    }
+
+    function applyThemeByTime() {
+      const h = new Date().getHours();
+      document.body.classList.remove('theme-day', 'theme-night', 'theme-evening');
+      if (h >= 6 && h < 18) {
+        document.body.classList.add('theme-day');
+      } else if (h >= 18 && h < 22) {
+        document.body.classList.add('theme-evening');
+      } else {
+        document.body.classList.add('theme-night');
+      }
+    }
+    applyThemeByTime();
+    setInterval(applyThemeByTime, 60000);
+
+    const bgHearts = ['❤️', '💕', '💖', '💗', '💓'];
+    for (let i = 0; i < 15; i++) {
+      const h = document.createElement('div');
+      h.className = 'heart-bg';
+      h.textContent = bgHearts[Math.floor(Math.random() * bgHearts.length)];
+      h.style.left = Math.random() * 100 + '%';
+      h.style.fontSize = (14 + Math.random() * 24) + 'px';
+      h.style.animationDuration = (10 + Math.random() * 10) + 's';
+      h.style.animationDelay = (Math.random() * 12) + 's';
+      h.style.animationPlayState = 'paused';
+      document.body.appendChild(h);
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          h.style.animationPlayState = 'running';
+        });
+      });
+    }
+
+    // ========== ВТОРАЯ СТРАНИЦА ==========
+    const page2 = document.getElementById('page2');
+    const backBtn = document.getElementById('backBtn');
+    const songPlayer = document.getElementById('songPlayer');
+    const lyricText = document.getElementById('lyricText');
+    const songFill = document.getElementById('songFill');
+    const finalScreen = document.getElementById('finalScreen');
+    const replayBtn = document.getElementById('replayBtn');
+    const finalExitBtn = document.getElementById('finalExitBtn');
+
+    const LYRICS = [
+      { time: 0,   text: "..." },
+      { time: 14,   text: "Детка, на мне висит метка, я — твоя мишень" },
+      { time: 17,   text: "Ты — конфетка в упаковке среди муляжей" },
+      { time: 21,   text: "Я приму твой выстрел, не могу терпеть уже" },
+      { time: 24,   text: "Целься в сердце, чтобы оно перестало жечь" },
+      { time: 28,   text: "Детка, ты карамель-карамель" },
+      { time: 29,   text: "Опутала туго чарами-чарами" },
+      { time: 31,   text: "Душа кричит, будто фа-до-соль-ре-ля-ми" },
+      { time: 33,   text: "Губы твои стали алыми-алыми" },
+      { time: 34,   text: "Выпью тебя, и до талого мало мне" },
+      { time: 36,   text: "Мир на миг стал безлик, а мы бокалами" },
+      { time: 38,   text: "Ловим те капли, что самыми-самыми" },
+      { time: 40,   text: "Станут для нас и залечат все раны нам" },
+      { time: 42,   text: "Детка, детка, детка, уа-уэй" },
+      { time: 46,   text: "Я хочу, чтоб ты была моей" },
+      { time: 49,   text: "Пока летаем, тает ночь и день" },
+      { time: 53,   text: "Она — удача, я бегу за ней 💫" },
+      { time: 56,   text: "Как делишки, детка, где твоя улыбка?" },
+      { time: 58,   text: "Ты мой джекпот, я кричу: «Бинго!», детка, нахер Тиндер" },
+      { time: 62,   text: "Заполонила меня моя половинка" },
+      { time: 65,   text: "Мы крутим love, и кружим в ритме, нам не нужен ***" },
+      { time: 69,   text: "Как делишки у моей малышки, алло?" },
+      { time: 73,   text: "Как делишки у моей малышки, алло?" },
+      { time: 76,   text: "Как делишки у моей малышки, алло?" },
+      { time: 80,   text: "Как делишки у моей малышки? Я, я!" },
+      { time: 83,   text: "Как делишки у моей малышки, алло?" },
+      { time: 86,   text: "Как делишки у моей малышки, алло?" },
+      { time: 90,   text: "Как делишки у моей малышки, алло?" },
+      { time: 93,   text: "Как делишки у моей малышки? Я, я!" },
+      { time: 96,   text: "Так часто снишься, о тебе все мои мысли" },
+      { time: 100,  text: "Где мы на радуге зависли, солнца брызги на ней" },
+      { time: 103,  text: "В тебе сок есть, налей, в унисон акварель" },
+      { time: 107,  text: "Мы пишем наши чувства кляксами из ярких, бэй" },
+      { time: 110,  text: "Распахни мне сердце, будто раскладушка-сотик" },
+      { time: 113,  text: "И я нажму на твои кнопки, если ты не против" },
+      { time: 117,  text: "Мы крутим против часовой, детка, ты мой ***котик" },
+      { time: 120,  text: "Я называю это «love», звучит неплохо вроде" },
+      { time: 123,  text: "Я не катаюсь с тобой в метро, ведь ты бомба" },
+      { time: 128,  text: "Мы выше всех, моя малышка — вышка" },
+      { time: 130,  text: "По вечерам провожать её прямо до дома" },
+      { time: 135,  text: "Так клёво, так клёво" },
+      { time: 137,  text: "О нас поют во дворе кошки, малышка" },
+      { time: 140,  text: "Луной свечу тебе в окошко, пока спишь ты" },
+      { time: 144,  text: "В тебе есть чуитс, ты красива, даже слишком" },
+      { time: 147,  text: "Ну, как делишки, детка-детка, как делишки? Е-е" },
+      { time: 151,  text: "Как делишки у моей малышки, алло?" },
+      { time: 155,  text: "Как делишки у моей малышки, алло?" },
+      { time: 158,  text: "Как делишки у моей малышки, алло?" },
+      { time: 162,  text: "Как делишки у моей малышки? Я, я!" },
+      { time: 165,  text: "Как делишки у моей малышки, алло?" },
+      { time: 169,  text: "Как делишки у моей малышки, алло?" },
+      { time: 173,  text: "Как делишки у моей малышки, алло?" },
+      { time: 176,  text: "Как делишки у моей малышки? Я, я!" },
+      { time: 180,  text: "..." }
+    ];
+
+    let lyricIndex = 0;
+    let progressRafId = null;
+    let lastShownTime = -1;
+    let finalShown = false;
+    const SYNC_WINDOW = 0.6;
+
+    function showLyric(index) {
+      if (index >= LYRICS.length) return;
+      const nextText = LYRICS[index].text;
+      lyricText.classList.remove('show');
+      setTimeout(() => {
+        lyricText.textContent = nextText;
+        void lyricText.offsetWidth;
+        lyricText.classList.add('show');
+      }, 250);
+    }
+
+    function showFinal() {
+      if (finalShown) return;
+      finalShown = true;
+      songPlayer.pause(); // 🎵 Стоп музыка
+      finalScreen.classList.add('active');
+      finalBurstHearts(40);
+      if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+      }
+    }
+
+    function hideFinal() {
+      finalScreen.classList.remove('active');
+      finalShown = false;
+    }
+
+    function updateSongProgress() {
+      if (!page2.classList.contains('active')) {
+        progressRafId = null;
+        return;
+      }
+
+      const currentTime = songPlayer.currentTime;
+
+      if (songPlayer.duration && isFinite(songPlayer.duration)) {
+        const progress = (currentTime / songPlayer.duration) * 100;
+        songFill.style.width = progress + '%';
+      }
+
+      while (lyricIndex < LYRICS.length) {
+        const lyric = LYRICS[lyricIndex];
+        if (currentTime >= lyric.time - SYNC_WINDOW) {
+          if (lyricIndex !== lastShownTime) {
+            showLyric(lyricIndex);
+            lastShownTime = lyricIndex;
+          }
+          lyricIndex++;
+        } else {
+          break;
+        }
+      }
+
+      if (songPlayer.duration && isFinite(songPlayer.duration) && !finalShown) {
+        if (currentTime >= songPlayer.duration - 0.5 || songPlayer.ended) {
+          showFinal();
+        }
+      }
+
+      progressRafId = requestAnimationFrame(updateSongProgress);
+    }
+
+       function openPage2() {
+      // 🎵 Ставим главную музыку на паузу
+      music.pause();
+
+      page2.classList.add('active');
+      page2.scrollTop = 0;
+      backBtn.classList.add('show');
+      hideFinal();
+      songPlayer.volume = 0.4;
+      songPlayer.currentTime = 0;
+      lyricIndex = 0;
+      lastShownTime = -1;
+      lyricText.classList.remove('show');
+      lyricText.textContent = '';
+      songFill.style.width = '0%';
+
+      songPlayer.play().catch(() => {});
+
+      setTimeout(() => {
+        if (LYRICS.length > 0) {
+          lyricText.textContent = LYRICS[0].text;
+          void lyricText.offsetWidth;
+          lyricText.classList.add('show');
+          lastShownTime = 0;
+          lyricIndex = 1;
+        }
+      }, 400);
+
+      if (!progressRafId) {
+        progressRafId = requestAnimationFrame(updateSongProgress);
+      }
+    }
+
+    function closePage2() {
+      page2.classList.remove('active');
+      backBtn.classList.remove('show');
+      songPlayer.pause();
+      songPlayer.currentTime = 0;
+      lyricText.classList.remove('show');
+      lyricText.textContent = '';
+      songFill.style.width = '0%';
+      hideFinal();
+      if (progressRafId) {
+        cancelAnimationFrame(progressRafId);
+        progressRafId = null;
+      }
+
+      // 🎵 Возобновляем главную музыку, если она была включена
+      if (musicOn && musicStarted) {
+        music.play().catch(() => {});
+      }
+    }
+    // 🔁 Послушать заново
+    replayBtn.addEventListener('click', () => {
+      hideFinal();
+      openPage2();
+    });
+
+    // 🚪 Выйти
+    finalExitBtn.addEventListener('click', () => {
+      hideFinal();
+      closePage2();
+    });
+
+    function finalBurstHearts(count = 40) {
+      const emojis = ['❤️', '💖', '💕', '💗', '💓', '💞', '✨', '💝', '🌸'];
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+
+      for (let i = 0; i < count; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'final-burst-heart';
+        heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        heart.style.left = centerX + 'px';
+        heart.style.top = centerY + 'px';
+        heart.style.fontSize = (16 + Math.random() * 26) + 'px';
+        heart.style.transform = 'translate(-50%, -50%) scale(0.5)';
+        heart.style.opacity = '1';
+        heart.style.transition = 'transform 2s cubic-bezier(0.15, 0.6, 0.4, 1), opacity 2s ease-out';
+        document.body.appendChild(heart);
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 150 + Math.random() * 250;
+        const x = Math.cos(angle) * distance;
+        const y = Math.sin(angle) * distance;
+
+        setTimeout(() => {
+          heart.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(1.6) rotate(${Math.random() * 720}deg)`;
+          heart.style.opacity = '0';
+        }, 30);
+
+        setTimeout(() => heart.remove(), 2200);
+      }
+    }
+
+    document.getElementById('openPage2').addEventListener('click', openPage2);
+    backBtn.addEventListener('click', closePage2);
+  </script>
+</body>
+</html>
