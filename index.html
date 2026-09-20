@@ -44,15 +44,12 @@ body.gallery-leaving .content{animation:galleryPageOut .44s cubic-bezier(.65,0,.
 body.gallery-leaving .music-btn{animation:galleryControlOut .34s ease both}
 @keyframes galleryPageOut{from{opacity:1;transform:translate3d(0,0,0) scale(1)}to{opacity:0;transform:translate3d(0,-10px,0) scale(.992)}}
 @keyframes galleryControlOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
-.gallery-card{position:relative;overflow:hidden;isolation:isolate;will-change:transform,border-color,box-shadow;transition:transform .28s cubic-bezier(.22,1,.36,1),border-color .28s ease,box-shadow .28s ease,background .28s ease}
-.gallery-card .gallery-sheen{position:absolute;z-index:4;top:-35%;left:-85%;width:42%;height:170%;background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,.06) 28%,rgba(255,248,251,.42) 50%,rgba(255,255,255,.06) 72%,transparent 100%);transform:skewX(-18deg);opacity:0;pointer-events:none}
-.gallery-card:hover{transform:translate3d(0,-3px,0) scale(1.006);border-color:rgba(255,255,255,.20);box-shadow:0 20px 38px rgba(0,0,0,.30),0 0 26px rgba(223,175,194,.10);background:linear-gradient(155deg,rgba(255,255,255,.105),rgba(255,255,255,.040))}
-.gallery-card:hover .gallery-sheen{animation:gallerySheen .78s cubic-bezier(.22,1,.36,1) both}
-@keyframes gallerySheen{0%{left:-85%;opacity:0}12%{opacity:1}82%{opacity:1}100%{left:125%;opacity:0}}
-.gallery-card:active{transform:scale(.985)}
+.gallery-card{position:relative;overflow:hidden}
+.gallery-card::after{content:'';position:absolute;inset:0 auto 0 -100%;width:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);transition:left .6s ease;pointer-events:none}
+@media(hover:hover){.gallery-card:hover{transform:translateY(-2px)}.gallery-card:hover::after{left:100%}}
 @media(prefers-reduced-motion:reduce){
   body.gallery-leaving .content,body.gallery-leaving .music-btn{animation:none;opacity:.85}
-  .gallery-card .gallery-sheen{display:none}
+  .gallery-card::after{display:none}
   .gallery-card{transition:none}
 }
 h1{font-size:28px;font-weight:800;line-height:1.1;margin-bottom:10px;text-align:center;color:rgba(255,255,255,.94);letter-spacing:.2px;text-shadow:0 4px 26px rgba(0,0,0,.28)}
@@ -343,7 +340,6 @@ body.page2-open #page2 .inner{opacity:1;transform:translate3d(0,0,0) scale(1)}
         <small id="historyMeta">Посмотреть даты и будущие рубежи</small>
       </button>
       <a class="tool-card tool-card-wide gallery-card" id="galleryLink" href="./love-gallery/" aria-label="Открыть нашу галерею">
-        <span class="gallery-sheen" aria-hidden="true"></span>
         <span class="tool-kicker">Наши фотографии</span>
         <strong>Открыть галерею</strong>
         <small>Отдельное место для наших общих моментов</small>
