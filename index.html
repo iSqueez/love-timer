@@ -647,27 +647,27 @@
       animation: ringSpin 7s linear infinite;
     }
 
-    /* Круговой эквалайзер вокруг фото */
+    /* Круговой эквалайзер вокруг фото — отдельный внешний контур */
     .photo-equalizer {
       position: absolute;
-      inset: -34px;
-      width: calc(100% + 68px);
-      height: calc(100% + 68px);
+      inset: -46px;
+      width: calc(100% + 92px);
+      height: calc(100% + 92px);
       z-index: 1;
       pointer-events: none;
       overflow: visible;
-      opacity: .92;
+      opacity: .96;
       mix-blend-mode: screen;
-      filter: drop-shadow(0 0 7px rgba(231, 174, 195, .28)) drop-shadow(0 0 16px rgba(214, 154, 181, .10));
+      filter: drop-shadow(0 0 8px rgba(231, 174, 195, .34)) drop-shadow(0 0 22px rgba(214, 154, 181, .16));
       transition: opacity .55s ease;
     }
 
     .photo-frame.eq-idle .photo-equalizer {
-      opacity: .50;
+      opacity: .56;
     }
 
     .motion-light .photo-equalizer {
-      opacity: .30;
+      opacity: .34;
     }
 
     .photo-frame::after {
@@ -679,7 +679,7 @@
       filter: blur(9px);
       opacity: 0.8;
       pointer-events: none;
-      z-index: -1;
+      z-index: 0;
       animation: auraBreath 4.8s ease-in-out infinite;
     }
 
@@ -1488,6 +1488,11 @@
     }
     .photo-frame::before { opacity:.44; filter:blur(2.5px); animation-duration:13s; }
     .photo-frame::after { inset:-26px; opacity:.55; filter:blur(12px); animation-duration:7s; }
+    .photo-frame { overflow:visible; }
+    .photo-frame::after { z-index:0; }
+    .photo-equalizer { z-index:1; }
+    .photo-window { z-index:2; }
+    .frame-particle { z-index:4; }
     .photo-window { background:#09070c; box-shadow: inset 0 0 0 1px rgba(255,255,255,.10), inset 0 0 34px rgba(0,0,0,.36); }
     .photo-frame img { animation: photoFloat 8.5s cubic-bezier(.4,0,.2,1) infinite; }
     @keyframes photoFloat {
@@ -1502,7 +1507,15 @@
     .frame-particle { width:4px; height:4px; background:rgba(245,210,221,.88); box-shadow:0 0 9px rgba(239,180,201,.78); }
     .frame-particle::after { border-color:rgba(255,225,232,.24); }
 
-    .page2-title { color:rgba(255,255,255,.90); font-size:18px; font-weight:650; letter-spacing:.15px; text-shadow:0 4px 18px rgba(0,0,0,.38); }
+    .page2-title {
+      color:rgba(255,255,255,.90);
+      font-size:18px;
+      font-weight:650;
+      letter-spacing:.15px;
+      text-shadow:0 4px 18px rgba(0,0,0,.38);
+      margin-top:9px;
+      margin-bottom:20px;
+    }
     .page2-title::after { width:56px; height:1px; margin-top:11px; background:linear-gradient(90deg,transparent,rgba(230,194,166,.78),transparent); }
 
     .lyric-text { background:linear-gradient(160deg,rgba(255,255,255,.065),rgba(255,255,255,.018)); border-color:rgba(255,255,255,.09); box-shadow:0 18px 38px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.055); }
@@ -2194,6 +2207,21 @@
       .final-text { margin-bottom: 16px !important; }
     }
 
+
+    /* FINAL POSITION: фото-группа выше, заголовок ближе к рамке текста */
+    .photo-frame {
+      position: relative !important;
+      top: -18px !important;
+      margin-bottom: -13px !important;
+    }
+    .page2-title {
+      position: relative !important;
+      top: 18px !important;
+      margin-top: 0 !important;
+      margin-bottom: 24px !important;
+      transform: none !important;
+    }
+
   </style>
 </head>
 <body>
@@ -2868,7 +2896,7 @@
       { time: 56,   text: "Как делишки, детка, где твоя улыбка?" },
       { time: 58,   text: "Ты мой джекпот, я кричу: «Бинго!», детка, нахер Тиндер" },
       { time: 62,   text: "Заполонила меня моя половинка" },
-      { time: 65,   text: "Мы крутим love, и кружим в ритме, нам не нужен гриндер" },
+      { time: 65,   text: "Мы крутим love, и кружим в ритме, нам не нужен ***" },
       { time: 69,   text: "Как делишки у моей малышки, алло?" },
       { time: 73,   text: "Как делишки у моей малышки, алло?" },
       { time: 76,   text: "Как делишки у моей малышки, алло?" },
@@ -2883,7 +2911,7 @@
       { time: 107,  text: "Мы пишем наши чувства кляксами из ярких, бэй" },
       { time: 110,  text: "Распахни мне сердце, будто раскладушка-сотик" },
       { time: 113,  text: "И я нажму на твои кнопки, если ты не против" },
-      { time: 117,  text: "Мы крутим против часовой, детка, ты мой наркотик" },
+      { time: 117,  text: "Мы крутим против часовой, детка, ты мой ***котик" },
       { time: 120,  text: "Я называю это «love», звучит неплохо вроде" },
       { time: 123,  text: "Я не катаюсь с тобой в метро, ведь ты бомба" },
       { time: 128,  text: "Мы выше всех, моя малышка — вышка" },
@@ -3289,10 +3317,12 @@
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const cx = w / 2;
       const cy = h / 2;
-      // Радиус вынесен за пределы самой фотографии:
-      // внешний край рамки ≈ 96px на базовом размере, поэтому эквалайзер
-      // начинается с небольшим зазором уже снаружи неё.
-      const baseRadius = Math.max(12 * dpr, Math.min(w, h) * 0.405);
+      // Геометрия привязана к реальному размеру рамки, а не к canvas.
+      // Поэтому на телефоне и на десктопе эквалайзер всегда остаётся
+      // снаружи рамки и не упирается в край canvas.
+      const frameRect = photoFrameEl ? photoFrameEl.getBoundingClientRect() : null;
+      const frameRadius = frameRect ? (frameRect.width * dpr) / 2 : Math.min(w, h) * 0.34;
+      const baseRadius = Math.max(12 * dpr, frameRadius + 10 * dpr);
       const barCount = 52;
       const maxBar = Math.min(w, h) * 0.105;
 
@@ -3333,14 +3363,15 @@
         ctx.beginPath();
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
-        ctx.lineWidth = Math.max(4.2 * dpr, 4.2 * dpr);
+        ctx.lineWidth = Math.max(6.0 * dpr, 6.0 * dpr);
         ctx.lineCap = 'round';
 
-        const alpha = idle ? 0.34 : 0.30 + level * 0.78;
+        const alpha = idle ? 0.34 : 0.32 + level * 0.78;
+        const pulse = 0.88 + 0.12 * Math.sin((i / barCount) * Math.PI * 6);
         const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
-        gradient.addColorStop(0, `rgba(224, 170, 190, ${alpha * 0.48})`);
-        gradient.addColorStop(0.68, `rgba(244, 201, 216, ${alpha})`);
-        gradient.addColorStop(1, `rgba(213, 165, 126, ${Math.min(1, alpha * 0.78)})`);
+        gradient.addColorStop(0, `rgba(206, 150, 176, ${alpha * 0.40})`);
+        gradient.addColorStop(0.55, `rgba(244, 201, 216, ${Math.min(1, alpha * pulse)})`);
+        gradient.addColorStop(1, `rgba(226, 180, 137, ${Math.min(1, alpha * 0.90)})`);
         ctx.strokeStyle = gradient;
         ctx.shadowBlur = idle ? 5 * dpr : (5 + level * 10) * dpr;
         ctx.shadowColor = `rgba(231, 174, 195, ${idle ? 0.24 : 0.38 + level * 0.38})`;
