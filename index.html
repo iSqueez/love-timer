@@ -25,6 +25,7 @@
       padding: max(20px, env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-right, 0px)) max(20px, env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px));
       color: white;
       overflow-x: hidden;
+      overflow-y: auto;
       position: relative;
       transition: background 1.5s ease;
       overscroll-behavior: none;
@@ -1268,6 +1269,17 @@
 
 
 
+    /* === UTILITY VISIBILITY FIX === */
+    .utility-grid {
+      display:grid !important;
+      visibility:visible !important;
+      opacity:1 !important;
+    }
+    .utility-card {
+      visibility:visible !important;
+      opacity:1 !important;
+    }
+
     /* === FINAL VISUAL PASS === */
     body.theme-day {
       background:
@@ -1360,7 +1372,8 @@
     .intro-card { background:linear-gradient(150deg,rgba(255,255,255,.075),rgba(255,255,255,.026)); border-color:rgba(255,255,255,.10); box-shadow:0 30px 90px rgba(0,0,0,.46), inset 0 1px 0 rgba(255,255,255,.055); }
     .intro-title { color:rgba(255,255,255,.96); font-size:27px; letter-spacing:.1px; }
     .intro-subtitle { color:rgba(255,255,255,.60); }
-    .intro-mark { width:9px; height:9px; background:#deb7c7; box-shadow:0 0 18px rgba(222,183,199,.68); }
+    .intro-mark { width:30px; height:30px; background:none; box-shadow:0 0 20px rgba(222,183,199,.28); color:#deb7c7; display:flex; align-items:center; justify-content:center; }
+    .intro-mark svg { width:26px; height:26px; display:block; }
 
     .final-screen { background:radial-gradient(circle at 50% 36%,rgba(87,65,101,.30) 0%,rgba(13,10,16,.97) 58%,#07060a 100%); }
     .final-title { color:rgba(255,255,255,.96); font-size:28px; }
@@ -1639,13 +1652,15 @@
 
     .utility-grid {
       width: 100%;
-      display: grid;
+      display: grid !important;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin: 2px 0 16px;
     }
     .utility-card {
       min-height: 70px;
+      position: relative;
+      z-index: 4;
       border: 1px solid rgba(255,255,255,.095);
       border-radius: 18px;
       background: linear-gradient(145deg, rgba(255,255,255,.062), rgba(255,255,255,.018));
@@ -1839,7 +1854,13 @@
 
     <div class="page2-intro" id="page2Intro">
       <div class="intro-card">
-        <div class="intro-mark" aria-hidden="true"></div>
+        <div class="intro-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="presentation">
+            <path d="M5 13a7 7 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            <path d="M5 13v4.5A2.5 2.5 0 0 0 7.5 20H9v-8H6.5A1.5 1.5 0 0 0 5 13.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+            <path d="M19 13v4.5A2.5 2.5 0 0 1 16.5 20H15v-8h2.5A1.5 1.5 0 0 1 19 13.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+          </svg>
+        </div>
         <h2 class="intro-title">Это для тебя</h2>
         <p class="intro-subtitle">Надень наушники.<br>Несколько минут без спешки.</p>
         <button class="final-btn" id="startSongBtn">Начать</button>
@@ -2225,12 +2246,12 @@
     const photoFrame = document.querySelector('.photo-frame');
 
     // ============================================================
-    // ВСТАВЬ СВОЙ МАССИВ LYRICS СЮДА
-    // ============================================================
+    // ВСТАВЬ СЮДА СВОЙ УЖЕ ИМЕЮЩИЙСЯ МАССИВ LYRICS.
+    // Формат: { time: 14, text: "твоя строка" }
     const LYRICS = [
       // { time: 0, text: "..." },
-      // { time: 14, text: "..." },
-      // { time: 17, text: "..." },
+      // { time: 14, text: "твоя строка" },
+      // { time: 17, text: "следующая строка" },
     ];
 
     let lyricIndex = 0;
@@ -2393,7 +2414,13 @@
 
     function syncLyricToAudio(currentTime) {
       if (!LYRICS.length) {
-        lyricText.querySelectorAll('.lyric-layer').forEach(layer => layer.classList.remove('active', 'leaving'));
+        if (!lyricText.dataset.emptyShown) {
+          initLyricLayers();
+          const firstLayer = lyricText.querySelector('.lyric-layer');
+          firstLayer.classList.add('active');
+          prepareKaraokeLine('Вставь свой массив LYRICS в этот файл', firstLayer);
+          lyricText.dataset.emptyShown = '1';
+        }
         return;
       }
 
