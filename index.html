@@ -44,10 +44,10 @@ body.gallery-leaving .content{animation:galleryPageOut .44s cubic-bezier(.65,0,.
 body.gallery-leaving .music-btn{animation:galleryControlOut .34s ease both}
 @keyframes galleryPageOut{from{opacity:1;transform:translate3d(0,0,0) scale(1)}to{opacity:0;transform:translate3d(0,-10px,0) scale(.992)}}
 @keyframes galleryControlOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
-.gallery-card{position:relative;overflow:hidden;will-change:transform,border-color,box-shadow;transition:transform .28s cubic-bezier(.22,1,.36,1),border-color .28s ease,box-shadow .28s ease,background .28s ease}
-.gallery-card::after{content:'';position:absolute;inset:0 auto 0 -105%;width:105%;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.08) 32%,rgba(255,240,247,.30) 50%,rgba(255,255,255,.08) 68%,transparent 100%);transition:left .66s cubic-bezier(.22,1,.36,1);pointer-events:none;z-index:1}
-.gallery-card:hover{transform:translate3d(0,-3px,0) scale(1.004);border-color:rgba(255,255,255,.19);box-shadow:0 20px 38px rgba(0,0,0,.30),0 0 24px rgba(223,175,194,.07);background:linear-gradient(155deg,rgba(255,255,255,.095),rgba(255,255,255,.035))}
-.gallery-card:hover::after{left:100%}
+.gallery-card{position:relative;overflow:hidden;isolation:isolate;will-change:transform,border-color,box-shadow;transition:transform .28s cubic-bezier(.22,1,.36,1),border-color .28s ease,box-shadow .28s ease,background .28s ease}
+.gallery-card::after{content:'';position:absolute;z-index:3;top:-20%;left:-140%;width:70%;height:140%;background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,.04) 30%,rgba(255,245,250,.34) 50%,rgba(255,255,255,.04) 70%,transparent 100%);transform:skewX(-18deg);opacity:0;pointer-events:none;transition:left .72s cubic-bezier(.22,1,.36,1),opacity .18s ease}
+.gallery-card:hover{transform:translate3d(0,-3px,0) scale(1.006);border-color:rgba(255,255,255,.20);box-shadow:0 20px 38px rgba(0,0,0,.30),0 0 26px rgba(223,175,194,.10);background:linear-gradient(155deg,rgba(255,255,255,.105),rgba(255,255,255,.040))}
+.gallery-card:hover::after{left:125%;opacity:1}
 .gallery-card:active{transform:scale(.985)}
 @media(prefers-reduced-motion:reduce){
   body.gallery-leaving .content,body.gallery-leaving .music-btn{animation:none;opacity:.85}
