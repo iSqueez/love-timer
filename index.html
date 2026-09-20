@@ -88,10 +88,13 @@ h1{font-size:28px;font-weight:800;line-height:1.1;margin-bottom:10px;text-align:
 
 #loveBtn{width:100%;margin-bottom:14px;padding:16px 32px;background:linear-gradient(135deg,#fff,#ffe4f0);color:#b85f7f;box-shadow:0 8px 24px rgba(130,56,88,.28),inset 0 1px 0 rgba(255,255,255,.9);font-size:16px}
 .reset-btn{width:100%;margin-bottom:20px;padding:12px 20px;background:rgba(255,255,255,.10)!important;color:rgba(255,255,255,.88);border:1px solid rgba(255,255,255,.20);box-shadow:0 4px 14px rgba(0,0,0,.15);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);font-size:13px}
-.message-card{position:relative;width:100%;min-height:110px;padding:24px 22px;border-radius:24px;border:1px solid rgba(255,255,255,.18);background:linear-gradient(160deg,rgba(255,255,255,.18),rgba(255,255,255,.07));backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:0 8px 24px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.20);display:flex;align-items:center;justify-content:center;text-align:center;font-size:16px;line-height:1.6;font-weight:500;text-shadow:0 1px 6px rgba(0,0,0,.2);opacity:0;transform:translate3d(0,12px,0) scale(.985);filter:blur(5px);transition:opacity .52s ease,transform .60s cubic-bezier(.22,1,.36,1),filter .52s ease}
+.message-card{position:relative;width:100%;min-height:110px;padding:0;border-radius:24px;border:1px solid rgba(255,255,255,.18);background:linear-gradient(160deg,rgba(255,255,255,.18),rgba(255,255,255,.07));backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:0 8px 24px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.20);display:grid;align-items:stretch;text-align:center;font-size:16px;line-height:1.6;font-weight:500;text-shadow:0 1px 6px rgba(0,0,0,.2);opacity:0;transform:translate3d(0,12px,0) scale(.985);filter:blur(7px);transition:opacity .42s ease,transform .58s cubic-bezier(.22,1,.36,1),filter .46s ease;will-change:opacity,transform,filter;overflow:hidden}
 .message-card.show{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
-.message-card.special{display:block;min-height:0;padding:23px 20px 21px;line-height:1.58;background:linear-gradient(155deg,rgba(126,88,48,.72),rgba(105,45,82,.70));border-color:rgba(244,207,106,.72);box-shadow:0 12px 34px rgba(0,0,0,.26),0 0 24px rgba(232,183,91,.18),inset 0 1px 0 rgba(255,255,255,.14)}
-.message-card.special strong{display:block;margin-top:14px;color:rgba(255,235,243,.96);font-size:1.04em;line-height:1.45}
+.message-layer{grid-area:1/1;min-height:110px;padding:24px 22px;display:flex;align-items:center;justify-content:center;opacity:0;transform:translate3d(0,8px,0) scale(.992);filter:blur(6px);transition:opacity .48s cubic-bezier(.22,1,.36,1),transform .62s cubic-bezier(.22,1,.36,1),filter .52s ease;pointer-events:none;will-change:opacity,transform,filter}
+.message-layer.active{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+.message-layer.leaving{opacity:0;transform:translate3d(0,-8px,0) scale(.992);filter:blur(6px)}
+.message-layer.special{min-height:0;padding:23px 20px 21px;line-height:1.58;background:linear-gradient(155deg,rgba(126,88,48,.72),rgba(105,45,82,.70));border-radius:20px}
+.message-layer.special strong{display:block;margin-top:14px;color:rgba(255,235,243,.96);font-size:1.04em;line-height:1.45}
 .counter{margin-top:14px;font-size:13px;opacity:.82;text-align:center;font-weight:500;text-shadow:0 1px 6px rgba(0,0,0,.3)}
 
 .progress-wrap{width:100%;margin-top:12px;display:flex;flex-direction:column;align-items:center;gap:6px}.progress-label{font-size:12px;opacity:.82;font-weight:500}.progress-bar{width:100%;height:6px;background:rgba(0,0,0,.20);border-radius:3px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.2)}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#d99caf,#d8b783);border-radius:3px;box-shadow:0 0 8px rgba(216,182,141,.3)}
@@ -107,11 +110,12 @@ h1{font-size:28px;font-weight:800;line-height:1.1;margin-bottom:10px;text-align:
 .history-sheet{position:fixed;inset:0;z-index:100000;display:flex;align-items:flex-end;justify-content:center;padding:20px;background:rgba(7,5,10,.70);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s ease,visibility .3s ease}.history-sheet.show{opacity:1;visibility:visible;pointer-events:auto}.history-card{width:min(100%,380px);max-height:min(78vh,620px);overflow:auto;border-radius:26px;padding:22px;background:linear-gradient(160deg,rgba(35,25,39,.96),rgba(13,10,17,.98));border:1px solid rgba(255,255,255,.10);box-shadow:0 30px 90px rgba(0,0,0,.45);transform:translateY(18px);transition:transform .42s cubic-bezier(.22,1,.36,1)}.history-sheet.show .history-card{transform:none}.history-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:16px}.history-head h2{font-size:21px;color:rgba(255,255,255,.93);margin-top:3px}.history-close{width:36px;height:36px;padding:0;margin:0;background:rgba(255,255,255,.05);color:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.09);box-shadow:none}.history-close::after{display:none}.history-list{display:flex;flex-direction:column;gap:9px}.history-item{display:grid;grid-template-columns:78px 1fr;gap:12px;padding:13px 0;border-top:1px solid rgba(255,255,255,.075)}.history-item:first-child{border-top:0}.history-date{font-size:11px;color:rgba(255,255,255,.42);line-height:1.4}.history-item strong{display:block;margin-bottom:4px;font-size:14px;color:rgba(255,255,255,.88)}.history-item span{font-size:12px;color:rgba(255,255,255,.48)}
 
 /* Вторая страница */
-#page2{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;align-items:center;color:#fff;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:62px 20px 40px;background:
+#page2{position:fixed;inset:0;z-index:200;display:none;opacity:0;transform:translate3d(0,10px,0) scale(.995);transition:opacity .62s cubic-bezier(.22,1,.36,1),transform .72s cubic-bezier(.22,1,.36,1);flex-direction:column;align-items:center;color:#fff;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:62px 20px 40px;background:
   radial-gradient(circle at 50% 14%,rgba(224,156,182,.10),transparent 28%),
   radial-gradient(circle at 50% 86%,rgba(92,68,133,.10),transparent 28%),
   linear-gradient(180deg,#0b0910 0%,#120b16 52%,#08070b 100%)}
 #page2.active{display:flex}
+#page2.page2-visible{opacity:1;transform:none}
 #page2::before{content:'';position:fixed;inset:-18% -10%;z-index:0;pointer-events:none;background:
   radial-gradient(circle at 50% 8%,rgba(206,112,150,.13),transparent 30%),
   radial-gradient(circle at 15% 65%,rgba(115,76,168,.07),transparent 28%);transform:translate3d(0,0,0);animation:musicGlow 18s ease-in-out infinite alternate}
@@ -149,8 +153,9 @@ h1{font-size:28px;font-weight:800;line-height:1.1;margin-bottom:10px;text-align:
 
 /* Караоке */
 .lyric-container{width:100%;max-width:340px;height:96px;display:flex;align-items:center;justify-content:center;margin:0 0 13px;padding:0 4px;position:relative}.lyric-text{position:relative;width:100%;height:80px;margin:0;border-radius:20px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(160deg,rgba(255,255,255,.065),rgba(255,255,255,.018));backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:0 18px 38px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.055);overflow:hidden;text-shadow:0 2px 12px rgba(0,0,0,.46)}.lyric-text::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 20%,rgba(255,255,255,.045) 48%,transparent 76%);transform:translateX(-100%);animation:lyricSheen 8s ease-in-out infinite;pointer-events:none}@keyframes lyricSheen{0%,72%,100%{transform:translateX(-100%);opacity:0}78%{opacity:.8}88%{transform:translateX(100%);opacity:0}}
-.lyric-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10px 20px;opacity:0;transform:translate3d(0,8px,0) scale(.992);filter:blur(3.5px);transition:opacity .34s ease,transform .44s cubic-bezier(.22,1,.36,1),filter .36s ease;pointer-events:none}.lyric-layer.active{opacity:1;transform:none;filter:blur(0)}.lyric-layer.leaving{opacity:0;transform:translate3d(0,-6px,0) scale(.994);filter:blur(3px)}.lyric-line{width:100%;text-align:center;line-height:1.48;font-size:16.5px;font-weight:500;word-spacing:.03em}.karaoke-loader{display:inline-flex;align-items:flex-end;justify-content:center;gap:7px;min-height:24px}.karaoke-loader-dot{width:7px;height:7px;border-radius:50%;background:rgba(242,198,214,.94);box-shadow:0 0 10px rgba(232,184,201,.38);animation:kLoader 1.05s cubic-bezier(.22,1,.36,1) infinite}.karaoke-loader-dot:nth-child(1){animation-delay:-.7s}.karaoke-loader-dot:nth-child(2){animation-delay:-.45s}.karaoke-loader-dot:nth-child(3){animation-delay:-.2s}@keyframes kLoader{0%,100%{transform:translateY(0) scale(.78);opacity:.2}28%{transform:translateY(-7px) scale(1.12);opacity:1}52%{transform:translateY(-1px) scale(1.02);opacity:.78}72%{transform:translateY(0) scale(.88);opacity:.42}}
-.karaoke-word{display:inline-block;white-space:nowrap;margin-right:.28em;color:rgba(255,255,255,.24);opacity:.46;transition:color .16s ease,opacity .16s ease,transform .18s cubic-bezier(.22,1,.36,1),text-shadow .18s ease}.karaoke-word.sung{color:rgba(255,255,255,.88);opacity:.96}.karaoke-word.current{color:#f0c5d4;opacity:1;transform:translateY(-1px) scale(1.02);text-shadow:0 0 8px rgba(235,165,191,.34)}.karaoke-word.current::after{content:'';display:block;height:1px;margin:2px auto 0;width:64%;border-radius:999px;background:linear-gradient(90deg,transparent,rgba(230,190,160,.82),transparent)}
+.lyric-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10px 20px;opacity:0;transform:translate3d(0,13px,0) scale(.984);filter:blur(8px);transition:opacity var(--lyric-transition,.36s) cubic-bezier(.22,1,.36,1),transform var(--lyric-transition,.46s) cubic-bezier(.22,1,.36,1),filter var(--lyric-transition,.44s) ease;pointer-events:none;will-change:opacity,transform,filter}.lyric-layer.active{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}.lyric-layer.leaving{opacity:0;transform:translate3d(0,-10px,0) scale(.986);filter:blur(8px)}.lyric-line{width:100%;text-align:center;line-height:1.48;font-size:16.5px;font-weight:500;word-spacing:.03em}.karaoke-loader{display:inline-flex;align-items:flex-end;justify-content:center;gap:7px;min-height:24px}.karaoke-loader-dot{width:7px;height:7px;border-radius:50%;background:rgba(242,198,214,.94);box-shadow:0 0 10px rgba(232,184,201,.38);animation:kLoader 1.05s cubic-bezier(.22,1,.36,1) infinite}.karaoke-loader-dot:nth-child(1){animation-delay:-.7s}.karaoke-loader-dot:nth-child(2){animation-delay:-.45s}.karaoke-loader-dot:nth-child(3){animation-delay:-.2s}@keyframes kLoader{0%,100%{transform:translateY(0) scale(.78);opacity:.2}28%{transform:translateY(-7px) scale(1.12);opacity:1}52%{transform:translateY(-1px) scale(1.02);opacity:.78}72%{transform:translateY(0) scale(.88);opacity:.42}}
+.song-countdown{position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;pointer-events:none;transform:scale(.94);filter:blur(8px);transition:opacity .34s cubic-bezier(.22,1,.36,1),transform .46s cubic-bezier(.22,1,.36,1),filter .38s ease,visibility 0s linear .38s}.song-countdown.show{opacity:1;visibility:visible;transform:scale(1);filter:blur(0);transition-delay:0s}.countdown-loader{display:flex;align-items:flex-end;justify-content:center;gap:7px;min-height:24px}.countdown-loader.hidden{display:none}.countdown-number{display:none;font-size:34px;line-height:1;font-weight:700;letter-spacing:.04em;color:rgba(248,214,226,.94);text-shadow:0 0 22px rgba(228,164,190,.28);min-width:1ch;text-align:center}.countdown-number.visible{display:block}.countdown-number.tick{animation:countdownTick .58s cubic-bezier(.22,1,.36,1) both}@keyframes countdownTick{0%{opacity:0;transform:translateY(8px) scale(.78);filter:blur(7px)}28%{opacity:1;transform:translateY(0) scale(1.08);filter:blur(0)}100%{opacity:.86;transform:translateY(0) scale(1);filter:blur(0)}}.song-ending-loader{position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;pointer-events:none;transform:scale(.96);filter:blur(8px);transition:opacity .40s cubic-bezier(.22,1,.36,1),transform .52s cubic-bezier(.22,1,.36,1),filter .42s ease,visibility 0s linear .42s}.song-ending-loader.show{opacity:1;visibility:visible;transform:scale(1);filter:blur(0)}.song-ending-loader .karaoke-loader-dot{width:8px;height:8px}.lyric-text.countdown-active .lyric-layer,.lyric-text.ending-loader-active .lyric-layer{opacity:.06;filter:blur(3.5px);transform:scale(.992)}
+.karaoke-word{display:inline-block;white-space:nowrap;margin-right:.28em;color:rgba(255,255,255,.18);opacity:.34;filter:blur(2.2px);transform:translateY(0) scale(1);transition:color .18s ease,opacity .18s ease,filter .28s ease,transform .24s cubic-bezier(.22,1,.36,1),text-shadow .22s ease}.karaoke-word.sung{color:rgba(255,255,255,.90);opacity:.96;filter:blur(0)}.karaoke-word.current{color:#f0c5d4;opacity:1;filter:blur(0);transform:translateY(-1px) scale(1.025);text-shadow:0 0 8px rgba(235,165,191,.46),0 0 16px rgba(211,164,131,.12)}.karaoke-word.current::after{content:'';display:block;height:1px;margin:2px auto 0;width:64%;border-radius:999px;background:linear-gradient(90deg,transparent,rgba(230,190,160,.82),transparent)}
 .song-time{width:90%;max-width:320px;display:flex;justify-content:space-between;font-size:11px;opacity:.48;letter-spacing:.4px;margin:-10px 0 6px;font-variant-numeric:tabular-nums}.song-seek{width:90%;max-width:320px;height:24px;position:relative;margin:0 auto 9px;cursor:pointer;touch-action:none}.song-seek-track,.song-seek-fill{position:absolute;left:0;right:0;top:10px;height:4px;border-radius:99px}.song-seek-track{background:rgba(255,255,255,.09)}.song-seek-fill{right:auto;width:100%;transform:scaleX(0);transform-origin:left center;background:linear-gradient(90deg,#8a647b,#d6a0b3,#c6a47e);box-shadow:0 0 10px rgba(220,167,188,.22)}.song-seek-thumb{position:absolute;top:6px;left:0;width:14px;height:14px;border-radius:50%;transform:translateX(-50%);background:#e6b1c2;box-shadow:0 0 12px rgba(230,177,194,.45);transition:transform .15s ease}.song-seek:hover .song-seek-thumb,.song-seek.dragging .song-seek-thumb{transform:translateX(-50%) scale(1.1)}.song-seek:focus-visible{outline:2px solid rgba(230,177,194,.55);outline-offset:4px;border-radius:10px}
 .song-controls{width:90%;max-width:320px;display:grid;grid-template-columns:48px 48px 48px 1fr;gap:7px;align-items:center;margin-top:1px}.round-control,.focus-control{width:100%;min-height:40px;margin:0;padding:10px 8px;border-radius:999px;background:rgba(255,255,255,.055);color:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.10);box-shadow:0 8px 18px rgba(0,0,0,.16);font-size:12px}.round-control::after,.focus-control::after{display:none}.main-control{background:rgba(220,173,192,.14);color:rgba(255,255,255,.92);border-color:rgba(225,180,198,.24);font-size:14px}.focus-control{padding-inline:14px}
 
@@ -187,9 +192,9 @@ body.page2-open>.home-ambient,body.page2-open>.content,body.page2-open>.music-bt
 
 @media(max-width:700px){
   .message-card{backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
-  .lyric-layer{filter:blur(2.6px)}
+  .lyric-layer{filter:blur(5px)}
   .lyric-layer.active{filter:blur(0)}
-  .lyric-layer.leaving{filter:blur(2.3px)}
+  .lyric-layer.leaving{filter:blur(4.8px)}
   .home-tools{gap:8px}.tool-card{padding:12px;min-height:82px}.song-controls{grid-template-columns:46px 46px 46px 1fr;gap:6px}.page2-nav{padding:0 12px}.page2-nav-btn{padding:8px 10px;font-size:11px}
 }
 @media(max-width:430px){.home-tools{grid-template-columns:1fr}.tool-card{min-height:auto}.home-actions{gap:7px}.home-action{font-size:10.5px;padding:9px 8px}.history-sheet{padding:12px}.history-card{padding:19px}.final-panel{width:calc(100vw - 26px);padding:26px 19px 20px;border-radius:26px}.final-title{font-size:24px}.final-text{font-size:14px;max-width:290px}.song-controls{grid-template-columns:44px 44px 44px 1fr}}
@@ -201,6 +206,32 @@ body.audio-first .page2-lightfield{opacity:.78}.audio-first .page2-bloom,.audio-
 body.audio-first .photo-frame{box-shadow:0 0 22px rgba(225,147,177,.18),0 0 68px rgba(112,79,145,.09)}body.audio-first .photo-frame img{animation:photoFloatPlayback 34s ease-in-out infinite}@keyframes photoFloatPlayback{0%,100%{transform:translate3d(0,0,0) scale(1.016)}50%{transform:translate3d(-.45px,-.35px,0) scale(1.022)}}
 body.audio-first .lyric-text{backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
 body.audio-first .page2-title{color:rgba(255,255,255,.90)}
+
+
+/* ===== Плавность интерфейса ===== */
+/* Вторая страница мягко въезжает под intro, без reflow. */
+#page2 .inner{opacity:0;transform:translate3d(0,16px,0) scale(.985);transition:opacity .68s cubic-bezier(.22,1,.36,1),transform .78s cubic-bezier(.22,1,.36,1)}
+body.page2-open #page2 .inner{opacity:1;transform:translate3d(0,0,0) scale(1)}
+
+/* Intro не просто исчезает — карточка сама мягко уходит внутрь. */
+.page2-intro .intro-card{transform:translate3d(0,16px,0) scale(.968);opacity:0;filter:blur(6px);transition:opacity .62s cubic-bezier(.22,1,.36,1),transform .72s cubic-bezier(.22,1,.36,1),filter .54s ease}
+.page2-intro:not(.hidden) .intro-card{transform:translate3d(0,0,0) scale(1);opacity:1;filter:blur(0)}
+.page2-intro.hidden .intro-card{transform:translate3d(0,-10px,0) scale(.982);opacity:0;filter:blur(5px)}
+
+/* Финал получает нормальный fade вместо мгновенного display:none/display:flex. */
+.final-screen{display:flex;opacity:0;visibility:hidden;pointer-events:none;transform:scale(.985);transition:opacity .62s ease,transform .72s cubic-bezier(.22,1,.36,1),visibility 0s linear .62s}
+.final-screen.active{display:flex;opacity:1;visibility:visible;pointer-events:auto;transform:scale(1);transition:opacity .62s ease,transform .72s cubic-bezier(.22,1,.36,1),visibility 0s}
+.final-panel{opacity:0;transform:translate3d(0,18px,0) scale(.982);filter:blur(5px);transition:opacity .60s cubic-bezier(.22,1,.36,1),transform .72s cubic-bezier(.22,1,.36,1),filter .52s ease}
+.final-screen.active .final-panel{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0);transition-delay:.08s}
+
+/* Небольшая глубина у караоке при смене строки: blur заметен, но работает только на двух слоях. */
+.lyric-text{contain:layout paint}
+
+/* На touch оставляем blur, но ограничиваем область и делаем его умеренным. */
+@media(pointer:coarse){
+  .message-card{backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+  .lyric-text{backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+}
 
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
 </style>
@@ -247,7 +278,7 @@ body.audio-first .page2-title{color:rgba(255,255,255,.90)}
       Для тебя
     </button>
 
-    <div class="message-card" id="messageCard"></div>
+    <div class="message-card" id="messageCard" aria-live="polite"><div class="message-layer"></div><div class="message-layer"></div></div>
 
     <p class="counter" id="counter"></p>
 
@@ -683,6 +714,9 @@ if (window.Telegram && window.Telegram.WebApp) {
     let specialShown = localStorage.getItem('specialShown') === 'true';
 
     const card = document.getElementById('messageCard');
+    const messageLayers = Array.from(card.querySelectorAll('.message-layer'));
+    let messageLayerIndex = -1;
+    let messageTransitionTimer = null;
     const btn = document.getElementById('loveBtn');
     const counter = document.getElementById('counter');
     const progressWrap = document.getElementById('progressWrap');
@@ -723,34 +757,60 @@ if (window.Telegram && window.Telegram.WebApp) {
       return MESSAGES[idx];
     }
 
+    function showMessageContent(content, special = false) {
+      const nextIndex = messageLayerIndex === -1 ? 0 : 1 - messageLayerIndex;
+      const nextLayer = messageLayers[nextIndex];
+      const oldLayer = messageLayerIndex >= 0 ? messageLayers[messageLayerIndex] : null;
+
+      if (messageTransitionTimer) {
+        clearTimeout(messageTransitionTimer);
+        messageTransitionTimer = null;
+      }
+
+      nextLayer.className = `message-layer${special ? ' special' : ''}`;
+      nextLayer.innerHTML = content;
+      nextLayer.classList.remove('active', 'leaving');
+      void nextLayer.offsetWidth;
+
+      if (oldLayer) {
+        oldLayer.classList.remove('active');
+        oldLayer.classList.add('leaving');
+      }
+
+      messageLayerIndex = nextIndex;
+      card.classList.add('show');
+      requestAnimationFrame(() => nextLayer.classList.add('active'));
+
+      if (oldLayer) {
+        messageTransitionTimer = setTimeout(() => {
+          oldLayer.classList.remove('leaving');
+          messageTransitionTimer = null;
+        }, 650);
+      }
+    }
+
     btn.addEventListener('click', () => {
       if (window.Telegram && window.Telegram.WebApp) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
       }
 
       playMusicOnFirstClick();
-      card.classList.remove('show', 'special');
 
       const nextCount = shownCount + 1;
       const shouldShowSpecial = nextCount >= 10 && !specialShown;
 
-      setTimeout(() => {
-        if (shouldShowSpecial) {
-          card.innerHTML = SPECIAL_MESSAGE;
-          card.classList.add('show', 'special');
-          specialShown = true;
-          localStorage.setItem('specialShown', 'true');
-          progressWrap.style.display = 'none';
-          burstHearts(30);
-          btn.textContent = 'Ещё сообщение';
-        } else {
-          card.textContent = getRandomMessage();
-          card.classList.add('show');
-          btn.textContent = 'Ещё сообщение';
-          burstHearts(12);
-        }
-      }, 180);
+      if (shouldShowSpecial) {
+        showMessageContent(SPECIAL_MESSAGE, true);
+        specialShown = true;
+        localStorage.setItem('specialShown', 'true');
+        progressWrap.style.display = 'none';
+        burstHearts(30);
+      } else {
+        showMessageContent(getRandomMessage(), false);
+        burstHearts(12);
+      }
 
+      btn.textContent = 'Ещё сообщение';
       shownCount = nextCount;
       localStorage.setItem('loveCount', shownCount);
       updateCounterText();
@@ -952,6 +1012,8 @@ if (window.Telegram && window.Telegram.WebApp) {
     let karaokeLastCurrentIndex = -1;
     let lyricDisplayStarts = [];
     let lyricNextTimerId = null;
+    let countdownTimerId = null;
+    let endingLoaderShown = false;
 
     function formatTime(seconds) {
       if (!isFinite(seconds) || seconds < 0) return '0:00';
@@ -964,6 +1026,21 @@ if (window.Telegram && window.Telegram.WebApp) {
       lyricText.innerHTML = `
         <span class="lyric-layer"></span>
         <span class="lyric-layer"></span>
+        <span class="song-countdown" id="songCountdown" aria-hidden="true">
+          <span class="countdown-loader" id="countdownLoader" aria-hidden="true">
+            <span class="karaoke-loader-dot"></span>
+            <span class="karaoke-loader-dot"></span>
+            <span class="karaoke-loader-dot"></span>
+          </span>
+          <span class="countdown-number" id="countdownNumber">3</span>
+        </span>
+        <span class="song-ending-loader" id="songEndingLoader" aria-hidden="true">
+          <span class="karaoke-loader" aria-hidden="true">
+            <span class="karaoke-loader-dot"></span>
+            <span class="karaoke-loader-dot"></span>
+            <span class="karaoke-loader-dot"></span>
+          </span>
+        </span>
       `;
       lyricLayerIndex = -1;
       activeLyricIndex = -1;
@@ -1151,7 +1228,7 @@ if (window.Telegram && window.Telegram.WebApp) {
 
       const nextLine = LYRICS[index + 1];
       const gap = nextLine ? Math.max(0.25, nextLine.time - LYRICS[index].time) : 2;
-      const transition = Math.min(0.18, Math.max(0.11, gap * 0.12));
+      const transition = Math.min(0.32, Math.max(0.20, gap * 0.18));
       nextLayer.style.setProperty('--lyric-transition', `${transition}s`);
       if (oldLayer) oldLayer.style.setProperty('--lyric-transition', `${transition}s`);
 
@@ -1212,6 +1289,7 @@ if (window.Telegram && window.Telegram.WebApp) {
       document.body.classList.add('final-open');
       finalShown = true;
       cancelLyricScheduler();
+      showEndingLoader();
       songPlayer.pause();
 
       if (finalTimeoutId) clearTimeout(finalTimeoutId);
@@ -1222,7 +1300,7 @@ if (window.Telegram && window.Telegram.WebApp) {
         setTimeout(() => {
           if (finalShown) finalBurstHearts(24);
         }, 420);
-      }, 700);
+      }, 1050);
 
       if (window.Telegram && window.Telegram.WebApp) {
         setTimeout(() => {
@@ -1241,6 +1319,8 @@ if (window.Telegram && window.Telegram.WebApp) {
       }
       finalScreen.classList.remove('active');
       finalShown = false;
+      hideEndingLoader();
+      cancelSongCountdown();
       cancelLyricScheduler();
     }
 
@@ -1271,6 +1351,7 @@ if (window.Telegram && window.Telegram.WebApp) {
       }
 
       if (songPlayer.duration && isFinite(songPlayer.duration) && !finalShown) {
+        if (currentTime >= songPlayer.duration - 1.45) showEndingLoader();
         if (currentTime >= songPlayer.duration - 0.12 || songPlayer.ended) showFinal();
       }
 
@@ -1278,6 +1359,8 @@ if (window.Telegram && window.Telegram.WebApp) {
     }
 
     function resetSongView() {
+      cancelSongCountdown();
+      hideEndingLoader();
       cancelLyricScheduler();
       if (progressTimerId) { clearTimeout(progressTimerId); progressTimerId = null; }
       songPlayer.pause();
@@ -1294,22 +1377,114 @@ if (window.Telegram && window.Telegram.WebApp) {
     }
 
     function openPage2() {
-      document.body.classList.add('page2-open');
+      document.body.classList.remove('page2-open', 'final-open', 'audio-first');
       music.pause();
       page2.classList.add('active');
+      page2.classList.remove('page2-visible');
       page2.scrollTop = 0;
       try { songPlayer.load(); } catch (_) {}
-            resetSongView();
+      resetSongView();
       page2Intro.classList.remove('hidden');
       introOpened = false;
       songStarted = false;
+      requestAnimationFrame(() => {
+        if (!page2.classList.contains('active')) return;
+        document.body.classList.add('page2-open');
+        requestAnimationFrame(() => page2.classList.add('page2-visible'));
+      });
     }
 
     function setAudioFirstMode(active) {
       document.body.classList.toggle('audio-first', !!active);
     }
 
-    function startSong() {
+    function cancelSongCountdown() {
+      if (countdownTimerId) {
+        clearTimeout(countdownTimerId);
+        countdownTimerId = null;
+      }
+      const overlay = document.getElementById('songCountdown');
+      const loader = document.getElementById('countdownLoader');
+      const number = document.getElementById('countdownNumber');
+      if (overlay) {
+        overlay.classList.remove('show');
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+      loader?.classList.remove('hidden');
+      number?.classList.remove('visible', 'tick');
+      lyricText.classList.remove('countdown-active');
+    }
+
+    function showEndingLoader() {
+      if (endingLoaderShown) return;
+      endingLoaderShown = true;
+      const overlay = document.getElementById('songEndingLoader');
+      if (!overlay) return;
+      overlay.classList.add('show');
+      overlay.setAttribute('aria-hidden', 'false');
+      lyricText.classList.add('ending-loader-active');
+    }
+
+    function hideEndingLoader() {
+      const overlay = document.getElementById('songEndingLoader');
+      if (overlay) {
+        overlay.classList.remove('show');
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+      lyricText.classList.remove('ending-loader-active');
+      endingLoaderShown = false;
+    }
+
+    function runSongCountdown() {
+      cancelSongCountdown();
+      const overlay = document.getElementById('songCountdown');
+      const loader = document.getElementById('countdownLoader');
+      const number = document.getElementById('countdownNumber');
+      if (!overlay || !loader || !number) return Promise.resolve(true);
+
+      lyricText.classList.add('countdown-active');
+      overlay.classList.add('show');
+      overlay.setAttribute('aria-hidden', 'false');
+      loader.classList.remove('hidden');
+      number.classList.remove('visible', 'tick');
+
+      return new Promise(resolve => {
+        // 1) Короткая «загрузка» точками в том же месте, где будет цифра.
+        countdownTimerId = setTimeout(() => {
+          loader.classList.add('hidden');
+          number.classList.add('visible');
+
+          let value = 3;
+          const tick = () => {
+            if (!introOpened || !page2.classList.contains('active')) {
+              cancelSongCountdown();
+              resolve(false);
+              return;
+            }
+
+            number.textContent = String(value);
+            number.classList.remove('tick');
+            void number.offsetWidth;
+            number.classList.add('tick');
+
+            if (value === 1) {
+              countdownTimerId = setTimeout(() => {
+                cancelSongCountdown();
+                resolve(true);
+              }, 720);
+              return;
+            }
+
+            value -= 1;
+            countdownTimerId = setTimeout(tick, 720);
+          };
+
+          tick();
+        }, 900);
+      });
+    }
+
+    async function startSong() {
       if (introOpened) return;
       introOpened = true;
       page2Intro.classList.add('hidden');
@@ -1320,27 +1495,39 @@ if (window.Telegram && window.Telegram.WebApp) {
       initLyricLayers();
       renderLyric(0, 0);
       updateKaraokeWords(0);
+
+      const ready = await runSongCountdown();
+      if (!ready || !introOpened || !page2.classList.contains('active')) return;
+
       songPlayer.play().catch(() => {});
       updatePlayButton();
       updateSeekVisual();
     }
 
+    let page2CloseTimerId = null;
+
     function closePage2() {
       document.body.classList.remove('page2-open', 'final-open', 'audio-first');
-      page2.classList.remove('active');
-      resetSongView();
-      if (!timerWakeId) scheduleTimerUpdate();
-      page2Intro.classList.remove('hidden');
-      introOpened = false;
-      songStarted = false;
-
+      cancelSongCountdown();
       if (progressTimerId) {
         clearTimeout(progressTimerId);
         progressTimerId = null;
       }
+      resetSongView();
+      page2Intro.classList.add('hidden');
+      introOpened = false;
+      songStarted = false;
 
+      if (page2CloseTimerId) clearTimeout(page2CloseTimerId);
+      page2.classList.remove('page2-visible');
+      page2CloseTimerId = setTimeout(() => {
+        page2.classList.remove('active');
+        page2Intro.classList.remove('hidden');
+      }, 520);
+
+      if (!timerWakeId) scheduleTimerUpdate();
       if (musicOn && musicStarted) {
-        music.play().catch(() => {});
+        setTimeout(() => music.play().catch(() => {}), 260);
       }
     }
 
