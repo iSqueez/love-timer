@@ -88,8 +88,8 @@ h1{font-size:28px;font-weight:800;line-height:1.1;margin-bottom:10px;text-align:
 
 #loveBtn{width:100%;margin-bottom:14px;padding:16px 32px;background:linear-gradient(135deg,#fff,#ffe4f0);color:#b85f7f;box-shadow:0 8px 24px rgba(130,56,88,.28),inset 0 1px 0 rgba(255,255,255,.9);font-size:16px}
 .reset-btn{width:100%;margin-bottom:20px;padding:12px 20px;background:rgba(255,255,255,.10)!important;color:rgba(255,255,255,.88);border:1px solid rgba(255,255,255,.20);box-shadow:0 4px 14px rgba(0,0,0,.15);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);font-size:13px}
-.message-card{position:relative;width:100%;min-height:110px;padding:24px 22px;border-radius:24px;border:1px solid rgba(255,255,255,.18);background:linear-gradient(160deg,rgba(255,255,255,.18),rgba(255,255,255,.07));backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);box-shadow:0 8px 24px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.20);display:flex;align-items:center;justify-content:center;text-align:center;font-size:16px;line-height:1.6;font-weight:500;text-shadow:0 1px 6px rgba(0,0,0,.2);opacity:0;transform:translateY(12px) scale(.985);filter:blur(4px);transition:opacity .45s ease,transform .58s cubic-bezier(.22,1,.36,1),filter .45s ease}
-.message-card.show{opacity:1;transform:none;filter:blur(0)}
+.message-card{position:relative;width:100%;min-height:110px;padding:24px 22px;border-radius:24px;border:1px solid rgba(255,255,255,.18);background:linear-gradient(160deg,rgba(255,255,255,.18),rgba(255,255,255,.07));backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:0 8px 24px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.20);display:flex;align-items:center;justify-content:center;text-align:center;font-size:16px;line-height:1.6;font-weight:500;text-shadow:0 1px 6px rgba(0,0,0,.2);opacity:0;transform:translate3d(0,12px,0) scale(.985);filter:blur(5px);transition:opacity .52s ease,transform .60s cubic-bezier(.22,1,.36,1),filter .52s ease}
+.message-card.show{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
 .message-card.special{display:block;min-height:0;padding:23px 20px 21px;line-height:1.58;background:linear-gradient(155deg,rgba(126,88,48,.72),rgba(105,45,82,.70));border-color:rgba(244,207,106,.72);box-shadow:0 12px 34px rgba(0,0,0,.26),0 0 24px rgba(232,183,91,.18),inset 0 1px 0 rgba(255,255,255,.14)}
 .message-card.special strong{display:block;margin-top:14px;color:rgba(255,235,243,.96);font-size:1.04em;line-height:1.45}
 .counter{margin-top:14px;font-size:13px;opacity:.82;text-align:center;font-weight:500;text-shadow:0 1px 6px rgba(0,0,0,.3)}
@@ -139,18 +139,18 @@ h1{font-size:28px;font-weight:800;line-height:1.1;margin-bottom:10px;text-align:
 /* Фото и EQ */
 .photo-frame{position:relative;width:192px;height:192px;flex:0 0 192px;margin:0 0 -13px;padding:3px;border-radius:50%;background:conic-gradient(from 215deg,#6a465b,#eeb4c7 23%,#d8b37f 42%,#7a5c83 66%,#e090aa 88%,#6a465b);box-shadow:0 0 28px rgba(225,147,177,.18),0 0 96px rgba(112,79,145,.11);isolation:isolate;overflow:visible}
 .photo-frame::before{content:'';position:absolute;inset:-2px;border-radius:50%;background:conic-gradient(from 20deg,transparent,rgba(255,214,228,.65),rgba(231,173,196,.48),transparent 44%,rgba(230,194,160,.35),transparent 68%);opacity:.45;pointer-events:none;z-index:0;animation:ringSpin 14s linear infinite}.photo-frame::after{content:'';position:absolute;inset:-24px;border-radius:50%;background:radial-gradient(circle,rgba(225,147,177,.14),rgba(225,147,177,.04) 42%,transparent 76%);opacity:.6;pointer-events:none;z-index:-1;animation:auraBreath 8s ease-in-out infinite alternate}@keyframes ringSpin{to{transform:rotate(360deg)}}@keyframes auraBreath{from{transform:scale(.98);opacity:.42}to{transform:scale(1.04);opacity:.64}}
-.photo-equalizer{position:absolute;inset:-45px;width:calc(100% + 90px);height:calc(100% + 90px);z-index:1;pointer-events:none;overflow:visible;opacity:.9;transition:opacity .4s ease}.photo-frame.eq-idle .photo-equalizer{opacity:.55}
+.frame-heart{position:absolute;z-index:5;pointer-events:none;font-family:Georgia,"Times New Roman",serif;font-size:15px;line-height:1;color:rgba(243,196,212,.80);text-shadow:0 0 10px rgba(235,165,192,.28);animation:heartFloat 6.4s ease-in-out infinite;will-change:transform,opacity}.fh1{top:-9px;left:31%;animation-delay:-.8s}.fh2{top:10%;right:-7px;font-size:13px;animation-delay:-2.4s}.fh3{top:47%;right:-11px;font-size:11px;animation-delay:-3.9s}.fh4{bottom:-8px;left:61%;font-size:13px;animation-delay:-1.7s}.fh5{bottom:15%;left:-9px;font-size:11px;animation-delay:-4.8s}.fh6{top:19%;left:-8px;font-size:14px;animation-delay:-5.7s}@keyframes heartFloat{0%,100%{transform:translate3d(0,0,0) scale(.90);opacity:.42}50%{transform:translate3d(0,-4px,0) scale(1.06);opacity:.92}}
 .photo-window{position:relative;width:100%;height:100%;border-radius:50%;overflow:hidden;background:#09070c;z-index:2;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),inset 0 0 34px rgba(0,0,0,.36)}
 .photo-frame img{display:block;width:112%;height:112%;max-width:none;margin:-6% 0 0 -6%;border:0;border-radius:50%;object-fit:cover;object-position:center;transform-origin:center;animation:photoFloat 28s cubic-bezier(.45,.05,.55,.95) infinite;backface-visibility:hidden;-webkit-backface-visibility:hidden}@keyframes photoFloat{0%,100%{transform:translate3d(0,0,0) scale(1.016)}50%{transform:translate3d(-.7px,-.6px,0) scale(1.024)}}
-.frame-particle{position:absolute;width:4px;height:4px;border-radius:50%;background:rgba(245,210,221,.82);box-shadow:0 0 8px rgba(239,180,201,.55);z-index:5;pointer-events:none;animation:frameParticle 4s ease-in-out infinite}.frame-particle::after{content:'';position:absolute;inset:-2px;border:1px solid rgba(255,225,232,.20);transform:rotate(45deg) scale(.8)}@keyframes frameParticle{0%,100%{transform:translate(-50%,-50%) scale(.8);opacity:.55}50%{transform:translate(-50%,-50%) scale(1.1);opacity:.9}}
+50%{transform:translate(-50%,-50%) scale(1.1);opacity:.9}}
 .frame-particle.h1{top:-2px;left:50%}.frame-particle.h2{top:17%;left:95%;animation-delay:.5s}.frame-particle.h3{top:50%;left:102%;animation-delay:1s}.frame-particle.h4{top:83%;left:95%;animation-delay:1.5s}.frame-particle.h5{top:102%;left:50%;animation-delay:2s}.frame-particle.h6{top:83%;left:5%;animation-delay:2.5s}.frame-particle.h7{top:50%;left:-2%;animation-delay:3s}.frame-particle.h8{top:17%;left:5%;animation-delay:3.5s}
 
 .page2-title{position:relative;margin:0 0 24px;top:18px;font-size:18px;line-height:1.25;font-weight:700;text-align:center;letter-spacing:.15px;color:rgba(255,255,255,.90);text-shadow:0 4px 18px rgba(0,0,0,.38)}.page2-title::after{content:'';display:block;width:56px;height:1px;margin:10px auto 0;background:linear-gradient(90deg,transparent,rgba(230,194,166,.78),transparent);opacity:.8}
 
 /* Караоке */
 .lyric-container{width:100%;max-width:340px;height:96px;display:flex;align-items:center;justify-content:center;margin:0 0 13px;padding:0 4px;position:relative}.lyric-text{position:relative;width:100%;height:80px;margin:0;border-radius:20px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(160deg,rgba(255,255,255,.065),rgba(255,255,255,.018));backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:0 18px 38px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.055);overflow:hidden;text-shadow:0 2px 12px rgba(0,0,0,.46)}.lyric-text::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 20%,rgba(255,255,255,.045) 48%,transparent 76%);transform:translateX(-100%);animation:lyricSheen 8s ease-in-out infinite;pointer-events:none}@keyframes lyricSheen{0%,72%,100%{transform:translateX(-100%);opacity:0}78%{opacity:.8}88%{transform:translateX(100%);opacity:0}}
-.lyric-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10px 20px;opacity:0;transform:translate3d(0,8px,0) scale(.992);transition:opacity .18s ease,transform .22s cubic-bezier(.22,1,.36,1);pointer-events:none}.lyric-layer.active{opacity:1;transform:none}.lyric-layer.leaving{opacity:0;transform:translate3d(0,-6px,0) scale(.994)}.lyric-line{width:100%;text-align:center;line-height:1.48;font-size:16.5px;font-weight:500;word-spacing:.03em}.karaoke-loader{display:inline-flex;align-items:flex-end;justify-content:center;gap:7px;min-height:24px}.karaoke-loader-dot{width:7px;height:7px;border-radius:50%;background:rgba(242,198,214,.94);box-shadow:0 0 10px rgba(232,184,201,.38);animation:kLoader 1.05s cubic-bezier(.22,1,.36,1) infinite}.karaoke-loader-dot:nth-child(1){animation-delay:-.7s}.karaoke-loader-dot:nth-child(2){animation-delay:-.45s}.karaoke-loader-dot:nth-child(3){animation-delay:-.2s}@keyframes kLoader{0%,100%{transform:translateY(0) scale(.78);opacity:.2}28%{transform:translateY(-7px) scale(1.12);opacity:1}52%{transform:translateY(-1px) scale(1.02);opacity:.78}72%{transform:translateY(0) scale(.88);opacity:.42}}
-.karaoke-word{display:inline-block;white-space:nowrap;margin-right:.28em;color:rgba(255,255,255,.24);opacity:.48;transition:color .10s ease,opacity .10s ease,transform .10s ease}.karaoke-word.sung{color:rgba(255,255,255,.86);opacity:.96}.karaoke-word.current{color:#f0c5d4;opacity:1;transform:translateY(-1px) scale(1.015);text-shadow:0 0 6px rgba(235,165,191,.22)}.karaoke-word.current::after{content:'';display:block;height:1px;margin:2px auto 0;width:64%;border-radius:999px;background:linear-gradient(90deg,transparent,rgba(230,190,160,.82),transparent)}
+.lyric-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10px 20px;opacity:0;transform:translate3d(0,8px,0) scale(.992);filter:blur(3.5px);transition:opacity .34s ease,transform .44s cubic-bezier(.22,1,.36,1),filter .36s ease;pointer-events:none}.lyric-layer.active{opacity:1;transform:none;filter:blur(0)}.lyric-layer.leaving{opacity:0;transform:translate3d(0,-6px,0) scale(.994);filter:blur(3px)}.lyric-line{width:100%;text-align:center;line-height:1.48;font-size:16.5px;font-weight:500;word-spacing:.03em}.karaoke-loader{display:inline-flex;align-items:flex-end;justify-content:center;gap:7px;min-height:24px}.karaoke-loader-dot{width:7px;height:7px;border-radius:50%;background:rgba(242,198,214,.94);box-shadow:0 0 10px rgba(232,184,201,.38);animation:kLoader 1.05s cubic-bezier(.22,1,.36,1) infinite}.karaoke-loader-dot:nth-child(1){animation-delay:-.7s}.karaoke-loader-dot:nth-child(2){animation-delay:-.45s}.karaoke-loader-dot:nth-child(3){animation-delay:-.2s}@keyframes kLoader{0%,100%{transform:translateY(0) scale(.78);opacity:.2}28%{transform:translateY(-7px) scale(1.12);opacity:1}52%{transform:translateY(-1px) scale(1.02);opacity:.78}72%{transform:translateY(0) scale(.88);opacity:.42}}
+.karaoke-word{display:inline-block;white-space:nowrap;margin-right:.28em;color:rgba(255,255,255,.24);opacity:.46;transition:color .16s ease,opacity .16s ease,transform .18s cubic-bezier(.22,1,.36,1),text-shadow .18s ease}.karaoke-word.sung{color:rgba(255,255,255,.88);opacity:.96}.karaoke-word.current{color:#f0c5d4;opacity:1;transform:translateY(-1px) scale(1.02);text-shadow:0 0 8px rgba(235,165,191,.34)}.karaoke-word.current::after{content:'';display:block;height:1px;margin:2px auto 0;width:64%;border-radius:999px;background:linear-gradient(90deg,transparent,rgba(230,190,160,.82),transparent)}
 .song-time{width:90%;max-width:320px;display:flex;justify-content:space-between;font-size:11px;opacity:.48;letter-spacing:.4px;margin:-10px 0 6px;font-variant-numeric:tabular-nums}.song-seek{width:90%;max-width:320px;height:24px;position:relative;margin:0 auto 9px;cursor:pointer;touch-action:none}.song-seek-track,.song-seek-fill{position:absolute;left:0;right:0;top:10px;height:4px;border-radius:99px}.song-seek-track{background:rgba(255,255,255,.09)}.song-seek-fill{right:auto;width:100%;transform:scaleX(0);transform-origin:left center;background:linear-gradient(90deg,#8a647b,#d6a0b3,#c6a47e);box-shadow:0 0 10px rgba(220,167,188,.22)}.song-seek-thumb{position:absolute;top:6px;left:0;width:14px;height:14px;border-radius:50%;transform:translateX(-50%);background:#e6b1c2;box-shadow:0 0 12px rgba(230,177,194,.45);transition:transform .15s ease}.song-seek:hover .song-seek-thumb,.song-seek.dragging .song-seek-thumb{transform:translateX(-50%) scale(1.1)}.song-seek:focus-visible{outline:2px solid rgba(230,177,194,.55);outline-offset:4px;border-radius:10px}
 .song-controls{width:90%;max-width:320px;display:grid;grid-template-columns:48px 48px 48px 1fr;gap:7px;align-items:center;margin-top:1px}.round-control,.focus-control{width:100%;min-height:40px;margin:0;padding:10px 8px;border-radius:999px;background:rgba(255,255,255,.055);color:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.10);box-shadow:0 8px 18px rgba(0,0,0,.16);font-size:12px}.round-control::after,.focus-control::after{display:none}.main-control{background:rgba(220,173,192,.14);color:rgba(255,255,255,.92);border-color:rgba(225,180,198,.24);font-size:14px}.focus-control{padding-inline:14px}
 
@@ -186,13 +186,17 @@ body.page2-open>.home-ambient,body.page2-open>.content,body.page2-open>.music-bt
 }
 
 @media(max-width:700px){
-  .home-tools{gap:8px}.tool-card{padding:12px;min-height:82px}.song-controls{grid-template-columns:46px 46px 46px 1fr;gap:6px}.page2-nav{padding:0 12px}.page2-nav-btn{padding:8px 10px;font-size:11px}.photo-equalizer{inset:-41px;width:calc(100% + 82px);height:calc(100% + 82px)}
+  .message-card{backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+  .lyric-layer{filter:blur(2.6px)}
+  .lyric-layer.active{filter:blur(0)}
+  .lyric-layer.leaving{filter:blur(2.3px)}
+  .home-tools{gap:8px}.tool-card{padding:12px;min-height:82px}.song-controls{grid-template-columns:46px 46px 46px 1fr;gap:6px}.page2-nav{padding:0 12px}.page2-nav-btn{padding:8px 10px;font-size:11px}
 }
 @media(max-width:430px){.home-tools{grid-template-columns:1fr}.tool-card{min-height:auto}.home-actions{gap:7px}.home-action{font-size:10.5px;padding:9px 8px}.history-sheet{padding:12px}.history-card{padding:19px}.final-panel{width:calc(100vw - 26px);padding:26px 19px 20px;border-radius:26px}.final-title{font-size:24px}.final-text{font-size:14px;max-width:290px}.song-controls{grid-template-columns:44px 44px 44px 1fr}}
 @media(max-height:700px){#page2{padding-top:58px}.photo-frame{width:160px;height:160px;flex-basis:160px}.page2-title{font-size:17px;margin-bottom:22px}.lyric-container{height:84px}.lyric-text{height:72px}.lyric-line{font-size:15.2px}.lyric-layer{padding:10px 14px}.final-panel{padding-top:21px;padding-bottom:17px}.final-heart{margin-bottom:12px}.final-title{margin-bottom:9px}.final-text{margin-bottom:16px}}
 
 /* Во время воспроизведения интерфейс сохраняет атмосферу, но прекращает дорогие бесконечные перерисовки. */
-body.audio-first .page2-ambient>* ,body.audio-first #page2::before,body.audio-first #page2::after,body.audio-first .photo-frame::before,body.audio-first .photo-frame::after,body.audio-first .frame-particle{animation:none!important}
+body.audio-first .page2-lightfield{animation-duration:46s}body.audio-first .page2-bloom-a{animation-duration:34s}body.audio-first .page2-bloom-b{animation-duration:38s}body.audio-first .ambient-orb{animation-duration:42s}body.audio-first .ambient-glow{animation-duration:26s}body.audio-first .light-streak{animation-duration:24s}body.audio-first .page2-particle{animation-duration:12s}body.audio-first .photo-frame::before{animation-duration:22s}body.audio-first .photo-frame::after{animation-duration:16s}body.audio-first .frame-heart{animation-duration:8s}
 body.audio-first .page2-lightfield{opacity:.78}.audio-first .page2-bloom,.audio-first .ambient-orb{opacity:.13}.audio-first .ambient-glow{opacity:.34}.audio-first .lyric-text::before{animation:none;transform:translateX(-15%);opacity:.25}
 body.audio-first .photo-frame{box-shadow:0 0 22px rgba(225,147,177,.18),0 0 68px rgba(112,79,145,.09)}body.audio-first .photo-frame img{animation:photoFloatPlayback 34s ease-in-out infinite}@keyframes photoFloatPlayback{0%,100%{transform:translate3d(0,0,0) scale(1.016)}50%{transform:translate3d(-.45px,-.35px,0) scale(1.022)}}
 body.audio-first .lyric-text{backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
@@ -332,19 +336,16 @@ body.audio-first .page2-title{color:rgba(255,255,255,.90)}
     </div>
 
     <div class="inner">
-      <div class="photo-frame eq-idle">
-        <canvas class="photo-equalizer" id="photoEqualizer" aria-hidden="true"></canvas>
+      <div class="photo-frame">
         <div class="photo-window">
           <img src="photo1.jpg" alt="Твое фото" loading="lazy" decoding="async">
         </div>
-        <span class="frame-particle h1" aria-hidden="true"></span>
-        <span class="frame-particle h2" aria-hidden="true"></span>
-        <span class="frame-particle h3" aria-hidden="true"></span>
-        <span class="frame-particle h4" aria-hidden="true"></span>
-        <span class="frame-particle h5" aria-hidden="true"></span>
-        <span class="frame-particle h6" aria-hidden="true"></span>
-        <span class="frame-particle h7" aria-hidden="true"></span>
-        <span class="frame-particle h8" aria-hidden="true"></span>
+        <span class="frame-heart fh1" aria-hidden="true">♡</span>
+        <span class="frame-heart fh2" aria-hidden="true">♡</span>
+        <span class="frame-heart fh3" aria-hidden="true">♥</span>
+        <span class="frame-heart fh4" aria-hidden="true">♡</span>
+        <span class="frame-heart fh5" aria-hidden="true">♥</span>
+        <span class="frame-heart fh6" aria-hidden="true">♡</span>
       </div>
 
       <h2 class="page2-title">Алина, это место — только для тебя</h2>
@@ -1212,8 +1213,6 @@ if (window.Telegram && window.Telegram.WebApp) {
       finalShown = true;
       cancelLyricScheduler();
       songPlayer.pause();
-      stopPhotoEqualizer();
-      if (photoFrameEl) photoFrameEl.classList.add('eq-idle');
 
       if (finalTimeoutId) clearTimeout(finalTimeoutId);
       finalTimeoutId = setTimeout(() => {
@@ -1279,10 +1278,8 @@ if (window.Telegram && window.Telegram.WebApp) {
     }
 
     function resetSongView() {
-      stopPhotoEqualizer();
       cancelLyricScheduler();
       if (progressTimerId) { clearTimeout(progressTimerId); progressTimerId = null; }
-      if (photoFrameEl) photoFrameEl.classList.add('eq-idle');
       songPlayer.pause();
       songPlayer.currentTime = 0;
       lyricIndex = 0;
@@ -1330,8 +1327,6 @@ if (window.Telegram && window.Telegram.WebApp) {
 
     function closePage2() {
       document.body.classList.remove('page2-open', 'final-open', 'audio-first');
-      stopPhotoEqualizer();
-      if (photoFrameEl) photoFrameEl.classList.add('eq-idle');
       page2.classList.remove('active');
       resetSongView();
       if (!timerWakeId) scheduleTimerUpdate();
@@ -1351,131 +1346,6 @@ if (window.Telegram && window.Telegram.WebApp) {
 
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden && !document.body.classList.contains('page2-open') && !timerWakeId) scheduleTimerUpdate();
-    });
-
-    // ===== Лёгкий круговой эквалайзер вокруг фото =====
-    // Только canvas + редкий таймер. Без Web Audio/FFT: звук не проходит через JS.
-    const photoFrameEl = document.querySelector('.photo-frame');
-    const photoEqualizer = document.getElementById('photoEqualizer');
-    let photoEqTimer = null;
-    let photoEqGeometry = null;
-    let photoEqCtx = null;
-
-    function resizePhotoEqualizer() {
-      if (!photoEqualizer || !photoFrameEl) return false;
-      const rect = photoFrameEl.getBoundingClientRect();
-      if (rect.width < 2) return false;
-
-      const size = 220;
-      photoEqualizer.width = size;
-      photoEqualizer.height = size;
-      photoEqCtx = photoEqualizer.getContext('2d');
-      if (!photoEqCtx) return false;
-
-      const cssSize = photoEqualizer.getBoundingClientRect().width || rect.width + 82;
-      const scale = size / cssSize;
-      const radius = rect.width * .5 * scale + 10 * scale;
-      const maxBar = 7.2 * scale;
-      const count = 28;
-      const bars = new Array(count);
-
-      for (let i = 0; i < count; i++) {
-        const a = Math.PI * 2 * i / count - Math.PI / 2;
-        bars[i] = {
-          cos: Math.cos(a),
-          sin: Math.sin(a),
-          phase: i * .73 + .4
-        };
-      }
-
-      photoEqGeometry = { size, cx:size/2, cy:size/2, radius, maxBar, bars };
-      return true;
-    }
-
-    function drawPhotoEqualizer(idle = false) {
-      if (!photoEqCtx && !resizePhotoEqualizer()) return;
-      const g = photoEqGeometry;
-      const ctx = photoEqCtx;
-      const t = songPlayer.currentTime || 0;
-
-      ctx.clearRect(0, 0, g.size, g.size);
-      ctx.lineCap = 'round';
-
-      // Мягкое базовое кольцо: широкий прозрачный stroke вместо blur.
-      ctx.beginPath();
-      ctx.arc(g.cx, g.cy, g.radius - 2, 0, Math.PI * 2);
-      ctx.lineWidth = 4;
-      ctx.strokeStyle = idle ? 'rgba(235,181,202,.055)' : 'rgba(235,181,202,.075)';
-      ctx.stroke();
-
-      // Сначала широкое полупрозрачное свечение.
-      ctx.beginPath();
-      for (let i = 0; i < g.bars.length; i++) {
-        const b = g.bars[i];
-        const beat = .5 + .5 * Math.sin(t * 6.0);
-        const motion = .5 + .5 * Math.sin(t * 1.55 + b.phase);
-        const detail = .5 + .5 * Math.sin(t * 11.5 + b.phase * 1.5);
-        const level = Math.max(.08, Math.min(1, .16 + beat * (.34 + .12 * motion) + detail * .11));
-        const len = (.22 + level * .78) * g.maxBar;
-        ctx.moveTo(g.cx + b.cos * g.radius, g.cy + b.sin * g.radius);
-        ctx.lineTo(g.cx + b.cos * (g.radius + len), g.cy + b.sin * (g.radius + len));
-      }
-      ctx.lineWidth = 6.8;
-      ctx.strokeStyle = idle ? 'rgba(234,170,194,.05)' : 'rgba(234,170,194,.075)';
-      ctx.stroke();
-
-      // Чёткое ядро — один общий stroke.
-      ctx.beginPath();
-      for (let i = 0; i < g.bars.length; i++) {
-        const b = g.bars[i];
-        const beat = .5 + .5 * Math.sin(t * 6.0);
-        const motion = .5 + .5 * Math.sin(t * 1.55 + b.phase);
-        const detail = .5 + .5 * Math.sin(t * 11.5 + b.phase * 1.5);
-        const level = Math.max(.08, Math.min(1, .16 + beat * (.34 + .12 * motion) + detail * .11));
-        const len = (.22 + level * .78) * g.maxBar;
-        ctx.moveTo(g.cx + b.cos * g.radius, g.cy + b.sin * g.radius);
-        ctx.lineTo(g.cx + b.cos * (g.radius + len), g.cy + b.sin * (g.radius + len));
-      }
-      ctx.lineWidth = 4.1;
-      ctx.strokeStyle = idle ? 'rgba(236,184,202,.18)' : 'rgba(236,184,202,.68)';
-      ctx.stroke();
-    }
-
-    function getPhotoEqInterval() {
-      return document.body.classList.contains('perf-low') ? 150 :
-             document.body.classList.contains('perf-mobile') ? 125 : 105;
-    }
-
-    function photoEqualizerLoop() {
-      photoEqTimer = null;
-      if (document.hidden || !page2.classList.contains('active') || !songStarted || finalShown || songPlayer.paused) {
-        drawPhotoEqualizer(true);
-        return;
-      }
-      drawPhotoEqualizer(false);
-      photoEqTimer = setTimeout(photoEqualizerLoop, getPhotoEqInterval());
-    }
-
-    function startPhotoEqualizer() {
-      if (!photoEqualizer || !photoFrameEl) return;
-      if (!photoEqGeometry) resizePhotoEqualizer();
-      photoFrameEl.classList.remove('eq-idle');
-      if (photoEqTimer) clearTimeout(photoEqTimer);
-      photoEqualizerLoop();
-    }
-
-    function stopPhotoEqualizer() {
-      if (photoEqTimer) {
-        clearTimeout(photoEqTimer);
-        photoEqTimer = null;
-      }
-      if (photoFrameEl) photoFrameEl.classList.add('eq-idle');
-      drawPhotoEqualizer(true);
-    }
-
-    window.addEventListener('resize', () => {
-      photoEqGeometry = null;
-      if (page2.classList.contains('active')) drawPhotoEqualizer(!songStarted || songPlayer.paused);
     });
 
     //  Послушать заново
@@ -1706,7 +1576,6 @@ if (window.Telegram && window.Telegram.WebApp) {
     songPlayer.addEventListener('play', () => {
       updatePlayButton();
       setAudioFirstMode(true);
-      startPhotoEqualizer();
       if (!progressTimerId && page2.classList.contains('active') && songStarted) {
         progressTimerId = setTimeout(updateSongProgress, getProgressInterval());
       }
@@ -1716,7 +1585,6 @@ if (window.Telegram && window.Telegram.WebApp) {
       updatePlayButton();
       setAudioFirstMode(false);
       cancelLyricScheduler();
-      stopPhotoEqualizer();
       if (progressTimerId) {
         clearTimeout(progressTimerId);
         progressTimerId = null;
@@ -1772,13 +1640,7 @@ if (window.Telegram && window.Telegram.WebApp) {
     });
 
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        if (photoEqTimer) {
-          clearTimeout(photoEqTimer);
-          photoEqTimer = null;
-        }
-      } else if (songStarted && page2.classList.contains('active') && !finalShown && !songPlayer.paused) {
-        startPhotoEqualizer();
+      if (!document.hidden && songStarted && page2.classList.contains('active') && !finalShown && !songPlayer.paused) {
         if (!progressTimerId) progressTimerId = setTimeout(updateSongProgress, getProgressInterval());
         scheduleLyricSync(songPlayer.currentTime || 0);
       }
