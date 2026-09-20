@@ -1404,7 +1404,15 @@
     .intro-card { background:linear-gradient(150deg,rgba(255,255,255,.075),rgba(255,255,255,.026)); border-color:rgba(255,255,255,.10); box-shadow:0 30px 90px rgba(0,0,0,.46), inset 0 1px 0 rgba(255,255,255,.055); }
     .intro-title { color:rgba(255,255,255,.96); font-size:27px; letter-spacing:.1px; }
     .intro-subtitle { color:rgba(255,255,255,.60); }
-    .intro-mark { width:9px; height:9px; background:#deb7c7; box-shadow:0 0 18px rgba(222,183,199,.68); }
+    .intro-mark {
+      display:flex; align-items:center; justify-content:center;
+      width:40px; height:40px; margin:0 auto 16px;
+      color:#e4bbc9; background:rgba(228,187,201,.08);
+      border:1px solid rgba(228,187,201,.14); border-radius:50%;
+      box-shadow:0 0 22px rgba(228,187,201,.16);
+      animation:introMark 2.8s ease-in-out infinite;
+    }
+    .intro-mark svg { width:24px; height:24px; display:block; }
 
     .final-screen { background:radial-gradient(circle at 50% 36%,rgba(87,65,101,.30) 0%,rgba(13,10,16,.97) 58%,#07060a 100%); }
     .final-title { color:rgba(255,255,255,.96); font-size:28px; }
@@ -1435,6 +1443,17 @@
     @keyframes grainMove { from{transform:translate3d(0,0,0)} to{transform:translate3d(18px,-14px,0)} }
 
     .content { z-index:2; }
+
+    .home-tools { position:relative; z-index:3; opacity:1; visibility:visible; }
+    .tool-card, .message-card, .time-block, button {
+      will-change:transform, opacity, box-shadow, filter;
+    }
+
+    @media (max-height: 760px) {
+      body { justify-content:flex-start; overflow-y:auto; }
+      .content { margin-block:auto; padding-top:12px; padding-bottom:20px; }
+      .home-tools { margin-top:10px; }
+    }
     .home-ambient { z-index:0; }
     .timer { cursor:pointer; user-select:none; }
     .timer:active { transform:scale(.995); }
@@ -1451,11 +1470,19 @@
     .text-action { width:auto; padding:8px 0; margin:3px 0 0; background:none; border:0; box-shadow:none; color:rgba(255,255,255,.54); font-size:12px; font-weight:600; }
     .text-action::after { display:none; }
     .text-action:hover { transform:none; color:rgba(255,255,255,.82); box-shadow:none; }
+    .home-status {
+      margin-top:10px; font-size:11px; letter-spacing:.4px;
+      color:rgba(255,255,255,.42); text-align:center;
+    }
 
-    .photo-frame img { animation:photoFloat 20s cubic-bezier(.45,.05,.55,.95) infinite; }
+    .photo-frame img {
+      animation:photoFloat 28s cubic-bezier(.37,0,.63,1) infinite;
+      transform-origin:center center;
+      will-change:transform,filter;
+    }
     @keyframes photoFloat {
-      0%,100% { transform:scale(1.012) translate3d(0,0,0); filter:brightness(.985) saturate(.98); }
-      50% { transform:scale(1.028) translate3d(-1px,-1px,0); filter:brightness(1.025) saturate(1.01); }
+      0%,100% { transform:scale(1.006) translate3d(0,0,0); filter:brightness(.985) saturate(.985); }
+      50% { transform:scale(1.018) translate3d(-0.8px,-0.7px,0); filter:brightness(1.018) saturate(1.005); }
     }
     .photo-frame { animation:photoAura 9s ease-in-out infinite; }
     @keyframes photoAura {
@@ -1465,7 +1492,7 @@
 
     .lyric-layer { transition-duration:.34s; }
     .lyric-layer.active { transition-timing-function:cubic-bezier(.22,1,.36,1); }
-    .karaoke-word { filter:blur(1.05px); opacity:.44; transition:color .14s ease, filter .16s ease, opacity .16s ease, transform .16s cubic-bezier(.22,1,.36,1), text-shadow .16s ease; }
+    .karaoke-word { filter:blur(0.72px); opacity:.50; transition:color .14s ease, filter .16s ease, opacity .16s ease, transform .16s cubic-bezier(.22,1,.36,1), text-shadow .16s ease; }
     .karaoke-word.sung { filter:blur(0); opacity:.90; }
     .karaoke-word.current { filter:blur(0); opacity:1; transform:translateY(-1px) scale(1.015); }
 
@@ -1603,6 +1630,7 @@
       </button>
     </div>
 
+    <p class="home-status" id="homeStatus" aria-live="polite">Сегодня — день нашей истории.</p>
     <button class="text-action" id="timerModeBtn" type="button">Показать общее время</button>
   </div>
 
@@ -2149,6 +2177,7 @@
     // Вставь сюда свой оригинальный/лицензированный текст и тайминги.
     // Формат: [{ time: 0, text: "..." }, { time: 14, text: "..." }, ...]
     const LYRICS = [
+      { time: 0,    text: "..." },
       { time: 14,   text: "Детка, на мне висит метка, я — твоя мишень" },
       { time: 17,   text: "Ты — конфетка в упаковке среди муляжей" },
       { time: 21,   text: "Я приму твой выстрел, не могу терпеть уже" },
@@ -2200,8 +2229,12 @@
       { time: 165,  text: "Как делишки у моей малышки, алло?" },
       { time: 169,  text: "Как делишки у моей малышки, алло?" },
       { time: 173,  text: "Как делишки у моей малышки, алло?" },
-      { time: 176,  text: "Как делишки у моей малышки? Я, я!" }
+      { time: 176,  text: "Как делишки у моей малышки? Я, я!" },
+      { time: 180,  text: "..." }
     ];
+
+    // Защита от случайно переставленного таймкода: синхронизация всегда идёт по времени.
+    LYRICS.sort((a, b) => a.time - b.time);
 
     let lyricIndex = 0;
     let progressRafId = null;
@@ -2329,6 +2362,17 @@
       const oldLayer = lyricLayerIndex >= 0 ? layerNodes[lyricLayerIndex] : null;
 
       prepareKaraokeLine(LYRICS[index].text, nextLayer);
+
+      const duration = songPlayer.duration && isFinite(songPlayer.duration)
+        ? songPlayer.duration : REFERENCE_DURATION;
+      const nextTime = LYRICS[index + 1]
+        ? getScaledLyricTime(LYRICS[index + 1].time, duration)
+        : duration;
+      const thisTime = getScaledLyricTime(LYRICS[index].time, duration);
+      const gap = Math.max(0, nextTime - thisTime);
+      const transitionMs = Math.max(120, Math.min(420, gap * 180));
+
+      nextLayer.style.setProperty('--lyric-transition', `${transitionMs}ms`);
       nextLayer.classList.remove('active', 'leaving');
       void nextLayer.offsetWidth;
 
@@ -2336,6 +2380,7 @@
       lyricLayerIndex = nextLayerIndex;
 
       if (oldLayer) {
+        oldLayer.style.setProperty('--lyric-transition', `${transitionMs}ms`);
         oldLayer.classList.remove('active');
         oldLayer.classList.add('leaving');
       }
@@ -2344,7 +2389,7 @@
       updateKaraokeWords(currentTime);
 
       if (oldLayer) {
-        setTimeout(() => oldLayer.classList.remove('leaving'), 560);
+        setTimeout(() => oldLayer.classList.remove('leaving'), transitionMs + 80);
       }
     }
 
@@ -2564,6 +2609,7 @@
     const playPauseBtn = document.getElementById('playPauseBtn');
     const focusBtn = document.getElementById('focusBtn');
     const easterToast = document.getElementById('easterToast');
+    const homeStatus = document.getElementById('homeStatus');
 
     let timerMode = 0;
     let photoTapCount = 0;
@@ -2632,6 +2678,8 @@
     }
 
     function updateHomeTools() {
+      const totalDays = Math.floor(getTotalSeconds() / 86400);
+      if (homeStatus) homeStatus.textContent = `Сегодня — ${totalDays + 1}-й день нашей истории.`;
       const now = new Date();
       const next = getNextMonthlyDate(now);
       const ms = next.getTime() - now.getTime();
@@ -2700,6 +2748,16 @@
     historyCard.addEventListener('click', openHistory);
     historyClose.addEventListener('click', closeHistory);
     historySheet.addEventListener('click', e => { if (e.target === historySheet) closeHistory(); });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeHistory();
+        if (page2.classList.contains('focus-mode')) {
+          page2.classList.remove('focus-mode');
+          focusBtn.textContent = 'Фокус';
+        }
+      }
+    });
 
     // ===== Плавный мини-плеер =====
     function updatePlayButton() {
@@ -2779,6 +2837,20 @@
     focusBtn.addEventListener('click', () => {
       page2.classList.toggle('focus-mode');
       focusBtn.textContent = page2.classList.contains('focus-mode') ? 'Обычный вид' : 'Фокус';
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!page2.classList.contains('active') || !songStarted) return;
+      if (e.code === 'Space' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        if (songPlayer.paused) songPlayer.play().catch(() => {});
+        else songPlayer.pause();
+        updatePlayButton();
+      }
+      if (e.key.toLowerCase() === 'f') {
+        page2.classList.toggle('focus-mode');
+        focusBtn.textContent = page2.classList.contains('focus-mode') ? 'Обычный вид' : 'Фокус';
+      }
     });
 
     // ===== Пасхалка на фото =====
