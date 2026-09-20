@@ -787,20 +787,24 @@ if (window.Telegram && window.Telegram.WebApp) {
       nextLayer.classList.remove('active', 'leaving');
       void nextLayer.offsetWidth;
 
+      // Оставляем старый слой active и добавляем leaving в тот же кадр:
+      // браузер видит переход из полностью видимого состояния в blur/fade,
+      // поэтому карточка не исчезает рывком.
       if (oldLayer) {
-        oldLayer.classList.remove('active');
         oldLayer.classList.add('leaving');
       }
 
       messageLayerIndex = nextIndex;
       card.classList.add('show');
-      requestAnimationFrame(() => nextLayer.classList.add('active'));
+      requestAnimationFrame(() => {
+        nextLayer.classList.add('active');
+      });
 
       if (oldLayer) {
         messageTransitionTimer = setTimeout(() => {
-          oldLayer.classList.remove('leaving');
+          oldLayer.classList.remove('active', 'leaving');
           messageTransitionTimer = null;
-        }, 650);
+        }, 820);
       }
     }
 
@@ -939,9 +943,6 @@ if (window.Telegram && window.Telegram.WebApp) {
     // Формат: [{ time: 0, text: "..." }, { time: 14, text: "..." }, ...]
     const LYRICS = [
       { time: 0,    text: "..." },
-      { time: 8,    text: "3.." },
-      { time: 10,    text: "2.." },
-      { time: 12,    text: "1.." },
       { time: 14,   text: "Детка, на мне висит метка, я — твоя мишень" },
       { time: 17,   text: "Ты — конфетка в упаковке среди муляжей" },
       { time: 21,   text: "Я приму твой выстрел, не могу терпеть уже" },
@@ -1237,7 +1238,7 @@ if (window.Telegram && window.Telegram.WebApp) {
 
       const nextLine = LYRICS[index + 1];
       const gap = nextLine ? Math.max(0.25, nextLine.time - LYRICS[index].time) : 2;
-      const transition = Math.min(0.32, Math.max(0.20, gap * 0.18));
+      const transition = Math.min(0.72, Math.max(0.52, gap * 0.24));
       nextLayer.style.setProperty('--lyric-transition', `${transition}s`);
       if (oldLayer) oldLayer.style.setProperty('--lyric-transition', `${transition}s`);
 
@@ -1249,8 +1250,10 @@ if (window.Telegram && window.Telegram.WebApp) {
       activeLyricIndex = index;
       lyricLayerIndex = nextLayerIndex;
 
+      // Старый слой остаётся active, пока получает leaving.
+      // Это создаёт настоящий crossfade: старая строка уходит в blur,
+      // новая одновременно приходит из blur.
       if (oldLayer) {
-        oldLayer.classList.remove('active');
         oldLayer.classList.add('leaving');
       }
 
@@ -1259,7 +1262,7 @@ if (window.Telegram && window.Telegram.WebApp) {
       updateKaraokeWords(currentTime);
 
       if (oldLayer) {
-        setTimeout(() => oldLayer.classList.remove('leaving'), Math.ceil((transition + 0.08) * 1000));
+        setTimeout(() => oldLayer.classList.remove('active', 'leaving'), Math.ceil((transition + 0.14) * 1000));
       }
     }
 
