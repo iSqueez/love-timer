@@ -665,7 +665,7 @@
     .lyric-container {
       width: 100%;
       max-width: 340px;
-      min-height: 118px;
+      height: 96px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -675,91 +675,78 @@
     }
 
     .lyric-text {
-      font-size: 17px;
-      font-weight: 500;
-      text-align: center;
-      line-height: 1.5;
-      opacity: 0;
-      transform: translateY(18px) scale(0.95);
-      filter: blur(8px);
-      will-change: opacity, transform, filter;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.5);
-      padding: 14px 18px;
+      width: 100%;
+      height: 76px;
+      position: relative;
+      margin: 0;
+      padding: 0;
       border-radius: 18px;
-      background: linear-gradient(160deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
+      background: linear-gradient(160deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.04));
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      max-width: 100%;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.20);
+      overflow: hidden;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.5);
     }
 
-    .lyric-text.show {
-      animation: lyricIn 0.68s cubic-bezier(0.22, 1, 0.36, 1) both;
+    .lyric-layer {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-content: center;
+      justify-content: center;
+      align-items: center;
+      row-gap: 2px;
+      padding: 12px 18px;
+      opacity: 0;
+      transform: translateY(8px) scale(0.985);
+      transition:
+        opacity 0.22s ease,
+        transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform;
+      pointer-events: none;
     }
 
-    @keyframes lyricIn {
-      0% {
-        opacity: 0;
-        transform: translateY(18px) scale(0.95);
-        filter: blur(8px);
-      }
-      55% {
-        opacity: 1;
-        transform: translateY(-2px) scale(1.012);
-        filter: blur(1px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        filter: blur(0);
-      }
+    .lyric-layer.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
     }
 
-    /* Караоке-режим: будущие слова размыты, текущее подсвечено */
     .karaoke-word {
       display: inline-block;
-      margin-right: 0.24em;
-      color: rgba(255,255,255,0.30);
-      filter: blur(3.5px);
-      opacity: 0.48;
-      transform: translateY(2px);
+      white-space: nowrap;
+      margin-right: 0.28em;
+      color: rgba(255,255,255,0.42);
+      opacity: 0.78;
+      filter: blur(0.65px);
+      transform: translateY(0);
       transition:
-        color 0.20s ease,
-        filter 0.24s ease,
-        opacity 0.24s ease,
-        transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
-        text-shadow 0.24s ease;
+        color 0.11s ease,
+        filter 0.11s ease,
+        opacity 0.11s ease,
+        transform 0.13s cubic-bezier(0.22, 1, 0.36, 1),
+        text-shadow 0.11s ease;
       will-change: color, filter, opacity, transform;
     }
 
     .karaoke-word.sung {
       color: rgba(255,255,255,0.96);
-      filter: blur(0);
       opacity: 1;
+      filter: blur(0);
       transform: translateY(0);
-      text-shadow: 0 0 12px rgba(255,107,157,0.24);
+      text-shadow: 0 0 8px rgba(255,107,157,0.18);
     }
 
     .karaoke-word.current {
-      color: #ffd8e8;
-      filter: blur(0);
+      color: #ffe2ed;
       opacity: 1;
-      transform: translateY(-1px) scale(1.045);
-      background: linear-gradient(90deg, #ffffff 0%, #ffd7e6 45%, #ffd700 100%);
-      background-size: 180% 100%;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
+      filter: blur(0);
+      transform: translateY(-1px) scale(1.02);
       text-shadow:
-        0 0 8px rgba(255,107,157,0.82),
-        0 0 22px rgba(255,215,0,0.34);
-      animation: karaokePulse 0.9s ease-in-out infinite alternate;
-    }
-
-    @keyframes karaokePulse {
-      from { background-position: 0% 50%; }
-      to   { background-position: 100% 50%; }
+        0 0 7px rgba(255,107,157,0.72),
+        0 0 15px rgba(255,215,0,0.22);
     }
 
     .karaoke-word:last-child {
@@ -904,8 +891,9 @@
     @media (max-height: 700px) {
       .photo-frame { width: 154px; height: 154px; flex-basis: 154px; margin-bottom: 16px; }
       .page2-title { font-size: 18px; margin-bottom: 10px; }
-      .lyric-text { font-size: 15px; padding: 10px 14px; }
-      .lyric-container { min-height: 78px; margin-bottom: 10px; }
+      .lyric-layer { font-size: 15px; padding: 10px 14px; }
+      .lyric-text { height: 68px; }
+      .lyric-container { height: 84px; margin-bottom: 10px; }
       #page2 { padding-top: 60px; }
       .intro-card { padding: 24px 20px 22px; }
       .intro-title { font-size: 23px; }
@@ -1352,12 +1340,15 @@
 
     let lyricIndex = 0;
     let progressRafId = null;
-    let lastShownTime = -1;
     let finalShown = false;
     let finalTimeoutId = null;
-    const SYNC_WINDOW = 0.6;
+    const SYNC_WINDOW = 0;
     let introOpened = false;
     let songStarted = false;
+    let activeLyricIndex = -1;
+    let lyricLayerIndex = -1;
+    let karaokeWordWeights = [];
+    let karaokeTotalWeight = 0;
 
     function formatTime(seconds) {
       if (!isFinite(seconds) || seconds < 0) return '0:00';
@@ -1366,15 +1357,22 @@
       return `${mins}:${String(secs).padStart(2, '0')}`;
     }
 
-    let activeLyricIndex = -1;
-    let karaokeWordWeights = [];
-    let karaokeTotalWeight = 0;
+    function initLyricLayers() {
+      lyricText.innerHTML = `
+        <span class="lyric-layer"></span>
+        <span class="lyric-layer"></span>
+      `;
+      lyricLayerIndex = -1;
+      activeLyricIndex = -1;
+    }
 
-    function prepareKaraokeLine(text) {
-      lyricText.innerHTML = '';
+    function prepareKaraokeLine(text, layer) {
+      layer.innerHTML = '';
 
       if (!text || text === '...') {
-        lyricText.textContent = text || '';
+        const span = document.createElement('span');
+        span.textContent = text || '';
+        layer.appendChild(span);
         karaokeWordWeights = [];
         karaokeTotalWeight = 0;
         return;
@@ -1383,7 +1381,7 @@
       const words = text.trim().split(/\s+/);
       karaokeWordWeights = words.map(word => {
         const clean = word.replace(/[^\p{L}\p{N}]+/gu, '');
-        return Math.max(1, clean.length * 0.82);
+        return Math.max(1, clean.length * 0.9);
       });
       karaokeTotalWeight = karaokeWordWeights.reduce((sum, value) => sum + value, 0);
 
@@ -1392,7 +1390,7 @@
         span.className = 'karaoke-word';
         span.textContent = word;
         span.dataset.index = String(i);
-        lyricText.appendChild(span);
+        layer.appendChild(span);
       });
     }
 
@@ -1403,43 +1401,67 @@
       const line = LYRICS[activeLyricIndex];
       const nextLine = LYRICS[activeLyricIndex + 1];
       const start = line.time;
-      const rawEnd = nextLine ? nextLine.time : start + 3;
-      const end = Math.max(start + 0.8, rawEnd);
-      const progress = Math.max(0, Math.min(0.999, (currentTime - start) / (end - start)));
+      const end = nextLine ? nextLine.time : Math.max(start + 2.5, songPlayer.duration || start + 2.5);
+      const duration = Math.max(0.6, end - start);
+      const progress = Math.max(0, Math.min(1, (currentTime - start) / duration));
 
-      let target = progress * karaokeTotalWeight;
-      let currentIndex = karaokeWordWeights.length - 1;
-      let accumulated = 0;
+      let wordCursor = 0;
+      const activeLayer = lyricText.querySelector('.lyric-layer.active');
+      if (!activeLayer) return;
 
-      for (let i = 0; i < karaokeWordWeights.length; i++) {
-        accumulated += karaokeWordWeights[i];
-        if (target < accumulated) {
-          currentIndex = i;
+      activeLayer.querySelectorAll('.karaoke-word').forEach((node, i) => {
+        const wordStart = wordCursor / karaokeTotalWeight;
+        const wordEnd = (wordCursor + karaokeWordWeights[i]) / karaokeTotalWeight;
+        const sung = progress >= wordEnd;
+        const current = !sung && progress >= wordStart;
+
+        node.classList.toggle('sung', sung);
+        node.classList.toggle('current', current);
+        wordCursor += karaokeWordWeights[i];
+      });
+    }
+
+    function renderLyric(index, currentTime) {
+      if (index < 0 || index >= LYRICS.length) return;
+      if (index === activeLyricIndex) {
+        updateKaraokeWords(currentTime);
+        return;
+      }
+
+      const layers = lyricText.querySelectorAll('.lyric-layer');
+      if (layers.length !== 2) initLyricLayers();
+
+      const layerNodes = lyricText.querySelectorAll('.lyric-layer');
+      const nextLayerIndex = lyricLayerIndex === -1 ? 0 : 1 - lyricLayerIndex;
+      const nextLayer = layerNodes[nextLayerIndex];
+      const oldLayer = lyricLayerIndex >= 0 ? layerNodes[lyricLayerIndex] : null;
+
+      prepareKaraokeLine(LYRICS[index].text, nextLayer);
+      nextLayer.classList.remove('active');
+      activeLyricIndex = index;
+      lyricLayerIndex = nextLayerIndex;
+
+      requestAnimationFrame(() => {
+        if (oldLayer) oldLayer.classList.remove('active');
+        nextLayer.classList.add('active');
+        updateKaraokeWords(currentTime);
+      });
+    }
+
+    function syncLyricToAudio(currentTime) {
+      let targetIndex = 0;
+      for (let i = 1; i < LYRICS.length; i++) {
+        if (currentTime >= LYRICS[i].time - SYNC_WINDOW) {
+          targetIndex = i;
+        } else {
           break;
         }
       }
 
-      const wordNodes = lyricText.querySelectorAll('.karaoke-word');
-      wordNodes.forEach((node, i) => {
-        node.classList.toggle('sung', i < currentIndex);
-        node.classList.toggle('current', i === currentIndex);
-      });
-    }
-
-    function showLyric(index) {
-      if (index >= LYRICS.length) return;
-
-      const nextText = LYRICS[index].text;
-      activeLyricIndex = -1;
-      lyricText.classList.remove('show');
-
-      setTimeout(() => {
-        prepareKaraokeLine(nextText);
-        activeLyricIndex = index;
-        void lyricText.offsetWidth;
-        lyricText.classList.add('show');
-        updateKaraokeWords(songPlayer.currentTime);
-      }, 170);
+      if (targetIndex !== activeLyricIndex) {
+        renderLyric(targetIndex, currentTime);
+      }
+      lyricIndex = targetIndex;
     }
 
     function showFinal() {
@@ -1477,38 +1499,25 @@
     }
 
     function updateSongProgress() {
-      if (!page2.classList.contains('active')) {
+      if (!page2.classList.contains('active') || !songStarted) {
         progressRafId = null;
         return;
       }
 
       const currentTime = songPlayer.currentTime;
-
       songCurrentTime.textContent = formatTime(currentTime);
 
       if (songPlayer.duration && isFinite(songPlayer.duration)) {
-        const progress = (currentTime / songPlayer.duration) * 100;
+        const progress = Math.min(100, (currentTime / songPlayer.duration) * 100);
         songFill.style.width = progress + '%';
         songDuration.textContent = formatTime(songPlayer.duration);
       }
 
-      while (lyricIndex < LYRICS.length) {
-        const lyric = LYRICS[lyricIndex];
-        if (currentTime >= lyric.time - SYNC_WINDOW) {
-          if (lyricIndex !== lastShownTime) {
-            showLyric(lyricIndex);
-            lastShownTime = lyricIndex;
-          }
-          lyricIndex++;
-        } else {
-          break;
-        }
-      }
-
+      syncLyricToAudio(currentTime);
       updateKaraokeWords(currentTime);
 
       if (songPlayer.duration && isFinite(songPlayer.duration) && !finalShown) {
-        if (currentTime >= songPlayer.duration - 0.5 || songPlayer.ended) {
+        if (currentTime >= songPlayer.duration - 0.12 || songPlayer.ended) {
           showFinal();
         }
       }
@@ -1516,21 +1525,18 @@
       progressRafId = requestAnimationFrame(updateSongProgress);
     }
 
-       function resetSongView() {
+    function resetSongView() {
       songPlayer.pause();
       songPlayer.currentTime = 0;
       lyricIndex = 0;
-      lastShownTime = -1;
-      lyricText.classList.remove('show');
-      lyricText.innerHTML = '';
-      activeLyricIndex = -1;
-      karaokeWordWeights = [];
-      karaokeTotalWeight = 0;
       songFill.style.width = '0%';
       songCurrentTime.textContent = '0:00';
       songDuration.textContent = '0:00';
       finalShown = false;
       finalScreen.classList.remove('active');
+      karaokeWordWeights = [];
+      karaokeTotalWeight = 0;
+      initLyricLayers();
     }
 
     function openPage2() {
@@ -1552,19 +1558,9 @@
       songPlayer.currentTime = 0;
       songStarted = true;
 
+      initLyricLayers();
+      renderLyric(0, 0);
       songPlayer.play().catch(() => {});
-
-      setTimeout(() => {
-        if (LYRICS.length > 0) {
-          activeLyricIndex = 0;
-          prepareKaraokeLine(LYRICS[0].text);
-          void lyricText.offsetWidth;
-          lyricText.classList.add('show');
-          lastShownTime = 0;
-          lyricIndex = 1;
-          updateKaraokeWords(songPlayer.currentTime);
-        }
-      }, 350);
 
       if (!progressRafId) {
         progressRafId = requestAnimationFrame(updateSongProgress);
