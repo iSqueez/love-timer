@@ -90,9 +90,12 @@ h1{font-size:28px;font-weight:800;line-height:1.1;margin-bottom:10px;text-align:
 .reset-btn{width:100%;margin-bottom:20px;padding:12px 20px;background:rgba(255,255,255,.10)!important;color:rgba(255,255,255,.88);border:1px solid rgba(255,255,255,.20);box-shadow:0 4px 14px rgba(0,0,0,.15);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);font-size:13px}
 .message-card{position:relative;width:100%;min-height:110px;padding:0;border-radius:24px;border:1px solid rgba(255,255,255,.18);background:linear-gradient(160deg,rgba(255,255,255,.18),rgba(255,255,255,.07));backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:0 8px 24px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.20);display:grid;align-items:stretch;grid-template-areas:'stack';text-align:center;font-size:16px;line-height:1.6;font-weight:500;text-shadow:0 1px 6px rgba(0,0,0,.2);opacity:0;transform:translate3d(0,12px,0) scale(.985);transition:opacity .58s ease,transform .72s cubic-bezier(.22,1,.36,1);overflow:hidden;will-change:opacity,transform}
 .message-card.show{opacity:1;transform:translate3d(0,0,0) scale(1)}
-.message-layer{grid-area:stack;min-height:110px;padding:24px 22px;display:flex;align-items:center;justify-content:center;opacity:0;transform:translate3d(0,12px,0) scale(.982);filter:blur(8px);transition:opacity .62s cubic-bezier(.22,1,.36,1),transform .74s cubic-bezier(.22,1,.36,1),filter .62s ease;pointer-events:none;will-change:opacity,transform,filter;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.message-layer{grid-area:stack;min-height:110px;padding:24px 22px;display:flex;align-items:center;justify-content:center;opacity:0;transform:translate3d(0,16px,0) scale(.982);filter:blur(10px);pointer-events:none;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .message-layer.active{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
-.message-layer.leaving{opacity:0;transform:translate3d(0,-12px,0) scale(.982);filter:blur(8px)}
+.message-layer.message-enter{animation:messageEnter .82s cubic-bezier(.22,1,.36,1) both}
+.message-layer.message-leave{animation:messageLeave .82s cubic-bezier(.22,1,.36,1) both}
+@keyframes messageEnter{0%{opacity:0;transform:translate3d(0,16px,0) scale(.982);filter:blur(10px)}45%{opacity:.66;transform:translate3d(0,5px,0) scale(.994);filter:blur(4px)}100%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}}
+@keyframes messageLeave{0%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}55%{opacity:.52;transform:translate3d(0,-5px,0) scale(.993);filter:blur(4px)}100%{opacity:0;transform:translate3d(0,-16px,0) scale(.982);filter:blur(10px)}}
 .message-layer.special{min-height:0;padding:23px 20px 21px;line-height:1.58;background:linear-gradient(155deg,rgba(126,88,48,.72),rgba(105,45,82,.70));border-radius:20px}
 .message-layer.special strong{display:block;margin-top:14px;color:rgba(255,235,243,.96);font-size:1.04em;line-height:1.45}
 .counter{margin-top:14px;font-size:13px;opacity:.82;text-align:center;font-weight:500;text-shadow:0 1px 6px rgba(0,0,0,.3)}
@@ -153,7 +156,11 @@ h1{font-size:28px;font-weight:800;line-height:1.1;margin-bottom:10px;text-align:
 
 /* Караоке */
 .lyric-container{width:100%;max-width:340px;height:96px;display:flex;align-items:center;justify-content:center;margin:0 0 13px;padding:0 4px;position:relative}.lyric-text{position:relative;width:100%;height:80px;margin:0;border-radius:20px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(160deg,rgba(255,255,255,.065),rgba(255,255,255,.018));backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:0 18px 38px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.055);overflow:hidden;text-shadow:0 2px 12px rgba(0,0,0,.46)}.lyric-text::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 20%,rgba(255,255,255,.045) 48%,transparent 76%);transform:translateX(-100%);animation:lyricSheen 8s ease-in-out infinite;pointer-events:none}@keyframes lyricSheen{0%,72%,100%{transform:translateX(-100%);opacity:0}78%{opacity:.8}88%{transform:translateX(100%);opacity:0}}
-.lyric-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10px 20px;opacity:0;transform:translate3d(0,13px,0) scale(.984);filter:blur(8px);transition:opacity var(--lyric-transition,.36s) cubic-bezier(.22,1,.36,1),transform var(--lyric-transition,.46s) cubic-bezier(.22,1,.36,1),filter var(--lyric-transition,.44s) ease;pointer-events:none;will-change:opacity,transform,filter}.lyric-layer.active{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}.lyric-layer.leaving{opacity:0;transform:translate3d(0,-10px,0) scale(.986);filter:blur(8px)}.lyric-line{width:100%;text-align:center;line-height:1.48;font-size:16.5px;font-weight:500;word-spacing:.03em}.karaoke-loader{display:inline-flex;align-items:flex-end;justify-content:center;gap:7px;min-height:24px}.karaoke-loader-dot{width:7px;height:7px;border-radius:50%;background:rgba(242,198,214,.94);box-shadow:0 0 10px rgba(232,184,201,.38);animation:kLoader 1.05s cubic-bezier(.22,1,.36,1) infinite}.karaoke-loader-dot:nth-child(1){animation-delay:-.7s}.karaoke-loader-dot:nth-child(2){animation-delay:-.45s}.karaoke-loader-dot:nth-child(3){animation-delay:-.2s}@keyframes kLoader{0%,100%{transform:translateY(0) scale(.78);opacity:.2}28%{transform:translateY(-7px) scale(1.12);opacity:1}52%{transform:translateY(-1px) scale(1.02);opacity:.78}72%{transform:translateY(0) scale(.88);opacity:.42}}
+.lyric-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10px 20px;opacity:0;transform:translate3d(0,12px,0) scale(.985);filter:blur(9px);pointer-events:none;backface-visibility:hidden;-webkit-backface-visibility:hidden}.lyric-layer.active{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+.lyric-layer.lyric-enter{animation:lyricEnter var(--lyric-transition,.72s) cubic-bezier(.22,1,.36,1) both}
+.lyric-layer.lyric-leave{animation:lyricLeave var(--lyric-transition,.72s) cubic-bezier(.22,1,.36,1) both}
+@keyframes lyricEnter{0%{opacity:0;transform:translate3d(0,12px,0) scale(.985);filter:blur(9px)}48%{opacity:.68;transform:translate3d(0,4px,0) scale(.994);filter:blur(4px)}100%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}}
+@keyframes lyricLeave{0%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}52%{opacity:.52;transform:translate3d(0,-5px,0) scale(.993);filter:blur(4px)}100%{opacity:0;transform:translate3d(0,-11px,0) scale(.985);filter:blur(9px)}}.lyric-line{width:100%;text-align:center;line-height:1.48;font-size:16.5px;font-weight:500;word-spacing:.03em}.karaoke-loader{display:inline-flex;align-items:flex-end;justify-content:center;gap:7px;min-height:24px}.karaoke-loader-dot{width:7px;height:7px;border-radius:50%;background:rgba(242,198,214,.94);box-shadow:0 0 10px rgba(232,184,201,.38);animation:kLoader 1.05s cubic-bezier(.22,1,.36,1) infinite}.karaoke-loader-dot:nth-child(1){animation-delay:-.7s}.karaoke-loader-dot:nth-child(2){animation-delay:-.45s}.karaoke-loader-dot:nth-child(3){animation-delay:-.2s}@keyframes kLoader{0%,100%{transform:translateY(0) scale(.78);opacity:.2}28%{transform:translateY(-7px) scale(1.12);opacity:1}52%{transform:translateY(-1px) scale(1.02);opacity:.78}72%{transform:translateY(0) scale(.88);opacity:.42}}
 .song-ending-loader{position:absolute;inset:0;display:none;align-items:center;justify-content:center;z-index:5;pointer-events:none;opacity:0;transform:scale(.96);transition:opacity .45s ease,transform .55s cubic-bezier(.22,1,.36,1)}.song-ending-loader.show{display:flex;opacity:1;transform:scale(1)}.song-ending-loader .karaoke-loader{min-height:24px}.lyric-text.ending-loader-active .lyric-layer{opacity:.06;filter:blur(3.5px);transform:scale(.992)}
 .karaoke-word{display:inline-block;white-space:nowrap;margin-right:.28em;color:rgba(255,255,255,.18);opacity:.34;filter:blur(2.2px);transform:translateY(0) scale(1);transition:color .18s ease,opacity .18s ease,filter .28s ease,transform .24s cubic-bezier(.22,1,.36,1),text-shadow .22s ease}.karaoke-word.sung{color:rgba(255,255,255,.90);opacity:.96;filter:blur(0)}.karaoke-word.current{color:#f0c5d4;opacity:1;filter:blur(0);transform:translateY(-1px) scale(1.025);text-shadow:0 0 8px rgba(235,165,191,.46),0 0 16px rgba(211,164,131,.12)}.karaoke-word.current::after{content:'';display:block;height:1px;margin:2px auto 0;width:64%;border-radius:999px;background:linear-gradient(90deg,transparent,rgba(230,190,160,.82),transparent)}
 .song-time{width:90%;max-width:320px;display:flex;justify-content:space-between;font-size:11px;opacity:.48;letter-spacing:.4px;margin:-10px 0 6px;font-variant-numeric:tabular-nums}.song-seek{width:90%;max-width:320px;height:24px;position:relative;margin:0 auto 9px;cursor:pointer;touch-action:none}.song-seek-track,.song-seek-fill{position:absolute;left:0;right:0;top:10px;height:4px;border-radius:99px}.song-seek-track{background:rgba(255,255,255,.09)}.song-seek-fill{right:auto;width:100%;transform:scaleX(0);transform-origin:left center;background:linear-gradient(90deg,#8a647b,#d6a0b3,#c6a47e);box-shadow:0 0 10px rgba(220,167,188,.22)}.song-seek-thumb{position:absolute;top:6px;left:0;width:14px;height:14px;border-radius:50%;transform:translateX(-50%);background:#e6b1c2;box-shadow:0 0 12px rgba(230,177,194,.45);transition:transform .15s ease}.song-seek:hover .song-seek-thumb,.song-seek.dragging .song-seek-thumb{transform:translateX(-50%) scale(1.1)}.song-seek:focus-visible{outline:2px solid rgba(230,177,194,.55);outline-offset:4px;border-radius:10px}
@@ -248,7 +255,7 @@ body.page2-open #page2 .inner{opacity:1;transform:translate3d(0,0,0) scale(1)}
   .lyric-text{backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
 }
 
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
+@media(prefers-reduced-motion:reduce){.home-ambient span,.page2-ambient span,.photo-frame::before,.photo-frame::after,.final-screen::before{animation-duration:.001ms!important;animation-iteration-count:1!important}}
 </style>
 </head>
 <body>
@@ -782,30 +789,30 @@ if (window.Telegram && window.Telegram.WebApp) {
         messageTransitionTimer = null;
       }
 
+      // Полностью сбрасываем следующий слой, чтобы keyframes всегда стартовали с нуля.
       nextLayer.className = `message-layer${special ? ' special' : ''}`;
       nextLayer.innerHTML = content;
-      nextLayer.classList.remove('active', 'leaving');
+      nextLayer.setAttribute('aria-hidden', 'false');
       void nextLayer.offsetWidth;
 
-      // Оставляем старый слой active и добавляем leaving в тот же кадр:
-      // браузер видит переход из полностью видимого состояния в blur/fade,
-      // поэтому карточка не исчезает рывком.
       if (oldLayer) {
-        oldLayer.classList.add('leaving');
+        oldLayer.classList.remove('message-enter', 'message-leave');
+        oldLayer.classList.add('active');
+        oldLayer.setAttribute('aria-hidden', 'true');
+        void oldLayer.offsetWidth;
+        oldLayer.classList.add('message-leave');
       }
 
       messageLayerIndex = nextIndex;
       card.classList.add('show');
-      requestAnimationFrame(() => {
-        nextLayer.classList.add('active');
-      });
+      nextLayer.classList.add('message-enter');
 
-      if (oldLayer) {
-        messageTransitionTimer = setTimeout(() => {
-          oldLayer.classList.remove('active', 'leaving');
-          messageTransitionTimer = null;
-        }, 820);
-      }
+      messageTransitionTimer = setTimeout(() => {
+        nextLayer.classList.add('active');
+        nextLayer.classList.remove('message-enter');
+        if (oldLayer) oldLayer.classList.remove('active', 'message-leave');
+        messageTransitionTimer = null;
+      }, 860);
     }
 
     btn.addEventListener('click', () => {
@@ -1238,32 +1245,34 @@ if (window.Telegram && window.Telegram.WebApp) {
 
       const nextLine = LYRICS[index + 1];
       const gap = nextLine ? Math.max(0.25, nextLine.time - LYRICS[index].time) : 2;
-      const transition = Math.min(0.72, Math.max(0.52, gap * 0.24));
+      const transition = Math.min(0.82, Math.max(0.58, gap * 0.26));
       nextLayer.style.setProperty('--lyric-transition', `${transition}s`);
       if (oldLayer) oldLayer.style.setProperty('--lyric-transition', `${transition}s`);
 
       prepareKaraokeLine(LYRICS[index].text, nextLayer);
       if (LYRICS[index].text !== '...') nextLayer.classList.remove('loading');
-      nextLayer.classList.remove('active', 'leaving');
+      nextLayer.classList.remove('active', 'lyric-enter', 'lyric-leave');
       void nextLayer.offsetWidth;
 
       activeLyricIndex = index;
       lyricLayerIndex = nextLayerIndex;
+      activeWordNodes = Array.from(nextLayer.querySelectorAll('.karaoke-word'));
 
-      // Старый слой остаётся active, пока получает leaving.
-      // Это создаёт настоящий crossfade: старая строка уходит в blur,
-      // новая одновременно приходит из blur.
       if (oldLayer) {
-        oldLayer.classList.add('leaving');
+        oldLayer.classList.remove('lyric-enter', 'lyric-leave');
+        oldLayer.classList.add('active');
+        void oldLayer.offsetWidth;
+        oldLayer.classList.add('lyric-leave');
       }
 
-      nextLayer.classList.add('active');
-      activeWordNodes = Array.from(nextLayer.querySelectorAll('.karaoke-word'));
+      nextLayer.classList.add('lyric-enter');
       updateKaraokeWords(currentTime);
 
-      if (oldLayer) {
-        setTimeout(() => oldLayer.classList.remove('active', 'leaving'), Math.ceil((transition + 0.14) * 1000));
-      }
+      setTimeout(() => {
+        nextLayer.classList.remove('lyric-enter');
+        nextLayer.classList.add('active');
+        if (oldLayer) oldLayer.classList.remove('active', 'lyric-leave');
+      }, Math.ceil((transition + 0.12) * 1000));
     }
 
     function syncLyricToAudio(currentTime, schedule = false) {
