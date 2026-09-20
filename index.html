@@ -2331,6 +2331,186 @@
       animation-play-state: paused !important;
     }
 
+  
+
+    /* ===== DEEP MOBILE OPTIMIZATION — same visual language, cheaper rendering ===== */
+    /* Broad glows already use feathered gradients, so CSS blur is unnecessary on them. */
+    body.perf-mobile .home-lightfield,
+    body.perf-mobile .page2-lightfield,
+    body.perf-mobile .home-ambient::before,
+    body.perf-mobile .home-ambient::after,
+    body.perf-mobile .page2-ambient::before {
+      filter:none !important;
+    }
+    body.perf-mobile .home-bloom,
+    body.perf-mobile .page2-bloom,
+    body.perf-mobile .home-orb,
+    body.perf-mobile .ambient-orb,
+    body.perf-mobile .ambient-glow {
+      filter:none !important;
+      mix-blend-mode:normal !important;
+    }
+    body.perf-mobile .home-bloom-a,
+    body.perf-mobile .page2-bloom-a,
+    body.perf-mobile .home-orb-a,
+    body.perf-mobile .orb-a {
+      background:radial-gradient(circle, rgba(224,103,151,.18) 0%, rgba(224,103,151,.08) 38%, transparent 72%);
+    }
+    body.perf-mobile .home-bloom-b,
+    body.perf-mobile .page2-bloom-b,
+    body.perf-mobile .home-orb-b,
+    body.perf-mobile .orb-b {
+      background:radial-gradient(circle, rgba(115,87,191,.16) 0%, rgba(115,87,191,.06) 40%, transparent 73%);
+    }
+    body.perf-mobile .home-orb-c,
+    body.perf-mobile .orb-c {
+      background:radial-gradient(circle, rgba(163,59,133,.13) 0%, rgba(163,59,133,.05) 42%, transparent 74%);
+    }
+    body.perf-mobile .ambient-glow {
+      background:radial-gradient(circle, rgba(221,123,151,.10) 0%, rgba(221,123,151,.04) 36%, transparent 68%);
+    }
+
+    /* Keep the frosted look, but reduce the sampling radius on small GPUs. */
+    body.perf-mobile .tool-card,
+    body.perf-mobile .page2-nav-btn,
+    body.perf-mobile .lyric-text,
+    body.perf-mobile .easter-toast,
+    body.perf-mobile .intro-card,
+    body.perf-mobile .history-sheet {
+      backdrop-filter:blur(6px) !important;
+      -webkit-backdrop-filter:blur(6px) !important;
+    }
+
+    /* Keep the same decorative elements; make their motion cheaper instead of hiding them. */
+    body.perf-low .home-aurora,
+    body.perf-low .home-ring,
+    body.perf-low .home-grain,
+    body.perf-low .page2-ambient .light-streak,
+    body.perf-low .page2-starfield {
+      display:block !important;
+    }
+    body.perf-low .home-aurora,
+    body.perf-low .home-ring,
+    body.perf-low .page2-ambient .light-streak {
+      filter:none !important;
+      mix-blend-mode:normal !important;
+    }
+    body.perf-low .home-aurora { animation-duration:24s !important; opacity:.12; }
+    body.perf-low .home-ring-a { animation-duration:24s !important; }
+    body.perf-low .home-ring-b { animation-duration:32s !important; }
+    body.perf-low .home-grain { animation-duration:55s !important; opacity:.10; }
+    body.perf-low .page2-starfield { animation-duration:14s !important; opacity:.14; }
+    body.perf-low .page2-ambient .light-streak { animation-duration:22s !important; opacity:.12; }
+    body.perf-low .home-particle,
+    body.perf-low .page2-particle { animation-duration:10s !important; }
+    body.perf-low .home-particle { opacity:.13; }
+    body.perf-low .page2-particle { opacity:.12; }
+    body.perf-low .home-particle:nth-of-type(even),
+    body.perf-low .page2-particle:nth-of-type(even) { display:block !important; }
+
+    /* Soft photo bloom without a blur filter. */
+    body.perf-mobile .photo-frame::after {
+      filter:none !important;
+      inset:-32px !important;
+      background:radial-gradient(circle, rgba(225,147,177,.18) 0%, rgba(225,147,177,.07) 34%, rgba(112,79,145,.07) 52%, transparent 76%) !important;
+    }
+    body.perf-mobile .photo-frame::before {
+      filter:none !important;
+      opacity:.34 !important;
+    }
+    body.perf-mobile .photo-frame {
+      box-shadow:0 0 26px rgba(225,147,177,.18), 0 0 82px rgba(112,79,145,.10) !important;
+    }
+
+    /* Shadows are kept, but the expensive wide halos are tightened. */
+    body.perf-mobile .lyric-text { box-shadow:0 10px 24px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.045); }
+    body.perf-mobile .tool-card { box-shadow:0 7px 18px rgba(0,0,0,.15); }
+    body.perf-mobile .history-card { box-shadow:0 22px 60px rgba(0,0,0,.40); }
+
+    /* Avoid forcing extra GPU layers for every decorative node. */
+    body.perf-mobile .home-lightfield,
+    body.perf-mobile .home-bloom,
+    body.perf-mobile .home-orb,
+    body.perf-mobile .home-aurora,
+    body.perf-mobile .home-ring,
+    body.perf-mobile .home-particle,
+    body.perf-mobile .home-grain,
+    body.perf-mobile .page2-lightfield,
+    body.perf-mobile .page2-bloom,
+    body.perf-mobile .ambient-orb,
+    body.perf-mobile .ambient-glow,
+    body.perf-mobile .page2-particle,
+    body.perf-mobile .page2-starfield {
+      will-change:auto !important;
+    }
+
+    /* The only element that benefits from a predictable composited layer is the photo itself. */
+    body.perf-mobile .photo-frame img { will-change:transform; }
+
+    /* During playback the atmosphere keeps its look but stops re-painting large animated backgrounds. */
+    body.audio-first .page2-lightfield,
+    body.audio-first .page2-bloom,
+    body.audio-first .ambient-orb,
+    body.audio-first .ambient-glow,
+    body.audio-first .page2-particle,
+    body.audio-first .page2-starfield,
+    body.audio-first .page2-ambient::before,
+    body.audio-first .page2-ambient::after {
+      animation-play-state:paused !important;
+    }
+    body.audio-first .page2-lightfield,
+    body.audio-first .page2-bloom,
+    body.audio-first .ambient-orb,
+    body.audio-first .ambient-glow {
+      filter:none !important;
+    }
+
+    /* On mobile the equalizer remains visible as a lightweight audio halo. */
+    body.audio-safe .photo-equalizer { opacity:.86 !important; }
+    body.audio-safe .photo-equalizer-live { display:none !important; }
+
+    /* CSS handles the slow atmosphere pulse now; JS does not need to wake every 100–200ms. */
+    #page2::before { transform:translateX(-50%) scale(1); }
+    #page2 { --music-pulse:1; }
+
+  
+
+    /* ===== MOBILE PAINT OPTIMIZATION 2 ===== */
+    body.perf-mobile #page2::before { filter:none !important; }
+    body.perf-mobile .page2-intro { backdrop-filter:blur(5px) !important; -webkit-backdrop-filter:blur(5px) !important; }
+
+    /* The photo bloom already exists as a radial-gradient pseudo-layer, so don't repaint box-shadow on every frame. */
+    body.perf-mobile .photo-frame {
+      animation:none !important;
+      box-shadow:0 0 28px rgba(225,147,177,.20), 0 0 84px rgba(112,79,145,.11) !important;
+    }
+    body.perf-mobile .photo-frame::after { animation:auraBreath 8s ease-in-out infinite !important; }
+
+    /* Blur on every karaoke word is disproportionately expensive on older Android GPUs. Keep the same depth through opacity. */
+    body.perf-mobile .lyric-layer,
+    body.perf-mobile .lyric-layer.leaving,
+    body.perf-mobile .karaoke-word {
+      filter:none !important;
+    }
+    body.perf-mobile .karaoke-word {
+      transition:color .14s ease, opacity .16s ease, transform .16s cubic-bezier(.22,1,.36,1), text-shadow .16s ease !important;
+    }
+
+    /* These card blurs are local and small; a tighter radius keeps the glass look without a large sampling kernel. */
+    body.perf-mobile .tool-card,
+    body.perf-mobile .page2-nav-btn,
+    body.perf-mobile .lyric-text,
+    body.perf-mobile .intro-card,
+    body.perf-mobile .easter-toast,
+    body.perf-mobile .history-sheet {
+      backdrop-filter:blur(5px) !important;
+      -webkit-backdrop-filter:blur(5px) !important;
+    }
+
+    /* Use a cheap composited transition for the progress thumb rather than a large visual effect. */
+    body.perf-mobile .song-seek-thumb { box-shadow:0 0 7px rgba(230,177,194,.42); }
+    body.perf-mobile .song-seek-fill { box-shadow:0 0 6px rgba(220,167,188,.16); }
+
   </style>
 </head>
 <body>
@@ -2574,8 +2754,16 @@
       const timerTotalEl = document.getElementById('timerTotal');
       if (timerTotalEl) timerTotalEl.textContent = `Всего ${totalHours} часов ${totalMinutes} минут`;
     }
-    updateTimer();
-    setInterval(updateTimer, 1000);
+    let timerWakeId = null;
+    function scheduleTimerUpdate() {
+      if (document.hidden || document.body.classList.contains('page2-open')) {
+        timerWakeId = null;
+        return;
+      }
+      updateTimer();
+      timerWakeId = setTimeout(scheduleTimerUpdate, 1000);
+    }
+    scheduleTimerUpdate();
 
     const MESSAGES = [
       "Мне нравится, что рядом с тобой можно быть собой и не подбирать правильную версию себя.",
@@ -3042,8 +3230,14 @@
     // Защита от случайной перестановки таймкодов при дальнейших правках.
     LYRICS.sort((a, b) => a.time - b.time);
 
+
+    function rebuildLyricDisplayStarts() {
+      lyricDisplayStarts = LYRICS.map((line, index) => Math.max(0, getLyricTime(line.time) - getLyricLead(index)));
+      if (lyricDisplayStarts.length) lyricDisplayStarts[0] = 0;
+    }
+
     let lyricIndex = 0;
-    let progressRafId = null;
+    let progressTimerId = null;
     let finalShown = false;
     let finalTimeoutId = null;
     // Синхронизация рассчитана на акустическую версию длительностью 3:19 (199 сек).
@@ -3059,6 +3253,8 @@
     let lyricLayerIndex = -1;
     let karaokeWordWeights = [];
     let karaokeTotalWeight = 0;
+    let activeWordNodes = [];
+    let lyricDisplayStarts = [];
 
     function formatTime(seconds) {
       if (!isFinite(seconds) || seconds < 0) return '0:00';
@@ -3074,6 +3270,7 @@
       `;
       lyricLayerIndex = -1;
       activeLyricIndex = -1;
+      activeWordNodes = [];
     }
 
     function prepareKaraokeLine(text, layer) {
@@ -3134,6 +3331,8 @@
       return Math.min(MAX_LYRIC_LEAD, Math.max(MIN_LYRIC_LEAD, gap * 0.18));
     }
 
+    rebuildLyricDisplayStarts();
+
     function updateKaraokeWords(currentTime) {
       if (activeLyricIndex < 0 || activeLyricIndex >= LYRICS.length) return;
       if (!karaokeWordWeights.length || !karaokeTotalWeight) return;
@@ -3155,10 +3354,9 @@
       const progress = Math.max(0, Math.min(1, (currentTime - start) / (end - start)));
 
       let cursor = 0;
-      const activeLayer = lyricText.querySelector('.lyric-layer.active');
-      if (!activeLayer) return;
+      if (!activeWordNodes.length) return;
 
-      activeLayer.querySelectorAll('.karaoke-word').forEach((node, i) => {
+      activeWordNodes.forEach((node, i) => {
         const wordStart = cursor / karaokeTotalWeight;
         const wordEnd = (cursor + karaokeWordWeights[i]) / karaokeTotalWeight;
         const sung = progress >= wordEnd;
@@ -3205,6 +3403,7 @@
       }
 
       nextLayer.classList.add('active');
+      activeWordNodes = Array.from(nextLayer.querySelectorAll('.karaoke-word'));
       updateKaraokeWords(currentTime);
 
       if (oldLayer) {
@@ -3213,13 +3412,24 @@
     }
 
     function syncLyricToAudio(currentTime) {
-      // Смена строки происходит по display-start = vocal-start - lead.
-      // Это учитывает время её появления на экране и убирает визуальное отставание.
-      let targetIndex = 0;
-      for (let i = 1; i < LYRICS.length; i++) {
-        const start = Math.max(0, getLyricTime(LYRICS[i].time) - getLyricLead(i));
-        if (currentTime >= start) targetIndex = i;
-        else break;
+      let targetIndex = activeLyricIndex;
+
+      if (targetIndex < 0) {
+        let lo = 0, hi = lyricDisplayStarts.length - 1;
+        targetIndex = 0;
+        while (lo <= hi) {
+          const mid = (lo + hi) >> 1;
+          if (currentTime >= lyricDisplayStarts[mid]) {
+            targetIndex = mid;
+            lo = mid + 1;
+          } else {
+            hi = mid - 1;
+          }
+        }
+      } else if (currentTime >= (lyricDisplayStarts[targetIndex + 1] ?? Infinity)) {
+        while (targetIndex + 1 < lyricDisplayStarts.length && currentTime >= lyricDisplayStarts[targetIndex + 1]) targetIndex++;
+      } else if (currentTime < lyricDisplayStarts[targetIndex]) {
+        while (targetIndex > 0 && currentTime < lyricDisplayStarts[targetIndex]) targetIndex--;
       }
 
       if (targetIndex !== activeLyricIndex) renderLyric(targetIndex, currentTime);
@@ -3264,39 +3474,40 @@
       finalShown = false;
     }
 
-    let lastProgressFrame = 0;
-    function updateSongProgress(timestamp = 0) {
+    function getProgressInterval() {
+      if (document.body.classList.contains('perf-low')) return 70;
+      if (document.body.classList.contains('audio-safe')) return 58;
+      return 42;
+    }
+
+    function updateSongProgress() {
       if (document.hidden || !page2.classList.contains('active') || !songStarted) {
-        progressRafId = null;
+        progressTimerId = null;
         return;
       }
-      const frameInterval = document.body.classList.contains('perf-low') ? 66 : (document.body.classList.contains('audio-safe') ? 50 : 33);
-      if (timestamp - lastProgressFrame < frameInterval) {
-        progressRafId = requestAnimationFrame(updateSongProgress);
-        return;
-      }
-      lastProgressFrame = timestamp;
 
       const currentTime = songPlayer.currentTime;
-      songCurrentTime.textContent = formatTime(currentTime);
-      updateSeekVisual();
+      const currentSecond = Math.floor(currentTime);
+      if (songCurrentTime.dataset.second !== String(currentSecond)) {
+        songCurrentTime.dataset.second = String(currentSecond);
+        songCurrentTime.textContent = formatTime(currentTime);
+      }
 
       if (songPlayer.duration && isFinite(songPlayer.duration)) {
-        const progress = Math.min(100, (currentTime / songPlayer.duration) * 100);
+        const progress = Math.min(100, Math.max(0, currentTime / songPlayer.duration * 100));
         songSeekFill.style.width = progress + '%';
-        songDuration.textContent = formatTime(songPlayer.duration);
+        songSeekThumb.style.left = progress + '%';
       }
 
       syncLyricToAudio(currentTime);
 
       if (songPlayer.duration && isFinite(songPlayer.duration) && !finalShown) {
-        if (currentTime >= songPlayer.duration - 0.12 || songPlayer.ended) {
-          showFinal();
-        }
+        if (currentTime >= songPlayer.duration - 0.12 || songPlayer.ended) showFinal();
       }
 
-      progressRafId = requestAnimationFrame(updateSongProgress);
+      progressTimerId = setTimeout(updateSongProgress, getProgressInterval());
     }
+
 
     function resetSongView() {
       stopPhotoEqualizer();
@@ -3343,38 +3554,38 @@
       renderLyric(0, 0);
       songPlayer.play().catch(() => {});
       startPhotoEqualizer();
-      startMusicAtmosphere();
       updatePlayButton();
       updateSeekVisual();
 
-      if (!progressRafId) {
-        progressRafId = requestAnimationFrame(updateSongProgress);
+      if (!progressTimerId) {
+        progressTimerId = setTimeout(updateSongProgress, getProgressInterval());
       }
     }
 
     function closePage2() {
       document.body.classList.remove('page2-open', 'final-open', 'audio-first');
-      if (musicAtmosphereTimer) {
-        clearTimeout(musicAtmosphereTimer);
-        musicAtmosphereTimer = null;
-      }
       stopPhotoEqualizer();
       if (photoFrameEl) photoFrameEl.classList.add('eq-idle');
       page2.classList.remove('active');
-            resetSongView();
+      resetSongView();
+      if (!timerWakeId) scheduleTimerUpdate();
       page2Intro.classList.remove('hidden');
       introOpened = false;
       songStarted = false;
 
-      if (progressRafId) {
-        cancelAnimationFrame(progressRafId);
-        progressRafId = null;
+      if (progressTimerId) {
+        clearTimeout(progressTimerId);
+        progressTimerId = null;
       }
 
       if (musicOn && musicStarted) {
         music.play().catch(() => {});
       }
     }
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && !document.body.classList.contains('page2-open') && !timerWakeId) scheduleTimerUpdate();
+    });
 
     // ===== Круговой эквалайзер вокруг фото =====
     let photoAudioContext = null;
@@ -3849,39 +4060,17 @@
       if (!finalShown) showFinal();
     });
 
-    // Небольшая реакция фона на ход музыки: очень мягкая, без эквалайзера.
-    let musicAtmosphereTimer = null;
-    function updateMusicAtmosphere() {
-      if (document.hidden || !page2.classList.contains('active') || !songStarted) {
-        musicAtmosphereTimer = null;
-        return;
-      }
-      const t = songPlayer.currentTime || 0;
-      const wave = (Math.sin(t * 0.7) + Math.sin(t * 0.31 + 1.2)) * 0.5 + 0.5;
-      page2.style.setProperty('--music-pulse', (0.92 + wave * 0.10).toFixed(3));
-      musicAtmosphereTimer = setTimeout(updateMusicAtmosphere, document.body.classList.contains('perf-low') ? 260 : (document.body.classList.contains('audio-safe') ? 240 : 110));
-    }
-    function startMusicAtmosphere() {
-      if (musicAtmosphereTimer) clearTimeout(musicAtmosphereTimer);
-      updateMusicAtmosphere();
-    }
 
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
-        if (musicAtmosphereTimer) {
-          clearTimeout(musicAtmosphereTimer);
-          musicAtmosphereTimer = null;
-        }
         if (photoEqFrame) {
           cancelAnimationFrame(photoEqFrame);
           photoEqFrame = null;
         }
       } else if (songStarted && page2.classList.contains('active') && !finalShown) {
-        startMusicAtmosphere();
-        startPhotoEqualizer();
-        if (!progressRafId) {
-          lastProgressFrame = 0;
-          progressRafId = requestAnimationFrame(updateSongProgress);
+          startPhotoEqualizer();
+        if (!progressTimerId) {
+          progressTimerId = setTimeout(updateSongProgress, getProgressInterval());
         }
       }
     });
