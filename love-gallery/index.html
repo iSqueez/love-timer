@@ -103,12 +103,15 @@
       - preview: маленький WebP/AVIF/JPG для сетки;
       - full: крупная версия для просмотра.
 
-      Для первого запуска оставлен уже существующий photo1.jpg из love-timer.
-      Это позволяет открыть новую галерею сразу, не заставляя тебя сначала
-      копировать файл. Для полной изоляции проекта замени оба URL на локальные.
+      Сейчас для новых кадров используется одна full-версия.
+      Отдельные миниатюры в thumbs не нужны — галерея загружает full-файлы
+      лениво, а полноразмерный lightbox использует тот же файл.
     */
+    /* Сейчас используем только full-версии.
+       Когда появится много фотографий, thumbs можно вернуть без изменения
+       самой галереи: достаточно заменить preview на отдельный путь. */
     const galleryItem = (file, title, meta = '', alt = title) => ({
-      preview: `photos/thumbs/${file}`,
+      preview: `photos/full/${file}`,
       full: `photos/full/${file}`,
       title,
       meta,
@@ -122,17 +125,9 @@
         title: 'Наш первый кадр',
         meta: 'первый снимок',
         alt: 'Фотография из нашей истории'
-      }
-      /*
-      Для новой фотографии добавь ОДНУ строку:
-      galleryItem('02.webp', 'Название момента', '2026'),
-      А сам файл положи дважды:
-      photos/thumbs/02.webp
-      photos/full/02.webp
-
-      Пример:
-      galleryItem('03.webp', 'Ещё один момент', '2026'),
-      */
+      },
+      galleryItem('parnoe1.jpg', 'Парное фото 1', '2026'),
+      galleryItem('parnoe2.jpg', 'Парное фото 2', '2026')
     ];
 
     const gallery = document.getElementById('gallery');
@@ -166,8 +161,6 @@
       const img = document.createElement('img');
       img.src = item.preview;
       img.alt = item.alt || item.title || 'Фотография';
-      img.width = 700;
-      img.height = 875;
       img.loading = index === 0 ? 'eager' : 'lazy';
       img.decoding = 'async';
       if (index === 0) img.fetchPriority = 'high';
