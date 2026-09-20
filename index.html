@@ -650,15 +650,15 @@
     /* Круговой эквалайзер вокруг фото — отдельный внешний контур */
     .photo-equalizer {
       position: absolute;
-      inset: -46px;
-      width: calc(100% + 92px);
-      height: calc(100% + 92px);
+      inset: -52px;
+      width: calc(100% + 104px);
+      height: calc(100% + 104px);
       z-index: 1;
       pointer-events: none;
       overflow: visible;
-      opacity: .96;
+      opacity: .98;
       mix-blend-mode: screen;
-      filter: drop-shadow(0 0 8px rgba(231, 174, 195, .34)) drop-shadow(0 0 22px rgba(214, 154, 181, .16));
+      filter: none;
       transition: opacity .55s ease;
     }
 
@@ -2247,11 +2247,11 @@
     body.audio-first .photo-frame::before { animation-play-state:paused !important; }
     body.audio-first .photo-frame::after { animation-play-state:paused !important; opacity:.38; }
     body.audio-first .frame-particle { animation-duration:7s; }
-    body.audio-first .photo-equalizer { filter:none; mix-blend-mode:normal; }
+    body.audio-first .photo-equalizer { opacity:.96; filter:none; mix-blend-mode:screen; }
 
     /* На мобильных не используем тяжёлый live-canvas: вокруг фото остаётся
        спокойный внешний контур, а анализатор звука не забирает ресурсы у MP3. */
-    body.audio-safe .photo-equalizer { opacity:.62 !important; filter:none !important; }
+    body.audio-safe .photo-equalizer { opacity:.78 !important; filter:none !important; }
     body.audio-safe .photo-equalizer-live { display:none; }
 
     /* ===== PERFORMANCE PASS ===== */
@@ -2292,7 +2292,7 @@
     body.perf-low .home-ambient::after { animation:none !important; }
     body.perf-low .home-particle:nth-of-type(even),
     body.perf-low .page2-particle:nth-of-type(even) { display:none; }
-    body.perf-low .photo-equalizer { filter:none; mix-blend-mode:normal; }
+    body.perf-low .photo-equalizer { filter:none; mix-blend-mode:screen; opacity:.82; }
     body.perf-low .photo-frame::before,
     body.perf-low .photo-frame::after { animation:none !important; }
     body.perf-low .lyric-text,
@@ -3455,22 +3455,25 @@
       // снаружи рамки и не упирается в край canvas.
       const frameRect = photoFrameEl ? photoFrameEl.getBoundingClientRect() : null;
       const frameRadius = frameRect ? (frameRect.width * dpr) / 2 : Math.min(w, h) * 0.34;
-      const baseRadius = Math.max(12 * dpr, frameRadius + 10 * dpr);
-      const barCount = document.body.classList.contains('perf-low') ? 28 : (document.body.classList.contains('perf-mobile') ? 32 : 36);
-      const maxBar = Math.min(w, h) * 0.115;
+      const baseRadius = Math.max(12 * dpr, frameRadius + 15 * dpr);
+      const barCount = document.body.classList.contains('perf-low') ? 24 : (document.body.classList.contains('perf-mobile') ? 30 : 36);
+      const maxBar = Math.min(w, h) * 0.082;
 
       ctx.clearRect(0, 0, w, h);
 
-      // Мягкое базовое кольцо: эквалайзер остаётся визуально собранным
-      // даже в тихих местах трека.
+      // Сначала мягкое внешнее свечение. Оно рисуется самим canvas, поэтому
+      // не зависит от CSS blur и не исчезает в audio-first / mobile режимах.
+      const ringRadius = Math.max(1, baseRadius - 2.5 * dpr);
       ctx.beginPath();
-      ctx.arc(cx, cy, Math.max(1, baseRadius - 1.5 * dpr), 0, Math.PI * 2);
-      ctx.lineWidth = 1.6 * dpr;
-      ctx.strokeStyle = `rgba(236, 192, 208, ${idle ? 0.16 : 0.23})`;
-      ctx.shadowBlur = 9 * dpr;
-      ctx.shadowColor = `rgba(223, 157, 188, ${idle ? 0.10 : 0.18})`;
+      ctx.arc(cx, cy, ringRadius, 0, Math.PI * 2);
+      ctx.lineWidth = 5.5 * dpr;
+      ctx.strokeStyle = `rgba(229, 166, 194, ${idle ? 0.045 : 0.075})`;
       ctx.stroke();
-      ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.arc(cx, cy, ringRadius, 0, Math.PI * 2);
+      ctx.lineWidth = 1.2 * dpr;
+      ctx.strokeStyle = `rgba(241, 196, 208, ${idle ? 0.13 : 0.20})`;
+      ctx.stroke();
 
       if (photoAnalyser && photoEqData && !idle) {
         photoAnalyser.getByteFrequencyData(photoEqData);
@@ -3479,12 +3482,10 @@
       for (let i = 0; i < barCount; i++) {
         const angle = (Math.PI * 2 * i / barCount) - Math.PI / 2;
         const freqIndex = Math.floor((i / barCount) * Math.min(photoEqData?.length || 64, 56));
-        const raw = !idle && photoEqData ? (photoEqData[freqIndex] || 0) / 255 : 0.08;
-
-        // Чуть сильнее подчёркиваем низкие/средние частоты.
-        const bassBoost = i < barCount ? 1.0 + 0.18 * Math.sin((i / barCount) * Math.PI * 2) : 1;
-        const level = idle ? 0.22 : Math.pow(raw, 0.72) * bassBoost;
-        const length = Math.max(2.5 * dpr, (0.10 + level * 0.90) * maxBar);
+        const raw = !idle && photoEqData ? (photoEqData[freqIndex] || 0) / 255 : 0.045;
+        const tonal = 0.96 + 0.10 * Math.sin((i / barCount) * Math.PI * 2 + 0.45);
+        const level = idle ? 0.24 : Math.pow(raw, 0.68) * tonal;
+        const length = Math.max(4 * dpr, (0.16 + level * 0.84) * maxBar);
         const inner = baseRadius;
         const outer = inner + length;
 
@@ -3493,21 +3494,29 @@
         const x2 = cx + Math.cos(angle) * outer;
         const y2 = cy + Math.sin(angle) * outer;
 
+        // Широкий полупрозрачный ореол + компактное ядро.
         ctx.beginPath();
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
-        ctx.lineWidth = Math.max(6.0 * dpr, 6.0 * dpr);
         ctx.lineCap = 'round';
+        ctx.lineWidth = 9 * dpr;
+        ctx.strokeStyle = `rgba(232, 161, 191, ${idle ? 0.055 : Math.min(0.14, 0.035 + level * 0.11)})`;
+        ctx.stroke();
 
-        const alpha = idle ? 0.34 : 0.32 + level * 0.78;
-        // Один цвет на сегмент вместо создания 36 новых градиентов + blur каждый кадр.
-        const tone = i % 3;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.lineWidth = 4.8 * dpr;
+
+        const tone = i % 4;
+        const alpha = idle ? 0.28 : Math.min(0.94, 0.34 + level * 0.76);
         ctx.strokeStyle = tone === 0
-          ? `rgba(219, 165, 190, ${alpha})`
+          ? `rgba(211, 151, 180, ${alpha})`
           : tone === 1
-            ? `rgba(239, 190, 207, ${alpha * 0.96})`
-            : `rgba(218, 184, 148, ${alpha * 0.88})`;
-        ctx.shadowBlur = 0;
+            ? `rgba(239, 183, 202, ${alpha * 0.98})`
+            : tone === 2
+              ? `rgba(223, 181, 151, ${alpha * 0.88})`
+              : `rgba(196, 144, 173, ${alpha * 0.92})`;
         ctx.stroke();
       }
 
