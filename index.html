@@ -38,6 +38,22 @@ button:active{transform:scale(.97)}
 
 .content{position:relative;z-index:2;width:100%;max-width:380px;display:flex;flex-direction:column;align-items:center;animation:contentIn .9s cubic-bezier(.22,1,.36,1) both}
 @keyframes contentIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* Переход с главной в галерею */
+body.gallery-leaving .content{animation:galleryPageOut .44s cubic-bezier(.65,0,.84,.12) both;pointer-events:none}
+body.gallery-leaving .music-btn{animation:galleryControlOut .34s ease both}
+@keyframes galleryPageOut{from{opacity:1;transform:translate3d(0,0,0) scale(1)}to{opacity:0;transform:translate3d(0,-10px,0) scale(.992)}}
+@keyframes galleryControlOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
+.gallery-card{position:relative;overflow:hidden;will-change:transform,border-color,box-shadow;transition:transform .28s cubic-bezier(.22,1,.36,1),border-color .28s ease,box-shadow .28s ease,background .28s ease}
+.gallery-card::after{content:'';position:absolute;inset:0 auto 0 -120%;width:78%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.10),transparent);transform:skewX(-15deg);transition:transform .78s cubic-bezier(.22,1,.36,1);pointer-events:none}
+.gallery-card:hover{transform:translate3d(0,-3px,0) scale(1.004);border-color:rgba(255,255,255,.17);box-shadow:0 18px 34px rgba(0,0,0,.26);background:linear-gradient(155deg,rgba(255,255,255,.095),rgba(255,255,255,.035))}
+.gallery-card:hover::after{transform:translateX(250%)}
+.gallery-card:active{transform:scale(.985)}
+@media(prefers-reduced-motion:reduce){
+  body.gallery-leaving .content,body.gallery-leaving .music-btn{animation:none;opacity:.85}
+  .gallery-card::after{display:none}
+  .gallery-card{transition:none}
+}
 h1{font-size:28px;font-weight:800;line-height:1.1;margin-bottom:10px;text-align:center;color:rgba(255,255,255,.94);letter-spacing:.2px;text-shadow:0 4px 26px rgba(0,0,0,.28)}
 .subtitle{font-size:14px;margin-bottom:26px;text-align:center;color:rgba(255,255,255,.58);text-shadow:0 2px 8px rgba(0,0,0,.3)}
 
@@ -1537,6 +1553,22 @@ if (window.Telegram && window.Telegram.WebApp) {
 
     document.getElementById('openPage2').addEventListener('click', openPage2);
     page2Back.addEventListener('click', closePage2);
+
+    // Плавный переход в отдельную страницу галереи.
+    const galleryLink = document.getElementById('galleryLink');
+    if (galleryLink) {
+      galleryLink.addEventListener('click', (event) => {
+        if (event.defaultPrevented) return;
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        const target = galleryLink.href;
+        document.body.classList.add('gallery-leaving');
+        const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        window.setTimeout(() => {
+          window.location.href = target;
+        }, prefersReduced ? 0 : 440);
+      });
+    }
 
     // ===== Дополнительный функционал =====
     const nextDateCard = document.getElementById('nextDateCard');
