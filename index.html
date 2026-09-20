@@ -2222,6 +2222,115 @@
       transform: none !important;
     }
 
+
+    /* ===== AUDIO-FIRST MODE ===== */
+    /* Во время воспроизведения на слабых устройствах аудио получает приоритет:
+       тяжёлые эффекты приглушаются, а JS-анимации эквалайзера отключаются. */
+    body.audio-first .page2-lightfield,
+    body.audio-first .page2-bloom,
+    body.audio-first .ambient-orb,
+    body.audio-first .ambient-glow,
+    body.audio-first .light-streak,
+    body.audio-first .page2-particle,
+    body.audio-first .page2-starfield,
+    body.audio-first .page2-ambient::before,
+    body.audio-first .page2-ambient::after {
+      animation-play-state: paused !important;
+    }
+    body.audio-first .page2-lightfield { opacity:.42; filter:blur(14px) !important; }
+    body.audio-first .page2-bloom { opacity:.08; filter:blur(24px) !important; }
+    body.audio-first .ambient-orb { opacity:.07; filter:blur(28px) !important; }
+    body.audio-first .ambient-glow { opacity:.45; filter:blur(24px) !important; }
+    body.audio-first .page2-particle,
+    body.audio-first .page2-starfield,
+    body.audio-first .light-streak { opacity:.08 !important; }
+    body.audio-first .photo-frame::before { animation-play-state:paused !important; }
+    body.audio-first .photo-frame::after { animation-play-state:paused !important; opacity:.38; }
+    body.audio-first .frame-particle { animation-duration:7s; }
+    body.audio-first .photo-equalizer { filter:none; mix-blend-mode:normal; }
+
+    /* На мобильных не используем тяжёлый live-canvas: вокруг фото остаётся
+       спокойный внешний контур, а анализатор звука не забирает ресурсы у MP3. */
+    body.audio-safe .photo-equalizer { opacity:.62 !important; filter:none !important; }
+    body.audio-safe .photo-equalizer-live { display:none; }
+
+    /* ===== PERFORMANCE PASS ===== */
+    body.perf-mobile .home-lightfield,
+    body.perf-mobile .page2-lightfield { filter: blur(18px) saturate(105%); }
+    body.perf-mobile .home-bloom,
+    body.perf-mobile .page2-bloom { filter: blur(38px); mix-blend-mode: normal; }
+    body.perf-mobile .home-orb,
+    body.perf-mobile .ambient-orb { filter: blur(42px); mix-blend-mode: normal; }
+    body.perf-mobile .home-aurora { filter: blur(26px); opacity: .10; }
+    body.perf-mobile .home-grain { opacity: .08; animation-duration: 42s; }
+    body.perf-mobile .home-ring-b { display:none; }
+    body.perf-mobile .page2-ambient::before { filter: blur(18px); }
+    body.perf-mobile .page2-starfield { animation-duration: 10s; }
+    body.perf-mobile .frame-particle { box-shadow: 0 0 6px rgba(239,180,201,.48); }
+    body.perf-mobile .photo-frame::before { filter: blur(1.5px); animation-duration: 16s; }
+    body.perf-mobile .photo-frame::after { filter: blur(7px); animation-duration: 11s; }
+    body.perf-mobile .photo-frame { animation-duration: 14s; }
+
+    body.perf-low .home-aurora,
+    body.perf-low .home-ring,
+    body.perf-low .home-grain,
+    body.perf-low .page2-ambient .light-streak,
+    body.perf-low .page2-starfield { display:none; }
+    body.perf-low .home-lightfield,
+    body.perf-low .page2-lightfield { animation:none !important; filter:blur(18px) !important; opacity:.68; }
+    body.perf-low .home-bloom,
+    body.perf-low .page2-bloom,
+    body.perf-low .home-orb,
+    body.perf-low .ambient-orb,
+    body.perf-low .ambient-glow { animation:none !important; }
+    body.perf-low .home-bloom,
+    body.perf-low .page2-bloom { filter:blur(30px); opacity:.12; }
+    body.perf-low .home-orb,
+    body.perf-low .ambient-orb { filter:blur(34px); opacity:.10; }
+    body.perf-low .page2-ambient::before,
+    body.perf-low .home-ambient::before,
+    body.perf-low .home-ambient::after { animation:none !important; }
+    body.perf-low .home-particle:nth-of-type(even),
+    body.perf-low .page2-particle:nth-of-type(even) { display:none; }
+    body.perf-low .photo-equalizer { filter:none; mix-blend-mode:normal; }
+    body.perf-low .photo-frame::before,
+    body.perf-low .photo-frame::after { animation:none !important; }
+    body.perf-low .lyric-text,
+    body.perf-low .intro-card,
+    body.perf-low .tool-card,
+    body.perf-low .page2-nav-btn,
+    body.perf-low .easter-toast,
+    body.perf-low .history-sheet { backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
+    body.perf-low .lyric-text { background:rgba(20,14,24,.92); }
+    body.perf-low .intro-card,
+    body.perf-low .tool-card,
+    body.perf-low .page2-nav-btn { background:rgba(20,14,24,.88); }
+    body.perf-low .history-sheet { background:rgba(7,5,10,.82); }
+    body.perf-low .final-screen { backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
+    @media (max-width:700px) {
+      .photo-equalizer { opacity:.90; }
+      .song-controls .round-control,
+      .song-controls .focus-control { box-shadow:0 6px 14px rgba(0,0,0,.12); }
+    }
+
+
+    body.page2-open .home-lightfield,
+    body.page2-open .home-bloom,
+    body.page2-open .home-orb,
+    body.page2-open .home-aurora,
+    body.page2-open .home-ring,
+    body.page2-open .home-particle,
+    body.page2-open .home-grain,
+    body.final-open .page2-ambient,
+    body.final-open .page2-ambient * {
+      animation-play-state: paused !important;
+    }
+    body.page2-open .home-ambient::before,
+    body.page2-open .home-ambient::after,
+    body.final-open .page2-ambient::before {
+      animation-play-state: paused !important;
+    }
+
   </style>
 </head>
 <body>
@@ -2358,7 +2467,7 @@
       <div class="photo-frame eq-idle">
         <canvas class="photo-equalizer" id="photoEqualizer" aria-hidden="true"></canvas>
         <div class="photo-window">
-          <img src="photo1.jpg" alt="Твое фото">
+          <img src="photo1.jpg" alt="Твое фото" loading="lazy" decoding="async">
         </div>
         <span class="frame-particle h1" aria-hidden="true"></span>
         <span class="frame-particle h2" aria-hidden="true"></span>
@@ -2418,7 +2527,7 @@
     </div>
   </div>
 
-  <audio id="bgMusic" loop preload="auto">
+  <audio id="bgMusic" loop preload="none">
     <source src="https://klopec.ru/sounds/2023-11/sound_125753.mp3" type="audio/mpeg">
   </audio>
 
@@ -2432,6 +2541,20 @@
       tg.ready();
       tg.expand();
     }
+
+    // Лёгкий режим включаем только там, где он действительно полезен:
+    // слабые мобильные устройства или режим экономии трафика.
+    const perfMobile = window.matchMedia?.('(pointer: coarse)').matches || false;
+    const perfLowCpu = typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4;
+    const perfLowMemory = typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4;
+    const perfSaveData = !!navigator.connection?.saveData;
+    const perfLowTier = perfLowCpu || perfLowMemory || perfSaveData;
+    const audioSafeDevice = perfMobile && (perfLowTier || (typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 8));
+    if (perfMobile) document.body.classList.add('perf-mobile');
+    if (perfSaveData || (perfMobile && (perfLowCpu || perfLowMemory))) {
+      document.body.classList.add('perf-low');
+    }
+    if (audioSafeDevice) document.body.classList.add('audio-safe');
 
     const START_DATE = new Date('2026-08-19T21:34:00+03:00');
 
@@ -2841,24 +2964,8 @@
     applyThemeByTime();
     setInterval(applyThemeByTime, 60000);
 
-    const bgHearts = ['', '', '', '', ''];
-    for (let i = 0; i < 15; i++) {
-      const h = document.createElement('div');
-      h.className = 'heart-bg';
-      h.textContent = bgHearts[Math.floor(Math.random() * bgHearts.length)];
-      h.style.left = Math.random() * 100 + '%';
-      h.style.fontSize = (14 + Math.random() * 24) + 'px';
-      h.style.animationDuration = (10 + Math.random() * 10) + 's';
-      h.style.animationDelay = (Math.random() * 12) + 's';
-      h.style.animationPlayState = 'paused';
-      document.body.appendChild(h);
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          h.style.animationPlayState = 'running';
-        });
-      });
-    }
+    // На текущем дизайне фоновые сердечки пустые и ничего не рисуют,
+    // поэтому не создаём 15 лишних DOM-анимаций на старте.
 
     // ========== ВТОРАЯ СТРАНИЦА ==========
     const page2 = document.getElementById('page2');
@@ -3122,6 +3229,7 @@
 
     function showFinal() {
       if (finalShown) return;
+      document.body.classList.add('final-open');
       finalShown = true;
       songPlayer.pause();
       stopPhotoEqualizer();
@@ -3147,6 +3255,7 @@
     }
 
     function hideFinal() {
+      document.body.classList.remove('final-open', 'audio-first');
       if (finalTimeoutId) {
         clearTimeout(finalTimeoutId);
         finalTimeoutId = null;
@@ -3155,11 +3264,18 @@
       finalShown = false;
     }
 
-    function updateSongProgress() {
-      if (!page2.classList.contains('active') || !songStarted) {
+    let lastProgressFrame = 0;
+    function updateSongProgress(timestamp = 0) {
+      if (document.hidden || !page2.classList.contains('active') || !songStarted) {
         progressRafId = null;
         return;
       }
+      const frameInterval = document.body.classList.contains('perf-low') ? 66 : (document.body.classList.contains('audio-safe') ? 50 : 33);
+      if (timestamp - lastProgressFrame < frameInterval) {
+        progressRafId = requestAnimationFrame(updateSongProgress);
+        return;
+      }
+      lastProgressFrame = timestamp;
 
       const currentTime = songPlayer.currentTime;
       songCurrentTime.textContent = formatTime(currentTime);
@@ -3199,13 +3315,19 @@
     }
 
     function openPage2() {
+      document.body.classList.add('page2-open');
       music.pause();
       page2.classList.add('active');
       page2.scrollTop = 0;
+      try { songPlayer.load(); } catch (_) {}
             resetSongView();
       page2Intro.classList.remove('hidden');
       introOpened = false;
       songStarted = false;
+    }
+
+    function setAudioFirstMode(active) {
+      document.body.classList.toggle('audio-first', !!active);
     }
 
     function startSong() {
@@ -3221,7 +3343,7 @@
       renderLyric(0, 0);
       songPlayer.play().catch(() => {});
       startPhotoEqualizer();
-      requestAnimationFrame(updateMusicAtmosphere);
+      startMusicAtmosphere();
       updatePlayButton();
       updateSeekVisual();
 
@@ -3231,6 +3353,11 @@
     }
 
     function closePage2() {
+      document.body.classList.remove('page2-open', 'final-open', 'audio-first');
+      if (musicAtmosphereTimer) {
+        clearTimeout(musicAtmosphereTimer);
+        musicAtmosphereTimer = null;
+      }
       stopPhotoEqualizer();
       if (photoFrameEl) photoFrameEl.classList.add('eq-idle');
       page2.classList.remove('active');
@@ -3262,6 +3389,12 @@
 
     function initPhotoAudioAnalyser() {
       if (!photoEqualizer || !songPlayer) return;
+      if (document.body.classList.contains('audio-safe')) {
+        // Live Web Audio analyser отключён на телефонах/слабых устройствах.
+        // Это не влияет на MP3, а освобождает CPU/GPU для плавного воспроизведения.
+        photoEqReady = false;
+        return;
+      }
       if (photoEqReady) {
         if (photoAudioContext && photoAudioContext.state === 'suspended') {
           photoAudioContext.resume().catch(() => {});
@@ -3275,7 +3408,7 @@
 
         photoAudioContext = new AudioCtx();
         photoAnalyser = photoAudioContext.createAnalyser();
-        photoAnalyser.fftSize = 256;
+        photoAnalyser.fftSize = 128;
         photoAnalyser.smoothingTimeConstant = 0.82;
         photoAudioSource = photoAudioContext.createMediaElementSource(songPlayer);
         photoAudioSource.connect(photoAnalyser);
@@ -3294,7 +3427,7 @@
       if (!photoEqualizer) return false;
       const rect = photoEqualizer.getBoundingClientRect();
       if (rect.width < 2 || rect.height < 2) return false;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = document.body.classList.contains('perf-low') ? 1 : (document.body.classList.contains('perf-mobile') ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 1.75));
       const width = Math.max(1, Math.round(rect.width * dpr));
       const height = Math.max(1, Math.round(rect.height * dpr));
       if (photoEqualizer.width !== width || photoEqualizer.height !== height) {
@@ -3314,7 +3447,7 @@
       const w = photoEqualizer.width;
       const h = photoEqualizer.height;
       if (w < 4 || h < 4) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = document.body.classList.contains('perf-low') ? 1 : (document.body.classList.contains('perf-mobile') ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 1.75));
       const cx = w / 2;
       const cy = h / 2;
       // Геометрия привязана к реальному размеру рамки, а не к canvas.
@@ -3323,8 +3456,8 @@
       const frameRect = photoFrameEl ? photoFrameEl.getBoundingClientRect() : null;
       const frameRadius = frameRect ? (frameRect.width * dpr) / 2 : Math.min(w, h) * 0.34;
       const baseRadius = Math.max(12 * dpr, frameRadius + 10 * dpr);
-      const barCount = 52;
-      const maxBar = Math.min(w, h) * 0.105;
+      const barCount = document.body.classList.contains('perf-low') ? 28 : (document.body.classList.contains('perf-mobile') ? 32 : 36);
+      const maxBar = Math.min(w, h) * 0.115;
 
       ctx.clearRect(0, 0, w, h);
 
@@ -3367,27 +3500,32 @@
         ctx.lineCap = 'round';
 
         const alpha = idle ? 0.34 : 0.32 + level * 0.78;
-        const pulse = 0.88 + 0.12 * Math.sin((i / barCount) * Math.PI * 6);
-        const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
-        gradient.addColorStop(0, `rgba(206, 150, 176, ${alpha * 0.40})`);
-        gradient.addColorStop(0.55, `rgba(244, 201, 216, ${Math.min(1, alpha * pulse)})`);
-        gradient.addColorStop(1, `rgba(226, 180, 137, ${Math.min(1, alpha * 0.90)})`);
-        ctx.strokeStyle = gradient;
-        ctx.shadowBlur = idle ? 5 * dpr : (5 + level * 10) * dpr;
-        ctx.shadowColor = `rgba(231, 174, 195, ${idle ? 0.24 : 0.38 + level * 0.38})`;
+        // Один цвет на сегмент вместо создания 36 новых градиентов + blur каждый кадр.
+        const tone = i % 3;
+        ctx.strokeStyle = tone === 0
+          ? `rgba(219, 165, 190, ${alpha})`
+          : tone === 1
+            ? `rgba(239, 190, 207, ${alpha * 0.96})`
+            : `rgba(218, 184, 148, ${alpha * 0.88})`;
+        ctx.shadowBlur = 0;
         ctx.stroke();
       }
 
       ctx.shadowBlur = 0;
     }
 
-    function photoEqualizerLoop() {
-      if (!page2.classList.contains('active') || !songStarted || finalShown) {
+    let photoEqLastFrame = 0;
+    function photoEqualizerLoop(timestamp = 0) {
+      if (document.hidden || !page2.classList.contains('active') || !songStarted || finalShown) {
         photoEqFrame = null;
         drawPhotoEqualizer(true);
         return;
       }
-      drawPhotoEqualizer(false);
+      const frameInterval = document.body.classList.contains('perf-low') ? 66 : (document.body.classList.contains('perf-mobile') ? 45 : 33);
+      if (timestamp - photoEqLastFrame >= frameInterval) {
+        drawPhotoEqualizer(false);
+        photoEqLastFrame = timestamp;
+      }
       photoEqFrame = requestAnimationFrame(photoEqualizerLoop);
     }
 
@@ -3395,6 +3533,13 @@
       if (!photoEqualizer || !photoFrameEl) return;
       photoFrameEl.classList.remove('eq-idle');
       if (photoEqFrame) cancelAnimationFrame(photoEqFrame);
+      if (document.body.classList.contains('audio-safe')) {
+        // На мобильных не запускаем live-анализатор: аудио важнее анимации.
+        drawPhotoEqualizer(true);
+        photoEqFrame = null;
+        return;
+      }
+      photoEqLastFrame = 0;
       photoEqFrame = requestAnimationFrame(photoEqualizerLoop);
     }
 
@@ -3646,8 +3791,8 @@
       updatePlayButton();
     });
 
-    songPlayer.addEventListener('play', updatePlayButton);
-    songPlayer.addEventListener('pause', updatePlayButton);
+    songPlayer.addEventListener('play', () => { updatePlayButton(); setAudioFirstMode(true); });
+    songPlayer.addEventListener('pause', () => { updatePlayButton(); setAudioFirstMode(false); });
     songPlayer.addEventListener('timeupdate', updateSeekVisual);
     songPlayer.addEventListener('loadedmetadata', () => {
       songDuration.textContent = formatTime(songPlayer.duration);
@@ -3696,15 +3841,41 @@
     });
 
     // Небольшая реакция фона на ход музыки: очень мягкая, без эквалайзера.
+    let musicAtmosphereTimer = null;
     function updateMusicAtmosphere() {
-      if (!page2.classList.contains('active') || !songStarted) return;
+      if (document.hidden || !page2.classList.contains('active') || !songStarted) {
+        musicAtmosphereTimer = null;
+        return;
+      }
       const t = songPlayer.currentTime || 0;
       const wave = (Math.sin(t * 0.7) + Math.sin(t * 0.31 + 1.2)) * 0.5 + 0.5;
       page2.style.setProperty('--music-pulse', (0.92 + wave * 0.10).toFixed(3));
-      requestAnimationFrame(updateMusicAtmosphere);
+      musicAtmosphereTimer = setTimeout(updateMusicAtmosphere, document.body.classList.contains('perf-low') ? 260 : (document.body.classList.contains('audio-safe') ? 240 : 110));
     }
-    // Не переопределяем функцию; запускаем атмосферу по первому клику после старта.
-    startSongBtn.addEventListener('click', () => requestAnimationFrame(updateMusicAtmosphere), { once: true });
+    function startMusicAtmosphere() {
+      if (musicAtmosphereTimer) clearTimeout(musicAtmosphereTimer);
+      updateMusicAtmosphere();
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        if (musicAtmosphereTimer) {
+          clearTimeout(musicAtmosphereTimer);
+          musicAtmosphereTimer = null;
+        }
+        if (photoEqFrame) {
+          cancelAnimationFrame(photoEqFrame);
+          photoEqFrame = null;
+        }
+      } else if (songStarted && page2.classList.contains('active') && !finalShown) {
+        startMusicAtmosphere();
+        startPhotoEqualizer();
+        if (!progressRafId) {
+          lastProgressFrame = 0;
+          progressRafId = requestAnimationFrame(updateSongProgress);
+        }
+      }
+    });
 
   </script>
   <script>
@@ -3821,9 +3992,7 @@
         rescueBoot();
       }
 
-      setTimeout(rescueBoot, 250);
-      setTimeout(rescueBoot, 900);
-      setInterval(rescueUpdateHomeTools, 60000);
+      setTimeout(rescueBoot, 600);
     })();
   </script>
 
