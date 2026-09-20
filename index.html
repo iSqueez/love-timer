@@ -1420,23 +1420,156 @@
       .lyric-text { height:72px; }
       .lyric-container { height:84px; }
     }
+  
+
+    /* ===== MOTION + FUNCTIONAL PASS ===== */
+    .home-ambient { position: fixed; inset: 0; overflow: hidden; pointer-events:none; z-index:0; }
+    .home-orb { position:absolute; border-radius:50%; filter:blur(68px); opacity:.16; will-change:transform; }
+    .home-orb-a { width:280px; height:280px; top:-110px; left:-80px; background:#cf7596; animation: homeOrbA 18s ease-in-out infinite; }
+    .home-orb-b { width:240px; height:240px; right:-80px; top:35%; background:#7359b4; opacity:.11; animation: homeOrbB 21s ease-in-out infinite; }
+    .home-orb-c { width:320px; height:320px; left:20%; bottom:-180px; background:#8e4778; opacity:.10; animation: homeOrbC 24s ease-in-out infinite; }
+    .home-grain { position:absolute; inset:0; opacity:.18; background-image:radial-gradient(rgba(255,255,255,.16) .7px, transparent .7px),radial-gradient(rgba(255,255,255,.08) .7px, transparent .7px); background-size:97px 97px,131px 131px; background-position:12px 8px,41px 28px; animation: grainMove 26s linear infinite; }
+    @keyframes homeOrbA { 0%,100%{transform:translate3d(0,0,0) scale(1)} 50%{transform:translate3d(90px,35px,0) scale(1.08)} }
+    @keyframes homeOrbB { 0%,100%{transform:translate3d(0,0,0) scale(1)} 50%{transform:translate3d(-60px,-28px,0) scale(1.06)} }
+    @keyframes homeOrbC { 0%,100%{transform:translate3d(0,0,0) scale(1)} 50%{transform:translate3d(35px,-50px,0) scale(1.08)} }
+    @keyframes grainMove { from{transform:translate3d(0,0,0)} to{transform:translate3d(18px,-14px,0)} }
+
+    .content { z-index:2; }
+    .home-ambient { z-index:0; }
+    .timer { cursor:pointer; user-select:none; }
+    .timer:active { transform:scale(.995); }
+    .time-block { transition:transform .28s cubic-bezier(.22,1,.36,1), box-shadow .28s ease; }
+    .timer:hover .time-block { transform:translateY(-1px); }
+
+    .home-tools { width:100%; display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+    .tool-card { width:100%; margin:0; padding:14px 14px 13px; border-radius:18px; text-align:left; color:white; background:linear-gradient(155deg,rgba(255,255,255,.075),rgba(255,255,255,.025)); border:1px solid rgba(255,255,255,.10); box-shadow:0 10px 24px rgba(0,0,0,.18); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); display:flex; flex-direction:column; align-items:flex-start; min-height:88px; transition:transform .35s cubic-bezier(.22,1,.36,1), border-color .35s ease, background .35s ease; }
+    .tool-card:hover { transform:translateY(-2px); border-color:rgba(230,190,205,.24); }
+    .tool-card:active { transform:scale(.98); }
+    .tool-kicker { font-size:10px; text-transform:uppercase; letter-spacing:1.2px; color:rgba(255,255,255,.42); margin-bottom:7px; }
+    .tool-card strong { font-size:15px; line-height:1.2; color:rgba(255,255,255,.92); font-weight:700; }
+    .tool-card small { margin-top:5px; font-size:11px; color:rgba(255,255,255,.50); }
+    .text-action { width:auto; padding:8px 0; margin:3px 0 0; background:none; border:0; box-shadow:none; color:rgba(255,255,255,.54); font-size:12px; font-weight:600; }
+    .text-action::after { display:none; }
+    .text-action:hover { transform:none; color:rgba(255,255,255,.82); box-shadow:none; }
+
+    .photo-frame img { animation:photoFloat 20s cubic-bezier(.45,.05,.55,.95) infinite; }
+    @keyframes photoFloat {
+      0%,100% { transform:scale(1.012) translate3d(0,0,0); filter:brightness(.985) saturate(.98); }
+      50% { transform:scale(1.028) translate3d(-1px,-1px,0); filter:brightness(1.025) saturate(1.01); }
+    }
+    .photo-frame { animation:photoAura 9s ease-in-out infinite; }
+    @keyframes photoAura {
+      0%,100% { box-shadow:0 0 28px rgba(225,147,177,.18),0 0 96px rgba(112,79,145,.13); }
+      50% { box-shadow:0 0 38px rgba(225,147,177,.28),0 0 112px rgba(112,79,145,.20); }
+    }
+
+    .lyric-layer { transition-duration:.34s; }
+    .lyric-layer.active { transition-timing-function:cubic-bezier(.22,1,.36,1); }
+    .karaoke-word { filter:blur(1.05px); opacity:.44; transition:color .14s ease, filter .16s ease, opacity .16s ease, transform .16s cubic-bezier(.22,1,.36,1), text-shadow .16s ease; }
+    .karaoke-word.sung { filter:blur(0); opacity:.90; }
+    .karaoke-word.current { filter:blur(0); opacity:1; transform:translateY(-1px) scale(1.015); }
+
+    .song-seek { width:90%; max-width:320px; height:18px; position:relative; margin:-3px auto 6px; cursor:pointer; touch-action:none; }
+    .song-seek-track, .song-seek-fill { position:absolute; left:0; right:0; top:7px; height:4px; border-radius:99px; }
+    .song-seek-track { background:rgba(255,255,255,.09); }
+    .song-seek-fill { right:auto; width:0; background:linear-gradient(90deg,#8a647b,#d6a0b3,#c6a47e); box-shadow:0 0 10px rgba(220,167,188,.22); }
+    .song-seek-thumb { position:absolute; top:3px; left:0; width:12px; height:12px; border-radius:50%; transform:translateX(-50%) scale(.9); background:#e6b1c2; box-shadow:0 0 12px rgba(230,177,194,.55); transition:transform .18s ease; }
+    .song-seek:hover .song-seek-thumb, .song-seek.dragging .song-seek-thumb { transform:translateX(-50%) scale(1.12); }
+    .song-controls { width:90%; max-width:320px; display:grid; grid-template-columns:56px 56px 56px 1fr; gap:9px; align-items:center; margin-top:2px; }
+    .round-control, .focus-control { width:100%; margin:0; padding:11px 8px; border-radius:999px; background:rgba(255,255,255,.055); color:rgba(255,255,255,.72); border:1px solid rgba(255,255,255,.10); box-shadow:0 8px 18px rgba(0,0,0,.16); font-size:12px; font-weight:700; }
+    .round-control::after, .focus-control::after { display:none; }
+    .round-control:hover, .focus-control:hover { transform:translateY(-1px); background:rgba(255,255,255,.09); box-shadow:0 10px 24px rgba(0,0,0,.20); }
+    .main-control { background:rgba(220,173,192,.14); color:rgba(255,255,255,.92); border-color:rgba(225,180,198,.24); font-size:14px; }
+    .focus-control { padding-inline:14px; }
+
+    #page2.focus-mode .photo-frame { transform:scale(1.045); transition:transform .8s cubic-bezier(.22,1,.36,1); }
+    #page2.focus-mode .page2-title { opacity:.18; transform:translateY(-8px); transition:opacity .5s ease, transform .6s ease; }
+    #page2.focus-mode .song-controls { opacity:.18; transition:opacity .5s ease; }
+    #page2.focus-mode .lyric-line { font-size:18px; }
+    #page2.focus-mode .lyric-text { box-shadow:0 20px 46px rgba(0,0,0,.34), 0 0 26px rgba(210,150,177,.08), inset 0 1px 0 rgba(255,255,255,.05); }
+
+    .final-screen { overflow:hidden; background:radial-gradient(circle at 50% 30%,rgba(120,82,126,.34) 0%,rgba(30,19,31,.96) 40%,rgba(7,6,10,.995) 100%); }
+    .final-screen::before { content:''; position:absolute; inset:-20%; background:radial-gradient(circle at 35% 35%,rgba(210,130,165,.12),transparent 28%),radial-gradient(circle at 70% 70%,rgba(95,73,155,.12),transparent 30%); filter:blur(28px); animation:finalBgDrift 14s ease-in-out infinite; pointer-events:none; }
+    @keyframes finalBgDrift { 0%,100%{transform:translate3d(0,0,0) scale(1);opacity:.65} 50%{transform:translate3d(-2%,2%,0) scale(1.06);opacity:1} }
+    .final-ambient { position:absolute; inset:0; pointer-events:none; }
+    .final-ambient span { position:absolute; width:6px; height:6px; border-radius:50%; background:rgba(244,215,226,.65); box-shadow:0 0 14px rgba(240,190,210,.45); animation:finalParticle 5s ease-in-out infinite; }
+    .final-ambient span:nth-child(1){left:24%;top:23%;animation-delay:.4s}.final-ambient span:nth-child(2){right:22%;top:31%;animation-delay:1.6s}.final-ambient span:nth-child(3){left:69%;bottom:21%;animation-delay:2.8s}
+    @keyframes finalParticle { 0%,100%{transform:translateY(0) scale(.8);opacity:.3} 50%{transform:translateY(-10px) scale(1.15);opacity:.8} }
+    .final-screen > :not(.final-ambient) { position:relative; z-index:1; }
+
+    .easter-toast { position:fixed; left:50%; bottom:22px; transform:translate(-50%,16px); padding:10px 14px; border-radius:999px; background:rgba(20,14,21,.76); border:1px solid rgba(255,255,255,.10); color:rgba(255,255,255,.78); font-size:12px; opacity:0; pointer-events:none; backdrop-filter:blur(12px); z-index:100000; transition:opacity .35s ease, transform .45s cubic-bezier(.22,1,.36,1); }
+    .easter-toast.show { opacity:1; transform:translate(-50%,0); }
+
+    @media (max-width:700px){
+      .home-tools { gap:8px; }
+      .tool-card { padding:12px; min-height:82px; }
+      .song-controls { grid-template-columns:52px 52px 52px 1fr; }
+    }
+    @media (max-width:430px){
+      .home-tools { grid-template-columns:1fr; }
+      .tool-card { min-height:auto; }
+    }
+    @media (max-height:700px){
+      .home-tools { margin-top:8px; }
+      .text-action { font-size:11px; }
+      .photo-frame { animation-duration:10s; }
+      .song-controls { margin-top:0; }
+      .page2.focus-mode .photo-frame { transform:scale(1.025); }
+    }
+
+  
+    .timer-total { display:none; width:100%; min-height:76px; align-items:center; justify-content:center; border-radius:20px; background:linear-gradient(155deg,rgba(255,255,255,.075),rgba(255,255,255,.025)); border:1px solid rgba(255,255,255,.10); box-shadow:0 10px 24px rgba(0,0,0,.18); color:rgba(255,255,255,.92); font-size:28px; font-weight:800; letter-spacing:.3px; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+    .timer-total.show { display:flex; animation:toolIn .42s cubic-bezier(.22,1,.36,1); }
+    @keyframes toolIn { from{opacity:0;transform:translateY(7px) scale(.98)} to{opacity:1;transform:translateY(0) scale(1)} }
+    .tool-card-wide { grid-column:1 / -1; min-height:72px; }
+    .history-sheet { position:fixed; inset:0; z-index:100000; display:flex; align-items:flex-end; justify-content:center; padding:20px; background:rgba(7,5,10,.58); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); opacity:0; visibility:hidden; pointer-events:none; transition:opacity .38s ease, visibility .38s ease; }
+    .history-sheet.show { opacity:1; visibility:visible; pointer-events:auto; }
+    .history-card { width:min(100%, 380px); max-height:min(78vh,620px); overflow:auto; border-radius:26px; padding:22px; background:linear-gradient(160deg,rgba(35,25,39,.96),rgba(13,10,17,.98)); border:1px solid rgba(255,255,255,.10); box-shadow:0 30px 90px rgba(0,0,0,.45); transform:translateY(18px); transition:transform .48s cubic-bezier(.22,1,.36,1); }
+    .history-sheet.show .history-card { transform:translateY(0); }
+    .history-head { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:16px; }
+    .history-head h2 { font-size:21px; color:rgba(255,255,255,.93); margin-top:3px; }
+    .history-close { width:36px; height:36px; padding:0; margin:0; background:rgba(255,255,255,.05); color:rgba(255,255,255,.72); border:1px solid rgba(255,255,255,.09); box-shadow:none; }
+    .history-close::after { display:none; }
+    .history-list { display:flex; flex-direction:column; gap:9px; }
+    .history-item { display:grid; grid-template-columns:78px 1fr; gap:12px; padding:13px 0; border-top:1px solid rgba(255,255,255,.075); }
+    .history-item:first-child { border-top:0; }
+    .history-date { font-size:11px; color:rgba(255,255,255,.42); line-height:1.4; }
+    .history-item strong { font-size:14px; color:rgba(255,255,255,.88); display:block; margin-bottom:4px; }
+    .history-item span { font-size:12px; color:rgba(255,255,255,.48); }
+    .intro-mark { display:flex; align-items:center; justify-content:center; width:40px; height:40px; margin:0 auto 16px; color:#e4bbc9; background:rgba(228,187,201,.08); border:1px solid rgba(228,187,201,.14); border-radius:50%; box-shadow:0 0 22px rgba(228,187,201,.16); }
+    .intro-mark svg { width:24px; height:24px; display:block; }
+    .music-btn { line-height:1; }
+    .music-btn[aria-label*="Переключить"] { font-family:Georgia,serif; }
+    #page2::before { transform:translateX(-50%) scale(var(--music-pulse,1)); }
+    @media (max-width:430px){ .history-sheet{padding:12px;} .history-card{padding:19px;} }
+
   </style>
 </head>
 <body>
 
+  <div class="easter-toast" id="easterToast">Это место тоже было сделано о тебе.</div>
+
+  <div class="home-ambient" aria-hidden="true">
+    <span class="home-orb home-orb-a"></span>
+    <span class="home-orb home-orb-b"></span>
+    <span class="home-orb home-orb-c"></span>
+    <span class="home-grain"></span>
+  </div>
+
   <button class="back-btn" id="backBtn">←</button>
-  <button class="music-btn" id="musicBtn" title="Музыка">♫</button>
+  <button class="music-btn" id="musicBtn" title="Музыка" aria-label="Переключить музыку">♪</button>
 
   <div class="content">
     <h1>Мы вместе уже</h1>
     <p class="subtitle">Время идёт. Я решил его запомнить.</p>
 
-    <div class="timer">
+    <div class="timer" id="timer">
       <div class="time-block"><span class="time-value" id="days">0</span><span class="time-label">Дней</span></div>
       <div class="time-block"><span class="time-value" id="hours">0</span><span class="time-label">Часов</span></div>
       <div class="time-block"><span class="time-value" id="minutes">0</span><span class="time-label">Минут</span></div>
       <div class="time-block"><span class="time-value" id="seconds">0</span><span class="time-label">Секунд</span></div>
     </div>
+    <div class="timer-total" id="timerTotal" aria-live="polite"></div>
 
     <button id="loveBtn">Открыть сообщение</button>
     <button class="reset-btn" id="openPage2" style="background: rgba(255,100,150,0.18); border-color: rgba(255,150,180,0.32);">
@@ -1450,6 +1583,39 @@
     <div class="progress-wrap" id="progressWrap" style="display:none;">
       <p class="progress-label" id="progressLabel">До последней страницы осталось 10</p>
       <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+
+    <div class="home-tools" aria-label="Дополнительная информация">
+      <button class="tool-card" id="nextDateCard" type="button">
+        <span class="tool-kicker">Следующая дата</span>
+        <strong id="nextDateValue">—</strong>
+        <small id="nextDateMeta">—</small>
+      </button>
+      <button class="tool-card" id="nextMilestoneCard" type="button">
+        <span class="tool-kicker">Ближайший рубеж</span>
+        <strong id="milestoneValue">—</strong>
+        <small id="milestoneMeta">—</small>
+      </button>
+      <button class="tool-card tool-card-wide" id="historyCard" type="button">
+        <span class="tool-kicker">Наша история</span>
+        <strong id="historyValue">С этой даты всё началось</strong>
+        <small id="historyMeta">Посмотреть даты и будущие рубежи</small>
+      </button>
+    </div>
+
+    <button class="text-action" id="timerModeBtn" type="button">Показать общее время</button>
+  </div>
+
+  <div class="history-sheet" id="historySheet" aria-hidden="true">
+    <div class="history-card">
+      <div class="history-head">
+        <div>
+          <span class="tool-kicker">Наша история</span>
+          <h2>От одной даты — дальше</h2>
+        </div>
+        <button class="history-close" id="historyClose" type="button" aria-label="Закрыть">×</button>
+      </div>
+      <div class="history-list" id="historyList"></div>
     </div>
   </div>
 
@@ -1466,7 +1632,12 @@
 
     <div class="page2-intro" id="page2Intro">
       <div class="intro-card">
-        <div class="intro-mark" aria-hidden="true"></div>
+        <div class="intro-mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64" role="presentation">
+            <path d="M12 34v-4a20 20 0 0 1 40 0v4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            <path d="M12 34v10a5 5 0 0 0 5 5h3V31h-3a5 5 0 0 0-5 5Zm40 0v10a5 5 0 0 1-5 5h-3V31h3a5 5 0 0 1 5 5Z" fill="currentColor"/>
+          </svg>
+        </div>
         <h2 class="intro-title">Это для тебя</h2>
         <p class="intro-subtitle">Надень наушники.<br>Несколько минут без спешки.</p>
         <button class="final-btn" id="startSongBtn">Начать</button>
@@ -1501,11 +1672,27 @@
         <span id="songCurrentTime">0:00</span>
         <span id="songDuration">0:00</span>
       </div>
+
+      <div class="song-seek" id="songSeek" role="slider" aria-label="Перемотка трека" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+        <div class="song-seek-track"></div>
+        <div class="song-seek-fill" id="songSeekFill"></div>
+        <div class="song-seek-thumb" id="songSeekThumb"></div>
+      </div>
+
+      <div class="song-controls">
+        <button class="round-control" id="rewindBtn" type="button" aria-label="Назад на 5 секунд">−5</button>
+        <button class="round-control main-control" id="playPauseBtn" type="button" aria-label="Пауза">Ⅱ</button>
+        <button class="round-control" id="forwardBtn" type="button" aria-label="Вперёд на 5 секунд">+5</button>
+        <button class="focus-control" id="focusBtn" type="button" aria-label="Фокус-режим">Фокус</button>
+      </div>
     </div>
   </div>
 
   <!-- ФИНАЛЬНЫЙ ЭКРАН -->
   <div class="final-screen" id="finalScreen">
+    <div class="final-ambient" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </div>
     <div class="final-heart" aria-hidden="true"></div>
     <h2 class="final-title">И всё-таки...</h2>
     <p class="final-text">
@@ -1526,7 +1713,6 @@
     <source src="music-love.mp3" type="audio/mpeg">
   </audio>
 
-  <script src="lyrics.js"></script>
   <script>
     if (window.Telegram && window.Telegram.WebApp) {
       const tg = window.Telegram.WebApp;
@@ -1848,7 +2034,7 @@
     music.volume = 0.25;
 
     function updateMusicIcon() {
-      musicBtn.textContent = musicOn ? '♫' : '·';
+      musicBtn.textContent = musicOn ? '♪' : '×';
     }
     updateMusicIcon();
 
@@ -2227,6 +2413,7 @@
 
       const currentTime = songPlayer.currentTime;
       songCurrentTime.textContent = formatTime(currentTime);
+      updateSeekVisual();
 
       if (songPlayer.duration && isFinite(songPlayer.duration)) {
         const progress = Math.min(100, (currentTime / songPlayer.duration) * 100);
@@ -2281,6 +2468,9 @@
       initLyricLayers();
       renderLyric(0, 0);
       songPlayer.play().catch(() => {});
+      requestAnimationFrame(updateMusicAtmosphere);
+      updatePlayButton();
+      updateSeekVisual();
 
       if (!progressRafId) {
         progressRafId = requestAnimationFrame(updateSongProgress);
@@ -2351,6 +2541,274 @@
 
     document.getElementById('openPage2').addEventListener('click', openPage2);
     backBtn.addEventListener('click', closePage2);
+
+
+    // ===== Дополнительный функционал =====
+    const timerEl = document.getElementById('timer');
+    const timerTotal = document.getElementById('timerTotal');
+    const timerModeBtn = document.getElementById('timerModeBtn');
+    const nextDateCard = document.getElementById('nextDateCard');
+    const nextDateValue = document.getElementById('nextDateValue');
+    const nextDateMeta = document.getElementById('nextDateMeta');
+    const milestoneValue = document.getElementById('milestoneValue');
+    const milestoneMeta = document.getElementById('milestoneMeta');
+    const historyCard = document.getElementById('historyCard');
+    const historySheet = document.getElementById('historySheet');
+    const historyClose = document.getElementById('historyClose');
+    const historyList = document.getElementById('historyList');
+    const songSeek = document.getElementById('songSeek');
+    const songSeekFill = document.getElementById('songSeekFill');
+    const songSeekThumb = document.getElementById('songSeekThumb');
+    const rewindBtn = document.getElementById('rewindBtn');
+    const forwardBtn = document.getElementById('forwardBtn');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const focusBtn = document.getElementById('focusBtn');
+    const easterToast = document.getElementById('easterToast');
+
+    let timerMode = 0;
+    let photoTapCount = 0;
+    let photoTapTimer = null;
+    let seekDragging = false;
+
+    function getTotalSeconds() {
+      return Math.max(0, Math.floor((Date.now() - START_DATE.getTime()) / 1000));
+    }
+
+    function updateTimerModeLabel() {
+      const labels = ['Показать общее время', 'Показать только дни', 'Вернуть обычный таймер'];
+      timerModeBtn.textContent = labels[timerMode];
+    }
+
+    function renderTimerMode() {
+      const total = getTotalSeconds();
+      const blocks = document.querySelectorAll('.time-block');
+      const labels = document.querySelectorAll('.time-label');
+      const values = document.querySelectorAll('.time-value');
+      blocks.forEach(b => b.style.display = '');
+      timerTotal.classList.remove('show');
+
+      if (timerMode === 0) {
+        updateTimer();
+      } else if (timerMode === 1) {
+        timerTotal.textContent = `${Math.floor(total / 3600)} часов ${Math.floor((total / 60) % 60)} минут`;
+        timerTotal.classList.add('show');
+        blocks.forEach(b => b.style.display = 'none');
+      } else {
+        timerTotal.textContent = `${total.toLocaleString('ru-RU')} секунд`;
+        timerTotal.classList.add('show');
+        blocks.forEach(b => b.style.display = 'none');
+      }
+      // restore labels in normal mode
+      if (timerMode === 0) {
+        labels[0].textContent='Дней'; labels[1].textContent='Часов'; labels[2].textContent='Минут'; labels[3].textContent='Секунд';
+        values[0].textContent = document.getElementById('days').textContent;
+      }
+      updateTimerModeLabel();
+    }
+
+    timerModeBtn.addEventListener('click', () => {
+      timerMode = (timerMode + 1) % 3;
+      renderTimerMode();
+    });
+    timerEl.addEventListener('click', () => {
+      timerMode = (timerMode + 1) % 3;
+      renderTimerMode();
+    });
+
+    function getMonthDate(year, month, day) {
+      return new Date(year, month, day, START_DATE.getHours(), START_DATE.getMinutes(), 0, 0);
+    }
+
+    function getNextMonthlyDate(now) {
+      const y = now.getFullYear();
+      const m = now.getMonth();
+      let candidate = getMonthDate(y, m, START_DATE.getDate());
+      if (candidate.getTime() <= now.getTime()) candidate = getMonthDate(y, m + 1, START_DATE.getDate());
+      return candidate;
+    }
+
+    function monthDiff(fromDate, toDate) {
+      return (toDate.getFullYear() - fromDate.getFullYear()) * 12 + (toDate.getMonth() - fromDate.getMonth());
+    }
+
+    function updateHomeTools() {
+      const now = new Date();
+      const next = getNextMonthlyDate(now);
+      const ms = next.getTime() - now.getTime();
+      const days = Math.floor(ms / 86400000);
+      const hours = Math.floor((ms / 3600000) % 24);
+      const nextMonths = Math.max(1, monthDiff(START_DATE, next));
+
+      nextDateValue.textContent = next.toLocaleDateString('ru-RU', { day:'numeric', month:'long' });
+      nextDateMeta.textContent = days > 0 ? `через ${days} д. ${String(hours).padStart(2,'0')} ч.` : 'совсем скоро';
+      milestoneValue.textContent = `${nextMonths}-й месяц`;
+      milestoneMeta.textContent = `до ${next.toLocaleDateString('ru-RU', { day:'numeric', month:'short' })}`;
+    }
+    updateHomeTools();
+    setInterval(updateHomeTools, 60000);
+
+    nextDateCard.addEventListener('click', () => {
+      const next = getNextMonthlyDate(new Date());
+      nextDateCard.animate([
+        { transform:'scale(1)' }, { transform:'scale(.98)' }, { transform:'scale(1)' }
+      ], { duration:320, easing:'cubic-bezier(.22,1,.36,1)' });
+      nextDateMeta.textContent = next.toLocaleDateString('ru-RU', { weekday:'long' });
+      setTimeout(updateHomeTools, 1600);
+    });
+
+    nextMilestoneCard.addEventListener('click', () => {
+      const now = new Date();
+      const next = getNextMonthlyDate(now);
+      const delta = Math.max(0, next - now);
+      const days = Math.floor(delta / 86400000);
+      milestoneMeta.textContent = `${days} дней осталось`;
+      setTimeout(updateHomeTools, 1600);
+    });
+
+
+    function addMonths(date, months) {
+      const d = new Date(date);
+      d.setMonth(d.getMonth() + months);
+      return d;
+    }
+
+    function buildHistory() {
+      const milestones = [
+        { date: START_DATE, title: 'Начало', text: 'Отсюда начинается наш счётчик.' },
+        { date: addMonths(START_DATE, 1), title: '1 месяц', text: 'Первый месячный рубеж.' },
+        { date: addMonths(START_DATE, 3), title: '3 месяца', text: 'Следующий заметный этап.' },
+        { date: addMonths(START_DATE, 6), title: 'Полгода', text: 'Ещё одна дата, которую можно сохранить.' },
+        { date: addMonths(START_DATE, 12), title: '1 год', text: 'Год с той самой даты.' }
+      ];
+      historyList.innerHTML = milestones.map(item => `
+        <div class="history-item">
+          <div class="history-date">${item.date.toLocaleDateString('ru-RU', {day:'2-digit', month:'short', year:'numeric'})}</div>
+          <div><strong>${item.title}</strong><span>${item.text}</span></div>
+        </div>
+      `).join('');
+    }
+    buildHistory();
+
+    function openHistory() {
+      historySheet.classList.add('show');
+      historySheet.setAttribute('aria-hidden','false');
+    }
+    function closeHistory() {
+      historySheet.classList.remove('show');
+      historySheet.setAttribute('aria-hidden','true');
+    }
+    historyCard.addEventListener('click', openHistory);
+    historyClose.addEventListener('click', closeHistory);
+    historySheet.addEventListener('click', e => { if (e.target === historySheet) closeHistory(); });
+
+    // ===== Плавный мини-плеер =====
+    function updatePlayButton() {
+      playPauseBtn.textContent = songPlayer.paused ? '▶' : 'Ⅱ';
+      playPauseBtn.setAttribute('aria-label', songPlayer.paused ? 'Воспроизвести' : 'Пауза');
+    }
+
+    function seekToRatio(ratio) {
+      if (!songPlayer.duration || !isFinite(songPlayer.duration)) return;
+      const nextTime = Math.max(0, Math.min(songPlayer.duration, ratio * songPlayer.duration));
+      songPlayer.currentTime = nextTime;
+      if (typeof syncLyricToAudio === 'function') syncLyricToAudio(nextTime);
+      updateSeekVisual();
+    }
+
+    function getSeekRatio(clientX) {
+      const rect = songSeek.getBoundingClientRect();
+      return Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    }
+
+    function updateSeekVisual() {
+      if (!songPlayer.duration || !isFinite(songPlayer.duration)) return;
+      const ratio = Math.max(0, Math.min(1, songPlayer.currentTime / songPlayer.duration));
+      songSeekFill.style.width = `${ratio * 100}%`;
+      songSeekThumb.style.left = `${ratio * 100}%`;
+      songSeek.setAttribute('aria-valuenow', String(Math.round(ratio * 100)));
+    }
+
+    songSeek.addEventListener('pointerdown', (e) => {
+      if (!songStarted) return;
+      seekDragging = true;
+      songSeek.classList.add('dragging');
+      songSeek.setPointerCapture?.(e.pointerId);
+      seekToRatio(getSeekRatio(e.clientX));
+    });
+    songSeek.addEventListener('pointermove', (e) => {
+      if (seekDragging) seekToRatio(getSeekRatio(e.clientX));
+    });
+    songSeek.addEventListener('pointerup', () => { seekDragging = false; songSeek.classList.remove('dragging'); });
+    songSeek.addEventListener('pointercancel', () => { seekDragging = false; songSeek.classList.remove('dragging'); });
+    songSeek.addEventListener('keydown', (e) => {
+      if (!songStarted) return;
+      if (e.key === 'ArrowLeft') { e.preventDefault(); songPlayer.currentTime = Math.max(0, songPlayer.currentTime - 5); syncLyricToAudio(songPlayer.currentTime); updateSeekVisual(); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); songPlayer.currentTime = Math.min(songPlayer.duration || Infinity, songPlayer.currentTime + 5); syncLyricToAudio(songPlayer.currentTime); updateSeekVisual(); }
+    });
+
+    rewindBtn.addEventListener('click', () => {
+      if (!songStarted) return;
+      songPlayer.currentTime = Math.max(0, songPlayer.currentTime - 5);
+      syncLyricToAudio(songPlayer.currentTime);
+      updateSeekVisual();
+    });
+    forwardBtn.addEventListener('click', () => {
+      if (!songStarted) return;
+      songPlayer.currentTime = Math.min(songPlayer.duration || Infinity, songPlayer.currentTime + 5);
+      syncLyricToAudio(songPlayer.currentTime);
+      updateSeekVisual();
+    });
+    playPauseBtn.addEventListener('click', () => {
+      if (!songStarted) {
+        startSong();
+        return;
+      }
+      if (songPlayer.paused) songPlayer.play().catch(() => {});
+      else songPlayer.pause();
+      updatePlayButton();
+    });
+
+    songPlayer.addEventListener('play', updatePlayButton);
+    songPlayer.addEventListener('pause', updatePlayButton);
+    songPlayer.addEventListener('timeupdate', updateSeekVisual);
+    songPlayer.addEventListener('loadedmetadata', () => {
+      songDuration.textContent = formatTime(songPlayer.duration);
+      updateSeekVisual();
+    });
+
+    focusBtn.addEventListener('click', () => {
+      page2.classList.toggle('focus-mode');
+      focusBtn.textContent = page2.classList.contains('focus-mode') ? 'Обычный вид' : 'Фокус';
+    });
+
+    // ===== Пасхалка на фото =====
+    const photoFrame = document.querySelector('.photo-frame');
+    photoFrame.addEventListener('click', () => {
+      photoTapCount += 1;
+      clearTimeout(photoTapTimer);
+      photoTapTimer = setTimeout(() => { photoTapCount = 0; }, 900);
+      if (photoTapCount >= 3) {
+        photoTapCount = 0;
+        easterToast.classList.add('show');
+        setTimeout(() => easterToast.classList.remove('show'), 2200);
+      }
+    });
+
+    // Полное завершение трека — мягкое завершение, без возврата к исходной строке.
+    songPlayer.addEventListener('ended', () => {
+      if (!finalShown) showFinal();
+    });
+
+    // Небольшая реакция фона на ход музыки: очень мягкая, без эквалайзера.
+    function updateMusicAtmosphere() {
+      if (!page2.classList.contains('active') || !songStarted) return;
+      const t = songPlayer.currentTime || 0;
+      const wave = (Math.sin(t * 0.7) + Math.sin(t * 0.31 + 1.2)) * 0.5 + 0.5;
+      page2.style.setProperty('--music-pulse', (0.92 + wave * 0.10).toFixed(3));
+      requestAnimationFrame(updateMusicAtmosphere);
+    }
+    // Не переопределяем функцию; запускаем атмосферу по первому клику после старта.
+    startSongBtn.addEventListener('click', () => requestAnimationFrame(updateMusicAtmosphere), { once: true });
 
   </script>
 </body>
