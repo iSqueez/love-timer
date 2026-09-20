@@ -1404,15 +1404,7 @@
     .intro-card { background:linear-gradient(150deg,rgba(255,255,255,.075),rgba(255,255,255,.026)); border-color:rgba(255,255,255,.10); box-shadow:0 30px 90px rgba(0,0,0,.46), inset 0 1px 0 rgba(255,255,255,.055); }
     .intro-title { color:rgba(255,255,255,.96); font-size:27px; letter-spacing:.1px; }
     .intro-subtitle { color:rgba(255,255,255,.60); }
-    .intro-mark {
-      display:flex; align-items:center; justify-content:center;
-      width:40px; height:40px; margin:0 auto 16px;
-      color:#e4bbc9; background:rgba(228,187,201,.08);
-      border:1px solid rgba(228,187,201,.14); border-radius:50%;
-      box-shadow:0 0 22px rgba(228,187,201,.16);
-      animation:introMark 2.8s ease-in-out infinite;
-    }
-    .intro-mark svg { width:24px; height:24px; display:block; }
+    .intro-mark { width:9px; height:9px; background:#deb7c7; box-shadow:0 0 18px rgba(222,183,199,.68); }
 
     .final-screen { background:radial-gradient(circle at 50% 36%,rgba(87,65,101,.30) 0%,rgba(13,10,16,.97) 58%,#07060a 100%); }
     .final-title { color:rgba(255,255,255,.96); font-size:28px; }
@@ -1443,17 +1435,6 @@
     @keyframes grainMove { from{transform:translate3d(0,0,0)} to{transform:translate3d(18px,-14px,0)} }
 
     .content { z-index:2; }
-
-    .home-tools { position:relative; z-index:3; opacity:1; visibility:visible; }
-    .tool-card, .message-card, .time-block, button {
-      will-change:transform, opacity, box-shadow, filter;
-    }
-
-    @media (max-height: 760px) {
-      body { justify-content:flex-start; overflow-y:auto; }
-      .content { margin-block:auto; padding-top:12px; padding-bottom:20px; }
-      .home-tools { margin-top:10px; }
-    }
     .home-ambient { z-index:0; }
     .timer { cursor:pointer; user-select:none; }
     .timer:active { transform:scale(.995); }
@@ -1470,19 +1451,11 @@
     .text-action { width:auto; padding:8px 0; margin:3px 0 0; background:none; border:0; box-shadow:none; color:rgba(255,255,255,.54); font-size:12px; font-weight:600; }
     .text-action::after { display:none; }
     .text-action:hover { transform:none; color:rgba(255,255,255,.82); box-shadow:none; }
-    .home-status {
-      margin-top:10px; font-size:11px; letter-spacing:.4px;
-      color:rgba(255,255,255,.42); text-align:center;
-    }
 
-    .photo-frame img {
-      animation:photoFloat 28s cubic-bezier(.37,0,.63,1) infinite;
-      transform-origin:center center;
-      will-change:transform,filter;
-    }
+    .photo-frame img { animation:photoFloat 20s cubic-bezier(.45,.05,.55,.95) infinite; }
     @keyframes photoFloat {
-      0%,100% { transform:scale(1.006) translate3d(0,0,0); filter:brightness(.985) saturate(.985); }
-      50% { transform:scale(1.018) translate3d(-0.8px,-0.7px,0); filter:brightness(1.018) saturate(1.005); }
+      0%,100% { transform:scale(1.012) translate3d(0,0,0); filter:brightness(.985) saturate(.98); }
+      50% { transform:scale(1.028) translate3d(-1px,-1px,0); filter:brightness(1.025) saturate(1.01); }
     }
     .photo-frame { animation:photoAura 9s ease-in-out infinite; }
     @keyframes photoAura {
@@ -1492,7 +1465,7 @@
 
     .lyric-layer { transition-duration:.34s; }
     .lyric-layer.active { transition-timing-function:cubic-bezier(.22,1,.36,1); }
-    .karaoke-word { filter:blur(0.72px); opacity:.50; transition:color .14s ease, filter .16s ease, opacity .16s ease, transform .16s cubic-bezier(.22,1,.36,1), text-shadow .16s ease; }
+    .karaoke-word { filter:blur(1.05px); opacity:.44; transition:color .14s ease, filter .16s ease, opacity .16s ease, transform .16s cubic-bezier(.22,1,.36,1), text-shadow .16s ease; }
     .karaoke-word.sung { filter:blur(0); opacity:.90; }
     .karaoke-word.current { filter:blur(0); opacity:1; transform:translateY(-1px) scale(1.015); }
 
@@ -1570,6 +1543,126 @@
     #page2::before { transform:translateX(-50%) scale(var(--music-pulse,1)); }
     @media (max-width:430px){ .history-sheet{padding:12px;} .history-card{padding:19px;} }
 
+    /* ===== FINAL USABILITY PASS ===== */
+    .back-btn { display:none !important; }
+
+    .page2-nav {
+      position:fixed;
+      top:max(12px, env(safe-area-inset-top,0px));
+      left:0; right:0;
+      z-index:1000;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:10px;
+      padding:0 16px;
+      pointer-events:none;
+    }
+    .page2-nav-btn {
+      pointer-events:auto;
+      justify-self:start;
+      width:auto;
+      min-width:0;
+      margin:0;
+      padding:9px 13px;
+      border-radius:999px;
+      background:rgba(10,8,15,.50);
+      border:1px solid rgba(255,255,255,.12);
+      color:rgba(255,255,255,.78);
+      box-shadow:0 10px 24px rgba(0,0,0,.22);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+      font-size:12px;
+      font-weight:650;
+    }
+    .page2-nav-title {
+      justify-self:center;
+      color:rgba(255,255,255,.46);
+      font-size:11px;
+      letter-spacing:.9px;
+      text-transform:uppercase;
+      pointer-events:none;
+    }
+    .page2-nav-btn.nav-placeholder { opacity:0; pointer-events:none; }
+
+    .home-actions {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:9px;
+      width:100%;
+      margin-top:6px;
+    }
+    .home-action {
+      width:100%;
+      margin:0;
+      padding:9px 12px;
+      border-radius:13px;
+      background:rgba(255,255,255,.035);
+      border:1px solid rgba(255,255,255,.075);
+      color:rgba(255,255,255,.52);
+      box-shadow:none;
+      font-size:11px;
+      font-weight:650;
+    }
+    .home-action::after { display:none; }
+    .home-action:hover { transform:translateY(-1px); background:rgba(255,255,255,.055); box-shadow:none; }
+    .home-action:active { transform:scale(.985); }
+
+    .song-progress { display:none !important; }
+    .song-seek {
+      height:24px;
+      margin:0 auto 9px;
+      touch-action:none;
+    }
+    .song-seek-track, .song-seek-fill { top:10px; height:4px; }
+    .song-seek-thumb { top:6px; width:14px; height:14px; }
+    .song-seek:focus-visible { outline:2px solid rgba(230,177,194,.60); outline-offset:4px; border-radius:10px; }
+
+    .song-controls {
+      grid-template-columns:48px 48px 48px 48px 1fr;
+      gap:7px;
+      margin-top:1px;
+    }
+    .round-control, .focus-control { min-height:40px; }
+    .main-control { font-size:13px; }
+
+    .photo-frame img {
+      animation:photoFloat 24s cubic-bezier(.37,0,.63,1) infinite;
+    }
+    @keyframes photoFloat {
+      0%,100% { transform:scale(1.016) translate3d(0,0,0); filter:brightness(.985) saturate(.985); }
+      50% { transform:scale(1.026) translate3d(-.8px,-.7px,0); filter:brightness(1.018) saturate(1.005); }
+    }
+    .photo-frame { animation:photoAura 11s ease-in-out infinite; }
+    @keyframes photoAura {
+      0%,100% { box-shadow:0 0 28px rgba(225,147,177,.16),0 0 96px rgba(112,79,145,.11); }
+      50% { box-shadow:0 0 34px rgba(225,147,177,.23),0 0 108px rgba(112,79,145,.16); }
+    }
+
+    .motion-light .home-orb,
+    .motion-light .home-grain,
+    .motion-light .heart-bg,
+    .motion-light .ambient-orb,
+    .motion-light .ambient-glow,
+    .motion-light .light-streak,
+    .motion-light .frame-particle,
+    .motion-light .final-ambient span {
+      animation-play-state:paused !important;
+    }
+
+    @media (max-width:430px){
+      .home-actions { gap:7px; }
+      .home-action { font-size:10.5px; padding:9px 8px; }
+      .page2-nav { padding:0 12px; }
+      .page2-nav-btn { padding:8px 10px; font-size:11px; }
+      .song-controls { grid-template-columns:46px 46px 46px 46px 1fr; gap:6px; }
+    }
+    @media (max-height:700px){
+      .page2-nav { top:max(8px, env(safe-area-inset-top,0px)); }
+      .song-controls { gap:5px; }
+      .home-actions { margin-top:3px; }
+    }
+
   </style>
 </head>
 <body>
@@ -1583,7 +1676,6 @@
     <span class="home-grain"></span>
   </div>
 
-  <button class="back-btn" id="backBtn">←</button>
   <button class="music-btn" id="musicBtn" title="Музыка" aria-label="Переключить музыку">♪</button>
 
   <div class="content">
@@ -1630,8 +1722,12 @@
       </button>
     </div>
 
-    <p class="home-status" id="homeStatus" aria-live="polite">Сегодня — день нашей истории.</p>
     <button class="text-action" id="timerModeBtn" type="button">Показать общее время</button>
+
+    <div class="home-actions" aria-label="Полезные действия">
+      <button class="home-action" id="shareBtn" type="button">Поделиться</button>
+      <button class="home-action" id="motionBtn" type="button">Снизить движение</button>
+    </div>
   </div>
 
   <div class="history-sheet" id="historySheet" aria-hidden="true">
@@ -1649,6 +1745,11 @@
 
   <!-- === ВТОРАЯ СТРАНИЦА === -->
   <div id="page2">
+    <div class="page2-nav">
+      <button class="page2-nav-btn" id="page2Back" type="button" aria-label="Вернуться на главную">← На главную</button>
+      <span class="page2-nav-title">Для тебя</span>
+      <button class="page2-nav-btn nav-placeholder" type="button" tabindex="-1" aria-hidden="true"> </button>
+    </div>
     <div class="page2-ambient" aria-hidden="true">
       <span class="ambient-orb orb-a"></span>
       <span class="ambient-orb orb-b"></span>
@@ -1693,9 +1794,6 @@
         <p class="lyric-text" id="lyricText"></p>
       </div>
 
-      <div class="song-progress">
-        <div class="song-progress-fill" id="songFill"></div>
-      </div>
       <div class="song-time">
         <span id="songCurrentTime">0:00</span>
         <span id="songDuration">0:00</span>
@@ -1711,6 +1809,7 @@
         <button class="round-control" id="rewindBtn" type="button" aria-label="Назад на 5 секунд">−5</button>
         <button class="round-control main-control" id="playPauseBtn" type="button" aria-label="Пауза">Ⅱ</button>
         <button class="round-control" id="forwardBtn" type="button" aria-label="Вперёд на 5 секунд">+5</button>
+        <button class="round-control" id="speedBtn" type="button" aria-label="Скорость воспроизведения">1×</button>
         <button class="focus-control" id="focusBtn" type="button" aria-label="Фокус-режим">Фокус</button>
       </div>
     </div>
@@ -2162,11 +2261,10 @@
 
     // ========== ВТОРАЯ СТРАНИЦА ==========
     const page2 = document.getElementById('page2');
-    const backBtn = document.getElementById('backBtn');
+    const page2Back = document.getElementById('page2Back');
     const songPlayer = document.getElementById('songPlayer');
     const lyricText = document.getElementById('lyricText');
-    const songFill = document.getElementById('songFill');
-    const finalScreen = document.getElementById('finalScreen');
+        const finalScreen = document.getElementById('finalScreen');
     const replayBtn = document.getElementById('replayBtn');
     const finalExitBtn = document.getElementById('finalExitBtn');
     const page2Intro = document.getElementById('page2Intro');
@@ -2233,7 +2331,7 @@
       { time: 180,  text: "..." }
     ];
 
-    // Защита от случайно переставленного таймкода: синхронизация всегда идёт по времени.
+    // Защита от случайной перестановки таймкодов при дальнейших правках.
     LYRICS.sort((a, b) => a.time - b.time);
 
     let lyricIndex = 0;
@@ -2362,17 +2460,6 @@
       const oldLayer = lyricLayerIndex >= 0 ? layerNodes[lyricLayerIndex] : null;
 
       prepareKaraokeLine(LYRICS[index].text, nextLayer);
-
-      const duration = songPlayer.duration && isFinite(songPlayer.duration)
-        ? songPlayer.duration : REFERENCE_DURATION;
-      const nextTime = LYRICS[index + 1]
-        ? getScaledLyricTime(LYRICS[index + 1].time, duration)
-        : duration;
-      const thisTime = getScaledLyricTime(LYRICS[index].time, duration);
-      const gap = Math.max(0, nextTime - thisTime);
-      const transitionMs = Math.max(120, Math.min(420, gap * 180));
-
-      nextLayer.style.setProperty('--lyric-transition', `${transitionMs}ms`);
       nextLayer.classList.remove('active', 'leaving');
       void nextLayer.offsetWidth;
 
@@ -2380,7 +2467,6 @@
       lyricLayerIndex = nextLayerIndex;
 
       if (oldLayer) {
-        oldLayer.style.setProperty('--lyric-transition', `${transitionMs}ms`);
         oldLayer.classList.remove('active');
         oldLayer.classList.add('leaving');
       }
@@ -2389,7 +2475,7 @@
       updateKaraokeWords(currentTime);
 
       if (oldLayer) {
-        setTimeout(() => oldLayer.classList.remove('leaving'), transitionMs + 80);
+        setTimeout(() => oldLayer.classList.remove('leaving'), 560);
       }
     }
 
@@ -2420,8 +2506,7 @@
       if (finalShown) return;
       finalShown = true;
       songPlayer.pause();
-      backBtn.classList.remove('show');
-
+      
       if (finalTimeoutId) clearTimeout(finalTimeoutId);
       finalTimeoutId = setTimeout(() => {
         // Пользователь мог закрыть страницу за это время.
@@ -2462,7 +2547,7 @@
 
       if (songPlayer.duration && isFinite(songPlayer.duration)) {
         const progress = Math.min(100, (currentTime / songPlayer.duration) * 100);
-        songFill.style.width = progress + '%';
+        songSeekFill.style.width = progress + '%';
         songDuration.textContent = formatTime(songPlayer.duration);
       }
 
@@ -2480,8 +2565,11 @@
     function resetSongView() {
       songPlayer.pause();
       songPlayer.currentTime = 0;
+      songPlayer.playbackRate = 1;
+      playbackRateIndex = 1;
+      if (speedBtn) speedBtn.textContent = '1×';
       lyricIndex = 0;
-      songFill.style.width = '0%';
+      songSeekFill.style.width = '0%';
       songCurrentTime.textContent = '0:00';
       songDuration.textContent = '0:00';
       finalShown = false;
@@ -2495,8 +2583,7 @@
       music.pause();
       page2.classList.add('active');
       page2.scrollTop = 0;
-      backBtn.classList.add('show');
-      resetSongView();
+            resetSongView();
       page2Intro.classList.remove('hidden');
       introOpened = false;
       songStarted = false;
@@ -2508,6 +2595,9 @@
       page2Intro.classList.add('hidden');
       songPlayer.volume = 0.4;
       songPlayer.currentTime = 0;
+      songPlayer.playbackRate = 1;
+      playbackRateIndex = 1;
+      speedBtn.textContent = '1×';
       songStarted = true;
 
       initLyricLayers();
@@ -2524,8 +2614,7 @@
 
     function closePage2() {
       page2.classList.remove('active');
-      backBtn.classList.remove('show');
-      resetSongView();
+            resetSongView();
       page2Intro.classList.remove('hidden');
       introOpened = false;
       songStarted = false;
@@ -2585,7 +2674,7 @@
     }
 
     document.getElementById('openPage2').addEventListener('click', openPage2);
-    backBtn.addEventListener('click', closePage2);
+    page2Back.addEventListener('click', closePage2);
 
 
     // ===== Дополнительный функционал =====
@@ -2608,13 +2697,17 @@
     const forwardBtn = document.getElementById('forwardBtn');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const focusBtn = document.getElementById('focusBtn');
+    const speedBtn = document.getElementById('speedBtn');
+    const shareBtn = document.getElementById('shareBtn');
+    const motionBtn = document.getElementById('motionBtn');
     const easterToast = document.getElementById('easterToast');
-    const homeStatus = document.getElementById('homeStatus');
 
     let timerMode = 0;
     let photoTapCount = 0;
     let photoTapTimer = null;
     let seekDragging = false;
+    let playbackRateIndex = 1;
+    const playbackRates = [0.9, 1, 1.1];
 
     function getTotalSeconds() {
       return Math.max(0, Math.floor((Date.now() - START_DATE.getTime()) / 1000));
@@ -2678,8 +2771,6 @@
     }
 
     function updateHomeTools() {
-      const totalDays = Math.floor(getTotalSeconds() / 86400);
-      if (homeStatus) homeStatus.textContent = `Сегодня — ${totalDays + 1}-й день нашей истории.`;
       const now = new Date();
       const next = getNextMonthlyDate(now);
       const ms = next.getTime() - now.getTime();
@@ -2748,16 +2839,6 @@
     historyCard.addEventListener('click', openHistory);
     historyClose.addEventListener('click', closeHistory);
     historySheet.addEventListener('click', e => { if (e.target === historySheet) closeHistory(); });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        closeHistory();
-        if (page2.classList.contains('focus-mode')) {
-          page2.classList.remove('focus-mode');
-          focusBtn.textContent = 'Фокус';
-        }
-      }
-    });
 
     // ===== Плавный мини-плеер =====
     function updatePlayButton() {
@@ -2834,23 +2915,41 @@
       updateSeekVisual();
     });
 
+    speedBtn.addEventListener('click', () => {
+      playbackRateIndex = (playbackRateIndex + 1) % playbackRates.length;
+      const rate = playbackRates[playbackRateIndex];
+      songPlayer.playbackRate = rate;
+      speedBtn.textContent = `${rate % 1 === 0 ? rate.toFixed(0) : rate.toFixed(1)}×`;
+      speedBtn.animate([
+        { transform:'scale(1)' },
+        { transform:'scale(.92)' },
+        { transform:'scale(1)' }
+      ], { duration:220, easing:'cubic-bezier(.22,1,.36,1)' });
+    });
+
+
+
+    shareBtn.addEventListener('click', async () => {
+      const data = { title:'Мы вместе', text:'Я сделал для тебя маленькое место.', url:window.location.href };
+      try {
+        if (navigator.share) await navigator.share(data);
+        else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(window.location.href);
+          shareBtn.textContent = 'Ссылка скопирована';
+          setTimeout(() => shareBtn.textContent = 'Поделиться', 1700);
+        }
+      } catch (_) {}
+    });
+
+    motionBtn.addEventListener('click', () => {
+      document.body.classList.toggle('motion-light');
+      const enabled = document.body.classList.contains('motion-light');
+      motionBtn.textContent = enabled ? 'Вернуть движение' : 'Снизить движение';
+    });
+
     focusBtn.addEventListener('click', () => {
       page2.classList.toggle('focus-mode');
       focusBtn.textContent = page2.classList.contains('focus-mode') ? 'Обычный вид' : 'Фокус';
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (!page2.classList.contains('active') || !songStarted) return;
-      if (e.code === 'Space' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
-        e.preventDefault();
-        if (songPlayer.paused) songPlayer.play().catch(() => {});
-        else songPlayer.pause();
-        updatePlayButton();
-      }
-      if (e.key.toLowerCase() === 'f') {
-        page2.classList.toggle('focus-mode');
-        focusBtn.textContent = page2.classList.contains('focus-mode') ? 'Обычный вид' : 'Фокус';
-      }
     });
 
     // ===== Пасхалка на фото =====
