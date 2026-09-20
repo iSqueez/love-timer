@@ -156,13 +156,13 @@ h1{font-size:28px;font-weight:800;line-height:1.1;margin-bottom:10px;text-align:
 
 /* Караоке */
 .lyric-container{width:100%;max-width:340px;height:96px;display:flex;align-items:center;justify-content:center;margin:0 0 13px;padding:0 4px;position:relative}.lyric-text{position:relative;width:100%;height:80px;margin:0;border-radius:20px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(160deg,rgba(255,255,255,.065),rgba(255,255,255,.018));backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:0 18px 38px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.055);overflow:hidden;text-shadow:0 2px 12px rgba(0,0,0,.46)}.lyric-text::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 20%,rgba(255,255,255,.045) 48%,transparent 76%);transform:translateX(-100%);animation:lyricSheen 8s ease-in-out infinite;pointer-events:none}@keyframes lyricSheen{0%,72%,100%{transform:translateX(-100%);opacity:0}78%{opacity:.8}88%{transform:translateX(100%);opacity:0}}
-.lyric-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10px 20px;opacity:0;transform:translate3d(0,6px,0) scale(.993);filter:blur(3px);pointer-events:none;backface-visibility:hidden;-webkit-backface-visibility:hidden}.lyric-layer.active{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+.lyric-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10px 20px;opacity:0;transform:translate3d(0,12px,0) scale(.985);filter:blur(9px);pointer-events:none;backface-visibility:hidden;-webkit-backface-visibility:hidden}.lyric-layer.active{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
 .lyric-layer.lyric-enter{animation:lyricEnter var(--lyric-transition,.72s) cubic-bezier(.22,1,.36,1) both}
 .lyric-layer.lyric-leave{animation:lyricLeave var(--lyric-transition,.72s) cubic-bezier(.22,1,.36,1) both}
-@keyframes lyricEnter{0%{opacity:0;transform:translate3d(0,6px,0) scale(.993);filter:blur(3px)}32%{opacity:.78;transform:translate3d(0,1.5px,0) scale(.999);filter:blur(1.15px)}100%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}}
-@keyframes lyricLeave{0%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}55%{opacity:.56;transform:translate3d(0,-2.5px,0) scale(.996);filter:blur(1.15px)}100%{opacity:0;transform:translate3d(0,-6px,0) scale(.993);filter:blur(3px)}}.lyric-line{width:100%;text-align:center;line-height:1.48;font-size:16.5px;font-weight:500;word-spacing:.03em}.karaoke-loader{display:inline-flex;align-items:flex-end;justify-content:center;gap:7px;min-height:24px}.karaoke-loader-dot{width:7px;height:7px;border-radius:50%;background:rgba(242,198,214,.94);box-shadow:0 0 10px rgba(232,184,201,.38);animation:kLoader 1.05s cubic-bezier(.22,1,.36,1) infinite}.karaoke-loader-dot:nth-child(1){animation-delay:-.7s}.karaoke-loader-dot:nth-child(2){animation-delay:-.45s}.karaoke-loader-dot:nth-child(3){animation-delay:-.2s}@keyframes kLoader{0%,100%{transform:translateY(0) scale(.78);opacity:.2}28%{transform:translateY(-7px) scale(1.12);opacity:1}52%{transform:translateY(-1px) scale(1.02);opacity:.78}72%{transform:translateY(0) scale(.88);opacity:.42}}
+@keyframes lyricEnter{0%{opacity:0;transform:translate3d(0,12px,0) scale(.985);filter:blur(9px)}48%{opacity:.68;transform:translate3d(0,4px,0) scale(.994);filter:blur(4px)}100%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}}
+@keyframes lyricLeave{0%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}52%{opacity:.52;transform:translate3d(0,-5px,0) scale(.993);filter:blur(4px)}100%{opacity:0;transform:translate3d(0,-11px,0) scale(.985);filter:blur(9px)}}.lyric-line{width:100%;text-align:center;line-height:1.48;font-size:16.5px;font-weight:500;word-spacing:.03em}.karaoke-loader{display:inline-flex;align-items:flex-end;justify-content:center;gap:7px;min-height:24px}.karaoke-loader-dot{width:7px;height:7px;border-radius:50%;background:rgba(242,198,214,.94);box-shadow:0 0 10px rgba(232,184,201,.38);animation:kLoader 1.05s cubic-bezier(.22,1,.36,1) infinite}.karaoke-loader-dot:nth-child(1){animation-delay:-.7s}.karaoke-loader-dot:nth-child(2){animation-delay:-.45s}.karaoke-loader-dot:nth-child(3){animation-delay:-.2s}@keyframes kLoader{0%,100%{transform:translateY(0) scale(.78);opacity:.2}28%{transform:translateY(-7px) scale(1.12);opacity:1}52%{transform:translateY(-1px) scale(1.02);opacity:.78}72%{transform:translateY(0) scale(.88);opacity:.42}}
 .song-ending-loader{position:absolute;inset:0;display:none;align-items:center;justify-content:center;z-index:5;pointer-events:none;opacity:0;transform:scale(.96);transition:opacity .45s ease,transform .55s cubic-bezier(.22,1,.36,1)}.song-ending-loader.show{display:flex;opacity:1;transform:scale(1)}.song-ending-loader .karaoke-loader{min-height:24px}.lyric-text.ending-loader-active .lyric-layer{opacity:.06;filter:blur(3.5px);transform:scale(.992)}
-.karaoke-word{display:inline-block;white-space:nowrap;margin-right:.28em;color:rgba(255,255,255,.18);opacity:.34;filter:blur(.8px);transform:translateY(0) scale(1);transition:color .16s ease,opacity .18s ease,filter .28s ease,transform .24s cubic-bezier(.22,1,.36,1),text-shadow .22s ease}.karaoke-word.sung{color:rgba(255,255,255,.90);opacity:.96;filter:blur(0)}.karaoke-word.current{color:#f0c5d4;opacity:1;filter:blur(0);transform:translateY(-1px) scale(1.025);text-shadow:0 0 8px rgba(235,165,191,.46),0 0 16px rgba(211,164,131,.12)}.karaoke-word.current::after{content:'';display:block;height:1px;margin:2px auto 0;width:64%;border-radius:999px;background:linear-gradient(90deg,transparent,rgba(230,190,160,.82),transparent)}
+.karaoke-word{display:inline-block;white-space:nowrap;margin-right:.28em;color:rgba(255,255,255,.18);opacity:.34;filter:blur(2.2px);transform:translateY(0) scale(1);transition:color .18s ease,opacity .18s ease,filter .28s ease,transform .24s cubic-bezier(.22,1,.36,1),text-shadow .22s ease}.karaoke-word.sung{color:rgba(255,255,255,.90);opacity:.96;filter:blur(0)}.karaoke-word.current{color:#f0c5d4;opacity:1;filter:blur(0);transform:translateY(-1px) scale(1.025);text-shadow:0 0 8px rgba(235,165,191,.46),0 0 16px rgba(211,164,131,.12)}.karaoke-word.current::after{content:'';display:block;height:1px;margin:2px auto 0;width:64%;border-radius:999px;background:linear-gradient(90deg,transparent,rgba(230,190,160,.82),transparent)}
 .song-time{width:90%;max-width:320px;display:flex;justify-content:space-between;font-size:11px;opacity:.48;letter-spacing:.4px;margin:-10px 0 6px;font-variant-numeric:tabular-nums}.song-seek{width:90%;max-width:320px;height:24px;position:relative;margin:0 auto 9px;cursor:pointer;touch-action:none}.song-seek-track,.song-seek-fill{position:absolute;left:0;right:0;top:10px;height:4px;border-radius:99px}.song-seek-track{background:rgba(255,255,255,.09)}.song-seek-fill{right:auto;width:100%;transform:scaleX(0);transform-origin:left center;background:linear-gradient(90deg,#8a647b,#d6a0b3,#c6a47e);box-shadow:0 0 10px rgba(220,167,188,.22)}.song-seek-thumb{position:absolute;top:6px;left:0;width:14px;height:14px;border-radius:50%;transform:translateX(-50%);background:#e6b1c2;box-shadow:0 0 12px rgba(230,177,194,.45);transition:transform .15s ease}.song-seek:hover .song-seek-thumb,.song-seek.dragging .song-seek-thumb{transform:translateX(-50%) scale(1.1)}.song-seek:focus-visible{outline:2px solid rgba(230,177,194,.55);outline-offset:4px;border-radius:10px}
 .song-controls{width:90%;max-width:320px;display:grid;grid-template-columns:48px 48px 48px 1fr;gap:7px;align-items:center;margin-top:1px}.round-control,.focus-control{width:100%;min-height:40px;margin:0;padding:10px 8px;border-radius:999px;background:rgba(255,255,255,.055);color:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.10);box-shadow:0 8px 18px rgba(0,0,0,.16);font-size:12px}.round-control::after,.focus-control::after{display:none}.main-control{background:rgba(220,173,192,.14);color:rgba(255,255,255,.92);border-color:rgba(225,180,198,.24);font-size:14px}.focus-control{padding-inline:14px}
 
@@ -199,9 +199,9 @@ body.page2-open>.home-ambient,body.page2-open>.content,body.page2-open>.music-bt
 
 @media(max-width:700px){
   .message-card{backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
-  .lyric-layer{filter:blur(2.6px)}
+  .lyric-layer{filter:blur(6px)}
   .lyric-layer.active{filter:blur(0)}
-  .lyric-layer.leaving{filter:blur(2.3px)}
+  .lyric-layer.leaving{filter:blur(4.8px)}
   .home-tools{gap:8px}.tool-card{padding:12px;min-height:82px}.song-controls{grid-template-columns:46px 46px 46px 1fr;gap:6px}.page2-nav{padding:0 12px}.page2-nav-btn{padding:8px 10px;font-size:11px}
 }
 @media(max-width:430px){.home-tools{grid-template-columns:1fr}.tool-card{min-height:auto}.home-actions{gap:7px}.home-action{font-size:10.5px;padding:9px 8px}.history-sheet{padding:12px}.history-card{padding:19px}.final-panel{width:calc(100vw - 26px);padding:26px 19px 20px;border-radius:26px}.final-title{font-size:24px}.final-text{font-size:14px;max-width:290px}.song-controls{grid-template-columns:44px 44px 44px 1fr}}
@@ -950,38 +950,41 @@ if (window.Telegram && window.Telegram.WebApp) {
     // Формат: [{ time: 0, text: "..." }, { time: 14, text: "..." }, ...]
     const LYRICS = [
       { time: 0,    text: "..." },
+      { time: 8,    text: "3" },
+      { time: 10,    text: "2" },
+      { time: 12,    text: "1" },
       { time: 14,   text: "Детка, на мне висит метка, я — твоя мишень" },
-      { time: 17,   text: "Ты — конфетка в упаковке среди муляжей" },
-      { time: 21,   text: "Я приму твой выстрел, не могу терпеть уже" },
-      { time: 24,   text: "Целься в сердце, чтобы оно перестало жечь" },
+      { time: 16,   text: "Ты — конфетка в упаковке среди муляжей" },
+      { time: 20,   text: "Я приму твой выстрел, не могу терпеть уже" },
+      { time: 23,   text: "Целься в сердце, чтобы оно перестало жечь" },
       { time: 28,   text: "Детка, ты карамель-карамель" },
       { time: 29,   text: "Опутала туго чарами-чарами" },
       { time: 31,   text: "Душа кричит, будто фа-до-соль-ре-ля-ми" },
-      { time: 33,   text: "Губы твои стали алыми-алыми" },
-      { time: 34,   text: "Выпью тебя, и до талого мало мне" },
+      { time: 32,   text: "Губы твои стали алыми-алыми" },
+      { time: 33,   text: "Выпью тебя, и до талого мало мне" },
       { time: 36,   text: "Мир на миг стал безлик, а мы бокалами" },
       { time: 38,   text: "Ловим те капли, что самыми-самыми" },
-      { time: 40,   text: "Станут для нас и залечат все раны нам" },
-      { time: 42,   text: "Детка, детка, детка, уа-уэй" },
-      { time: 46,   text: "Я хочу, чтоб ты была моей" },
-      { time: 49,   text: "Пока летаем, тает ночь и день" },
-      { time: 53,   text: "Она — удача, я бегу за ней 💫" },
+      { time: 39,   text: "Станут для нас и залечат все раны нам" },
+      { time: 41,   text: "Детка, детка, детка, уа-уэй" },
+      { time: 45,   text: "Я хочу, чтоб ты была моей" },
+      { time: 48,   text: "Пока летаем, тает ночь и день" },
+      { time: 52,   text: "Она — удача, я бегу за ней 💫" },
       { time: 56,   text: "Как делишки, детка, где твоя улыбка?" },
       { time: 58,   text: "Ты мой джекпот, я кричу: «Бинго!», детка, нахер Тиндер" },
       { time: 62,   text: "Заполонила меня моя половинка" },
       { time: 65,   text: "Мы крутим love, и кружим в ритме, нам не нужен гриндер" },
-      { time: 69,   text: "Как делишки у моей малышки, алло?" },
-      { time: 73,   text: "Как делишки у моей малышки, алло?" },
-      { time: 76,   text: "Как делишки у моей малышки, алло?" },
-      { time: 80,   text: "Как делишки у моей малышки? Я, я!" },
+      { time: 68,   text: "Как делишки у моей малышки, алло?" },
+      { time: 72,   text: "Как делишки у моей малышки, алло?" },
+      { time: 75,   text: "Как делишки у моей малышки, алло?" },
+      { time: 79,   text: "Как делишки у моей малышки? Я, я!" },
       { time: 83,   text: "Как делишки у моей малышки, алло?" },
       { time: 86,   text: "Как делишки у моей малышки, алло?" },
       { time: 90,   text: "Как делишки у моей малышки, алло?" },
-      { time: 93,   text: "Как делишки у моей малышки? Я, я!" },
-      { time: 96,   text: "Так часто снишься, о тебе все мои мысли" },
-      { time: 100,  text: "Где мы на радуге зависли, солнца брызги на ней" },
+      { time: 92,   text: "Как делишки у моей малышки? Я, я!" },
+      { time: 95,   text: "Так часто снишься, о тебе все мои мысли" },
+      { time: 99,  text: "Где мы на радуге зависли, солнца брызги на ней" },
       { time: 103,  text: "В тебе сок есть, налей, в унисон акварель" },
-      { time: 107,  text: "Мы пишем наши чувства кляксами из ярких, бэй" },
+      { time: 106,  text: "Мы пишем наши чувства кляксами из ярких, бэй" },
       { time: 110,  text: "Распахни мне сердце, будто раскладушка-сотик" },
       { time: 113,  text: "И я нажму на твои кнопки, если ты не против" },
       { time: 117,  text: "Мы крутим против часовой, детка, ты мой наркотик" },
@@ -991,17 +994,17 @@ if (window.Telegram && window.Telegram.WebApp) {
       { time: 130,  text: "По вечерам провожать её прямо до дома" },
       { time: 135,  text: "Так клёво, так клёво" },
       { time: 137,  text: "О нас поют во дворе кошки, малышка" },
-      { time: 140,  text: "Луной свечу тебе в окошко, пока спишь ты" },
+      { time: 139,  text: "Луной свечу тебе в окошко, пока спишь ты" },
       { time: 144,  text: "В тебе есть чуитс, ты красива, даже слишком" },
-      { time: 147,  text: "Ну, как делишки, детка-детка, как делишки? Е-е" },
-      { time: 151,  text: "Как делишки у моей малышки, алло?" },
-      { time: 155,  text: "Как делишки у моей малышки, алло?" },
-      { time: 158,  text: "Как делишки у моей малышки, алло?" },
-      { time: 162,  text: "Как делишки у моей малышки? Я, я!" },
-      { time: 165,  text: "Как делишки у моей малышки, алло?" },
-      { time: 169,  text: "Как делишки у моей малышки, алло?" },
-      { time: 173,  text: "Как делишки у моей малышки, алло?" },
-      { time: 176,  text: "Как делишки у моей малышки? Я, я!" },
+      { time: 146,  text: "Ну, как делишки, детка-детка, как делишки? Е-е" },
+      { time: 150,  text: "Как делишки у моей малышки, алло?" },
+      { time: 154,  text: "Как делишки у моей малышки, алло?" },
+      { time: 157,  text: "Как делишки у моей малышки, алло?" },
+      { time: 160,  text: "Как делишки у моей малышки? Я, я!" },
+      { time: 164,  text: "Как делишки у моей малышки, алло?" },
+      { time: 168,  text: "Как делишки у моей малышки, алло?" },
+      { time: 172,  text: "Как делишки у моей малышки, алло?" },
+      { time: 174,  text: "Как делишки у моей малышки? Я, я!" },
       { time: 180,  text: "..." }
     ];
 
@@ -1020,8 +1023,8 @@ if (window.Telegram && window.Telegram.WebApp) {
     // Синхронизация рассчитана на акустическую версию длительностью 3:19 (199 сек).
     // Если локальный MP3 имеет чуть другой хвост/паузы, таймкоды автоматически масштабируются.
     const REFERENCE_DURATION = 199;
-    const MAX_LYRIC_LEAD = 0.30;      // строка приходит чуть заранее, чтобы к моменту вокала уже читалась
-    const MIN_LYRIC_LEAD = 0.18;
+    const MAX_LYRIC_LEAD = 0.34;      // короткий запас на входную анимацию, без преждевременной смены строки
+    const MIN_LYRIC_LEAD = 0.12;
     const LYRIC_FINISH_EARLY = 0.05;
 
     let introOpened = false;
@@ -1138,7 +1141,7 @@ if (window.Telegram && window.Telegram.WebApp) {
       const next = LYRICS[index + 1];
       if (!current || !next) return MIN_LYRIC_LEAD;
       const gap = Math.max(0.25, getLyricTime(next.time) - getLyricTime(current.time));
-      return Math.min(MAX_LYRIC_LEAD, Math.max(MIN_LYRIC_LEAD, gap * 0.10));
+      return Math.min(MAX_LYRIC_LEAD, Math.max(MIN_LYRIC_LEAD, gap * 0.18));
     }
 
     rebuildLyricDisplayStarts();
@@ -1245,7 +1248,7 @@ if (window.Telegram && window.Telegram.WebApp) {
 
       const nextLine = LYRICS[index + 1];
       const gap = nextLine ? Math.max(0.25, nextLine.time - LYRICS[index].time) : 2;
-      const transition = Math.min(0.28, Math.max(0.20, gap * 0.095));
+      const transition = Math.min(0.82, Math.max(0.58, gap * 0.26));
       nextLayer.style.setProperty('--lyric-transition', `${transition}s`);
       if (oldLayer) oldLayer.style.setProperty('--lyric-transition', `${transition}s`);
 
