@@ -45,8 +45,17 @@ body.gallery-leaving .music-btn{animation:galleryControlOut .34s ease both}
 @keyframes galleryPageOut{from{opacity:1;transform:translate3d(0,0,0) scale(1)}to{opacity:0;transform:translate3d(0,-10px,0) scale(.992)}}
 @keyframes galleryControlOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
 .gallery-card{position:relative;overflow:hidden}
-.gallery-card::after{content:'';position:absolute;z-index:10;inset:0 auto 0 -100%;width:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);transition:left .6s ease;pointer-events:none}
-@media(hover:hover){.gallery-card:hover{transform:translateY(-2px)}.gallery-card:hover::after{left:100%}}
+.gallery-card::after{content:'';position:absolute;z-index:20;top:-50%;left:-55%;width:34%;height:200%;background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,.10) 35%,rgba(255,255,255,.42) 50%,rgba(255,255,255,.10) 65%,transparent 100%);transform:skewX(-18deg) translateX(0);pointer-events:none;opacity:0}
+@media(hover:hover){
+  .gallery-card:hover{transform:translateY(-2px)}
+  .gallery-card:hover::after{animation:gallerySheen .72s cubic-bezier(.22,1,.36,1) 1}
+}
+@keyframes gallerySheen{
+  0%{transform:skewX(-18deg) translateX(0);opacity:0}
+  10%{opacity:1}
+  85%{opacity:1}
+  100%{transform:skewX(-18deg) translateX(390%);opacity:0}
+}
 @media(prefers-reduced-motion:reduce){
   body.gallery-leaving .content,body.gallery-leaving .music-btn{animation:none;opacity:.85}
   .gallery-card::after{display:none}
