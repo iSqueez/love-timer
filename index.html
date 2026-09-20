@@ -25,7 +25,6 @@
       padding: max(20px, env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-right, 0px)) max(20px, env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px));
       color: white;
       overflow-x: hidden;
-      overflow-y: auto;
       position: relative;
       transition: background 1.5s ease;
       overscroll-behavior: none;
@@ -583,29 +582,63 @@
       50% { opacity: 0.9; }
     }
 
-    /* Фото: один фиксированный круг. Геометрия не масштабируется — анимируется только содержимое и свечение. */
+    /* Фото: геометрия статична, движение только внутри и в свете рамки */
     .photo-frame {
       position: relative;
-      width: 176px;
-      height: 176px;
-      margin-bottom: 18px;
-      flex: 0 0 176px;
+      width: 184px;
+      height: 184px;
+      margin-bottom: 22px;
+      flex: 0 0 184px;
       border-radius: 50%;
-      padding: 3px;
+      padding: 4px;
       background: conic-gradient(
         from 0deg,
-        #dba0b8 0deg,
-        #e8c39e 90deg,
-        #b77998 180deg,
-        #8f6380 270deg,
-        #dba0b8 360deg
+        #ff6b9d 0deg,
+        #ffd700 105deg,
+        #ff7aa8 185deg,
+        #c44569 275deg,
+        #ff6b9d 360deg
       );
       box-shadow:
-        0 0 22px rgba(221,172,192,.30),
-        0 0 58px rgba(184,139,166,.16);
-      animation: photoAura 5.2s ease-in-out infinite;
+        0 0 26px rgba(255, 107, 157, 0.35),
+        0 0 70px rgba(255, 107, 157, 0.16);
+      animation: photoAura 4.8s ease-in-out infinite;
       isolation: isolate;
       overflow: visible;
+    }
+
+    .photo-frame::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 0deg,
+        rgba(255,255,255,0),
+        rgba(255,215,0,0.75),
+        rgba(255,107,157,0.75),
+        rgba(255,255,255,0),
+        rgba(255,215,0,0.35),
+        rgba(255,255,255,0)
+      );
+      filter: blur(3px);
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 0;
+      animation: ringSpin 7s linear infinite;
+    }
+
+    .photo-frame::after {
+      content: '';
+      position: absolute;
+      inset: -20px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 107, 157, 0.18) 0%, rgba(255, 107, 157, 0.06) 48%, transparent 72%);
+      filter: blur(9px);
+      opacity: 0.8;
+      pointer-events: none;
+      z-index: -1;
+      animation: auraBreath 4.8s ease-in-out infinite;
     }
 
     .photo-window {
@@ -614,9 +647,9 @@
       height: 100%;
       border-radius: 50%;
       overflow: hidden;
-      background: #100c14;
+      background: #1a0a2e;
       z-index: 2;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), inset 0 0 24px rgba(0,0,0,.22);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14), inset 0 0 24px rgba(0,0,0,0.24);
     }
 
     .photo-frame img {
@@ -630,53 +663,63 @@
       object-fit: cover;
       object-position: center;
       transform-origin: center center;
-      animation: photoFloat 7.2s ease-in-out infinite;
+      animation: photoFloat 6.5s ease-in-out infinite;
       will-change: transform, filter;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
     }
 
     @keyframes photoFloat {
-      0%, 100% { transform: translate3d(0,0,0) scale(1); filter: brightness(1) saturate(1); }
-      50% { transform: translate3d(0,-1px,0) scale(1.025); filter: brightness(1.04) saturate(1.03); }
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1.00) rotate(-0.15deg); filter: brightness(1) saturate(1); }
+      50% { transform: translate3d(0, -2px, 0) scale(1.028) rotate(0.15deg); filter: brightness(1.045) saturate(1.04); }
     }
 
     @keyframes photoAura {
-      0%, 100% {
-        box-shadow: 0 0 22px rgba(221,172,192,.30), 0 0 58px rgba(184,139,166,.16);
-      }
-      50% {
-        box-shadow: 0 0 32px rgba(229,182,200,.46), 0 0 78px rgba(184,139,166,.22);
-      }
+      0%, 100% { box-shadow: 0 0 26px rgba(255, 107, 157, 0.35), 0 0 70px rgba(255, 107, 157, 0.16); }
+      50% { box-shadow: 0 0 40px rgba(255, 107, 157, 0.52), 0 0 92px rgba(255, 107, 157, 0.24); }
+    }
+
+    @keyframes ringSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes auraBreath {
+      0%, 100% { transform: scale(0.96); opacity: 0.58; }
+      50% { transform: scale(1.07); opacity: 0.92; }
     }
 
     .frame-heart {
       position: absolute;
+      font-size: 18px;
       z-index: 5;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: rgba(241,210,220,.78);
-      box-shadow: 0 0 9px rgba(232,190,207,.55);
+      animation: heartFloat 2.4s ease-in-out infinite;
+      filter: drop-shadow(0 0 7px rgba(255, 100, 150, 0.82));
       pointer-events: none;
-      animation: heartFloat 2.8s ease-in-out infinite;
+      line-height: 1;
       transform-origin: center;
-      will-change: transform, opacity;
+      will-change: transform, filter;
     }
 
     @keyframes heartFloat {
-      0%, 100% { transform: translate(-50%,-50%) translateY(0) scale(.82); opacity:.48; }
-      50% { transform: translate(-50%,-50%) translateY(-3px) scale(1.12); opacity:.95; }
+      0%, 100% {
+        transform: translate(-50%, -50%) translateY(0) scale(1) rotate(-3deg);
+        filter: drop-shadow(0 0 7px rgba(255,100,150,0.68));
+      }
+      50% {
+        transform: translate(-50%, -50%) translateY(-3px) scale(1.14) rotate(3deg);
+        filter: drop-shadow(0 0 12px rgba(255,120,170,0.96));
+      }
     }
 
-    .frame-heart.h1 { top: -2px; left: 50%; animation-delay: 0s; }
-    .frame-heart.h2 { top: 14%; left: 95%; animation-delay: .22s; }
-    .frame-heart.h3 { top: 50%; left: 101%; animation-delay: .44s; }
-    .frame-heart.h4 { top: 86%; left: 95%; animation-delay: .66s; }
-    .frame-heart.h5 { top: 102%; left: 50%; animation-delay: .88s; }
-    .frame-heart.h6 { top: 86%; left: 5%; animation-delay: 1.10s; }
-    .frame-heart.h7 { top: 50%; left: -1%; animation-delay: 1.32s; }
-    .frame-heart.h8 { top: 14%; left: 5%; animation-delay: 1.54s; }
+    .frame-heart.h1 { top: -1px; left: 50%; animation-delay: 0s; }
+    .frame-heart.h2 { top: 13%; left: 96%; animation-delay: 0.18s; }
+    .frame-heart.h3 { top: 50%; left: 102%; animation-delay: 0.36s; }
+    .frame-heart.h4 { top: 87%; left: 96%; animation-delay: 0.54s; }
+    .frame-heart.h5 { top: 102%; left: 50%; animation-delay: 0.72s; }
+    .frame-heart.h6 { top: 87%; left: 4%; animation-delay: 0.90s; }
+    .frame-heart.h7 { top: 50%; left: -2%; animation-delay: 1.08s; }
+    .frame-heart.h8 { top: 13%; left: 4%; animation-delay: 1.26s; }
 
     .page2-title {
       font-size: 20px;
@@ -1269,17 +1312,6 @@
 
 
 
-    /* === UTILITY VISIBILITY FIX === */
-    .utility-grid {
-      display:grid !important;
-      visibility:visible !important;
-      opacity:1 !important;
-    }
-    .utility-card {
-      visibility:visible !important;
-      opacity:1 !important;
-    }
-
     /* === FINAL VISUAL PASS === */
     body.theme-day {
       background:
@@ -1372,8 +1404,7 @@
     .intro-card { background:linear-gradient(150deg,rgba(255,255,255,.075),rgba(255,255,255,.026)); border-color:rgba(255,255,255,.10); box-shadow:0 30px 90px rgba(0,0,0,.46), inset 0 1px 0 rgba(255,255,255,.055); }
     .intro-title { color:rgba(255,255,255,.96); font-size:27px; letter-spacing:.1px; }
     .intro-subtitle { color:rgba(255,255,255,.60); }
-    .intro-mark { width:30px; height:30px; background:none; box-shadow:0 0 20px rgba(222,183,199,.28); color:#deb7c7; display:flex; align-items:center; justify-content:center; }
-    .intro-mark svg { width:26px; height:26px; display:block; }
+    .intro-mark { width:9px; height:9px; background:#deb7c7; box-shadow:0 0 18px rgba(222,183,199,.68); }
 
     .final-screen { background:radial-gradient(circle at 50% 36%,rgba(87,65,101,.30) 0%,rgba(13,10,16,.97) 58%,#07060a 100%); }
     .final-title { color:rgba(255,255,255,.96); font-size:28px; }
@@ -1389,418 +1420,12 @@
       .lyric-text { height:72px; }
       .lyric-container { height:84px; }
     }
-  
-    /* === REFINED PLAYER / KARAOKE PASS === */
-    .song-controls {
-      width: 90%;
-      max-width: 320px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 18px;
-      margin-top: 8px;
-    }
-    .song-controls button {
-      width: auto;
-      margin: 0;
-      border: 0;
-      font-family: inherit;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-    .song-skip {
-      min-width: 46px;
-      height: 36px;
-      padding: 0 10px !important;
-      border-radius: 999px;
-      background: rgba(255,255,255,.055) !important;
-      color: rgba(255,255,255,.66) !important;
-      border: 1px solid rgba(255,255,255,.10) !important;
-      box-shadow: none !important;
-      font-size: 12px !important;
-      font-weight: 600 !important;
-      letter-spacing: .02em;
-    }
-    .song-play {
-      width: 42px !important;
-      height: 42px;
-      padding: 0 !important;
-      border-radius: 50%;
-      background: rgba(235,183,201,.10) !important;
-      color: rgba(255,255,255,.92) !important;
-      border: 1px solid rgba(235,183,201,.32) !important;
-      box-shadow: 0 0 20px rgba(224,169,191,.10) !important;
-      font-size: 14px !important;
-      line-height: 1;
-    }
-    .song-controls button:active {
-      transform: scale(.93) !important;
-    }
-    .song-progress {
-      position: relative;
-      cursor: pointer;
-      touch-action: none;
-      height: 5px;
-      overflow: visible;
-    }
-    .song-progress::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 50%;
-      width: 100%;
-      height: 22px;
-      transform: translateY(-50%);
-      border-radius: 999px;
-    }
-    .song-progress-fill {
-      position: relative;
-      z-index: 1;
-      pointer-events: none;
-      transition: none;
-    }
-    .song-progress::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: var(--progress-pos, 0%);
-      width: 10px;
-      height: 10px;
-      transform: translate(-50%,-50%);
-      border-radius: 50%;
-      background: #e7b3c7;
-      box-shadow: 0 0 0 3px rgba(231,179,199,.08), 0 0 12px rgba(231,179,199,.38);
-      z-index: 2;
-      pointer-events: none;
-      transition: left .08s linear;
-    }
-
-    /* Last word stays in the highlighted/current state until the next line starts.
-       This removes the ugly "end-of-line" visual reset. */
-    .karaoke-word.current {
-      transform: translateY(-1px) scale(1.018);
-    }
-    .karaoke-word.current::after {
-      opacity: .72;
-    }
-    .karaoke-word.sung.current {
-      color: #f0c5d4;
-      filter: blur(0);
-      opacity: 1;
-    }
-
-    /* Slightly softer future-word blur. */
-    .karaoke-word {
-      filter: blur(.8px);
-      opacity: .52;
-    }
-    .karaoke-word.sung { filter: blur(0); }
-    .karaoke-word.current { filter: blur(0); }
-
-    /* Subtle music-state breathing. The geometry never changes. */
-    .photo-frame.song-live {
-      animation-duration: 5.8s;
-    }
-    .photo-frame.song-beat .photo-window {
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.14),
-        inset 0 0 34px rgba(0,0,0,.30),
-        0 0 22px rgba(230,173,194,.08);
-    }
-
-    /* Extra depth in the atmosphere, kept intentionally subtle. */
-    .ambient-mote {
-      position: absolute;
-      width: 3px;
-      height: 3px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.58);
-      box-shadow: 0 0 8px rgba(231,194,210,.35);
-      opacity: 0;
-      animation: moteFloat linear infinite;
-    }
-    @keyframes moteFloat {
-      0% { transform: translate3d(0,18px,0) scale(.7); opacity: 0; }
-      18% { opacity: .35; }
-      72% { opacity: .22; }
-      100% { transform: translate3d(12px,-36px,0) scale(1.1); opacity: 0; }
-    }
-
-    @media (max-height:700px) {
-      #page2 .inner { justify-content: flex-start; padding-top: 12px; padding-bottom: 20px; }
-      .photo-frame { width: 150px; height: 150px; flex-basis: 150px; margin-bottom: 12px; }
-      .page2-title { font-size: 17px; margin-bottom: 9px; }
-      .lyric-container { height: 72px; margin-bottom: 7px; }
-      .lyric-text { height: 68px; }
-      .lyric-line { font-size: 15px; }
-      .song-time { margin-top: -7px; margin-bottom: 2px; }
-      .song-controls { margin-top: 2px; gap: 12px; }
-      .song-skip { height: 32px; min-width: 42px; }
-      .song-play { width: 38px !important; height: 38px; }
-    }
-
-
-    /* === FINAL STABILITY OVERRIDES === */
-    /* One true geometry for the photo ring. No pseudo-rings, no scaling of the frame. */
-    .photo-frame {
-      width: 176px !important;
-      height: 176px !important;
-      flex-basis: 176px !important;
-      padding: 3px !important;
-      border-radius: 50% !important;
-      overflow: visible !important;
-      animation: photoAura 5.2s ease-in-out infinite !important;
-    }
-    .photo-frame::before,
-    .photo-frame::after {
-      display: none !important;
-      content: none !important;
-    }
-    .photo-window {
-      width: 100% !important;
-      height: 100% !important;
-      border-radius: 50% !important;
-      overflow: hidden !important;
-      transform: none !important;
-    }
-    .photo-frame img {
-      width: 112% !important;
-      height: 112% !important;
-      max-width: none !important;
-      border-radius: 50% !important;
-      margin: -6% 0 0 -6% !important;
-      animation: photoFloat 7.2s ease-in-out infinite !important;
-    }
-
-    /* Controls must stay visible on short phone viewports. */
-    #page2 .inner {
-      position: relative;
-      z-index: 5;
-      width: min(100%, 380px);
-    }
-    .song-controls {
-      display: flex !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      position: relative;
-      z-index: 20;
-    }
-
-    @media (max-height: 700px) {
-      #page2 .inner {
-        justify-content: flex-start !important;
-        padding-top: 10px !important;
-        padding-bottom: 16px !important;
-      }
-      .photo-frame {
-        width: 148px !important;
-        height: 148px !important;
-        flex-basis: 148px !important;
-        margin-bottom: 10px !important;
-      }
-      .page2-title {
-        font-size: 17px !important;
-        margin-bottom: 8px !important;
-      }
-      .lyric-container {
-        height: 70px !important;
-        margin-bottom: 6px !important;
-      }
-      .lyric-text {
-        height: 66px !important;
-      }
-      .lyric-line {
-        font-size: 15px !important;
-        line-height: 1.45 !important;
-      }
-      .song-time {
-        margin-top: -6px !important;
-        margin-bottom: 2px !important;
-      }
-      .song-controls {
-        margin-top: 3px !important;
-        gap: 12px !important;
-      }
-      .song-skip {
-        height: 32px !important;
-        min-width: 42px !important;
-      }
-      .song-play {
-        width: 38px !important;
-        height: 38px !important;
-      }
-    }
-  
-    /* === FINAL POLISH / FIRST SCREEN + STABLE PHOTO === */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: -18% -10% -8%;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 18% 18%, rgba(220,170,195,.10), transparent 26%),
-        radial-gradient(circle at 84% 76%, rgba(109,91,160,.10), transparent 28%);
-      filter: blur(22px);
-      animation: firstAmbientDrift 18s ease-in-out infinite alternate;
-      z-index: 0;
-    }
-    @keyframes firstAmbientDrift {
-      from { transform: translate3d(-1%, 0, 0) scale(1); opacity: .65; }
-      to { transform: translate3d(1.5%, -1%, 0) scale(1.04); opacity: 1; }
-    }
-    .content { z-index: 3; }
-
-    .utility-grid {
-      width: 100%;
-      display: grid !important;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin: 2px 0 16px;
-    }
-    .utility-card {
-      min-height: 70px;
-      position: relative;
-      z-index: 4;
-      border: 1px solid rgba(255,255,255,.095);
-      border-radius: 18px;
-      background: linear-gradient(145deg, rgba(255,255,255,.062), rgba(255,255,255,.018));
-      box-shadow: 0 10px 28px rgba(0,0,0,.14), inset 0 1px 0 rgba(255,255,255,.045);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 12px 14px;
-      color: rgba(255,255,255,.88);
-      text-align: left;
-    }
-    .utility-card-action {
-      width: 100%;
-      margin: 0;
-      cursor: pointer;
-      transition: transform .2s ease, border-color .2s ease, background .2s ease;
-    }
-    .utility-card-action:active { transform: scale(.985); }
-    .utility-card-action:hover { border-color: rgba(235,195,211,.22); }
-    .utility-kicker {
-      font-size: 10px;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,.42);
-      margin-bottom: 4px;
-    }
-    .utility-card strong {
-      font-size: 19px;
-      line-height: 1.15;
-      font-weight: 700;
-      color: rgba(255,255,255,.95);
-      font-variant-numeric: tabular-nums;
-    }
-    .utility-card > span:last-child {
-      font-size: 11px;
-      margin-top: 3px;
-      color: rgba(255,255,255,.48);
-    }
-
-    .music-btn svg { width: 21px; height: 21px; display: block; }
-    .music-btn.is-muted { opacity: .62; }
-    .music-btn.is-muted svg { opacity: .72; }
-
-    .first-bg-particle {
-      position: fixed;
-      width: 3px;
-      height: 3px;
-      border-radius: 50%;
-      background: rgba(245,225,233,.58);
-      box-shadow: 0 0 10px rgba(230,183,204,.28);
-      opacity: .0;
-      pointer-events: none;
-      z-index: 1;
-      animation: firstParticleFloat linear infinite;
-    }
-    @keyframes firstParticleFloat {
-      0% { opacity: 0; transform: translate3d(0, 18px, 0) scale(.65); }
-      16% { opacity: .30; }
-      70% { opacity: .16; }
-      100% { opacity: 0; transform: translate3d(12px, -40px, 0) scale(1.05); }
-    }
-
-    /* One immutable circle. Animate only the image inside the clip. */
-    .photo-frame {
-      width: 176px !important;
-      height: 176px !important;
-      flex-basis: 176px !important;
-      padding: 4px !important;
-      border-radius: 50% !important;
-      overflow: visible !important;
-      transform: none !important;
-      animation: photoAura 6.5s ease-in-out infinite !important;
-      will-change: box-shadow;
-    }
-    .photo-window {
-      width: 100% !important;
-      height: 100% !important;
-      border-radius: 50% !important;
-      overflow: hidden !important;
-      clip-path: circle(50% at 50% 50%);
-    }
-    .photo-frame img {
-      width: 100% !important;
-      height: 100% !important;
-      margin: 0 !important;
-      border-radius: 50% !important;
-      object-fit: cover !important;
-      transform-origin: center !important;
-      animation: photoFloatClean 8s cubic-bezier(.4,0,.2,1) infinite !important;
-      will-change: transform, filter;
-    }
-    @keyframes photoFloatClean {
-      0%,100% { transform: scale(1.025) translate3d(0,0,0); filter: brightness(.98) saturate(.97); }
-      50% { transform: scale(1.055) translate3d(-1px,-1px,0); filter: brightness(1.035) saturate(1.02); }
-    }
-    .photo-frame::before, .photo-frame::after { pointer-events:none; }
-
-    .lyric-layer {
-      transition:
-        opacity .34s cubic-bezier(.22,1,.36,1),
-        transform .48s cubic-bezier(.22,1,.36,1),
-        filter .34s ease;
-    }
-    .lyric-layer.leaving {
-      opacity: 0 !important;
-      transform: translate3d(0,-5px,0) scale(.997) !important;
-      filter: blur(.9px) !important;
-    }
-    .karaoke-word {
-      filter: blur(.65px);
-      opacity: .50;
-    }
-    .karaoke-word.sung { filter: blur(0); opacity: .94; }
-    .karaoke-word.current {
-      filter: blur(0);
-      opacity: 1;
-      transform: translateY(-1px) scale(1.018);
-    }
-
-    .song-progress { cursor: pointer; touch-action: none; }
-
-    @media (max-height:700px) {
-      .utility-grid { gap: 8px; margin-bottom: 10px; }
-      .utility-card { min-height: 62px; padding: 10px 12px; }
-      .utility-card strong { font-size: 16px; }
-      .photo-frame { width: 152px !important; height: 152px !important; flex-basis: 152px !important; }
-    }
-</style>
+  </style>
 </head>
 <body>
 
   <button class="back-btn" id="backBtn">←</button>
-  <button class="music-btn" id="musicBtn" title="Музыка" aria-label="Музыка">
-    <svg id="musicIcon" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M5 13a7 7 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
-      <path d="M5 12v5.5A2.5 2.5 0 0 0 7.5 20H9v-8H6.5A1.5 1.5 0 0 0 5 13.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
-      <path d="M19 12v5.5A2.5 2.5 0 0 1 16.5 20H15v-8h2.5a1.5 1.5 0 0 1 1.5 1.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
-    </svg>
-  </button>
+  <button class="music-btn" id="musicBtn" title="Музыка">♫</button>
 
   <div class="content">
     <h1>Мы вместе уже</h1>
@@ -1811,19 +1436,6 @@
       <div class="time-block"><span class="time-value" id="hours">0</span><span class="time-label">Часов</span></div>
       <div class="time-block"><span class="time-value" id="minutes">0</span><span class="time-label">Минут</span></div>
       <div class="time-block"><span class="time-value" id="seconds">0</span><span class="time-label">Секунд</span></div>
-    </div>
-
-    <div class="utility-grid" aria-label="Дополнительная информация">
-      <button class="utility-card utility-card-action" id="totalTimeCard" type="button">
-        <span class="utility-kicker">Общее время</span>
-        <strong id="totalTimeValue">0</strong>
-        <span id="totalTimeUnit">часов</span>
-      </button>
-      <div class="utility-card">
-        <span class="utility-kicker">Следующая дата</span>
-        <strong id="nextDateValue">—</strong>
-        <span id="nextDateCountdown">—</span>
-      </div>
     </div>
 
     <button id="loveBtn">Открыть сообщение</button>
@@ -1854,13 +1466,7 @@
 
     <div class="page2-intro" id="page2Intro">
       <div class="intro-card">
-        <div class="intro-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" role="presentation">
-            <path d="M5 13a7 7 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
-            <path d="M5 13v4.5A2.5 2.5 0 0 0 7.5 20H9v-8H6.5A1.5 1.5 0 0 0 5 13.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
-            <path d="M19 13v4.5A2.5 2.5 0 0 1 16.5 20H15v-8h2.5A1.5 1.5 0 0 1 19 13.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <div class="intro-mark" aria-hidden="true"></div>
         <h2 class="intro-title">Это для тебя</h2>
         <p class="intro-subtitle">Надень наушники.<br>Несколько минут без спешки.</p>
         <button class="final-btn" id="startSongBtn">Начать</button>
@@ -1895,12 +1501,6 @@
         <span id="songCurrentTime">0:00</span>
         <span id="songDuration">0:00</span>
       </div>
-
-      <div class="song-controls" id="songControls" aria-label="Управление треком">
-        <button type="button" class="song-skip" id="skipBackBtn" aria-label="Назад на 5 секунд">−5</button>
-        <button type="button" class="song-play" id="songPlayBtn" aria-label="Пауза">Ⅱ</button>
-        <button type="button" class="song-skip" id="skipForwardBtn" aria-label="Вперёд на 5 секунд">+5</button>
-      </div>
     </div>
   </div>
 
@@ -1926,24 +1526,8 @@
     <source src="music-love.mp3" type="audio/mpeg">
   </audio>
 
+  <script src="lyrics.js"></script>
   <script>
-    /*
-      ============================================================
-      ТЕКСТ ПЕСНИ
-      ============================================================
-      Вставь сюда СВОЙ уже имеющийся массив LYRICS целиком.
-      Формат: { time: 14, text: "..." }
-
-      Пример структуры (не текст песни):
-      const LYRICS = [
-        { time: 0, text: "..." },
-        { time: 14, text: "твоя строка" },
-        { time: 17, text: "следующая строка" }
-      ];
-
-      Ничего больше в логике ниже менять не нужно.
-    */
-
     if (window.Telegram && window.Telegram.WebApp) {
       const tg = window.Telegram.WebApp;
       tg.ready();
@@ -1967,59 +1551,204 @@
     updateTimer();
     setInterval(updateTimer, 1000);
 
-    // Дополнительные функции первого экрана
-    const totalTimeCard = document.getElementById('totalTimeCard');
-    const totalTimeValue = document.getElementById('totalTimeValue');
-    const totalTimeUnit = document.getElementById('totalTimeUnit');
-    const nextDateValue = document.getElementById('nextDateValue');
-    const nextDateCountdown = document.getElementById('nextDateCountdown');
-    const totalTimeModes = [
-      { unit: 'часов', calc: diff => Math.floor(diff / 3600000) },
-      { unit: 'минут', calc: diff => Math.floor(diff / 60000) },
-      { unit: 'секунд', calc: diff => Math.floor(diff / 1000) }
-    ];
-    let totalTimeMode = 0;
-
-    function updateFirstScreenUtilities() {
-      const now = new Date();
-      const diff = Math.max(0, now - START_DATE);
-      const mode = totalTimeModes[totalTimeMode];
-      totalTimeValue.textContent = mode.calc(diff).toLocaleString('ru-RU');
-      totalTimeUnit.textContent = mode.unit;
-
-      const next = new Date(START_DATE);
-      next.setDate(19);
-      next.setHours(21, 34, 0, 0);
-      next.setMonth(now.getMonth(), 19);
-      if (next <= now) next.setMonth(next.getMonth() + 1, 19);
-
-      const months = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
-      nextDateValue.textContent = `${next.getDate()} ${months[next.getMonth()]}`;
-      const daysLeft = Math.ceil((next - now) / 86400000);
-      nextDateCountdown.textContent = daysLeft === 1 ? 'завтра' : `через ${daysLeft} дн.`;
-    }
-
-    totalTimeCard.addEventListener('click', () => {
-      totalTimeMode = (totalTimeMode + 1) % totalTimeModes.length;
-      updateFirstScreenUtilities();
-    });
-
-    updateFirstScreenUtilities();
-    setInterval(updateFirstScreenUtilities, 1000);
-
     const MESSAGES = [
-      "Мне нравится, что рядом с тобой не приходится изображать кого-то другого.",
-      "Есть люди, с которыми интересно говорить. С тобой интересно даже молчать.",
-      "Мне нравится то, как обычные вещи рядом с тобой перестают быть обычными.",
-      "Я ценю не красивые моменты для фотографии, а те, которые остаются между нами.",
-      "Ты умеешь делать мой день лучше без громких жестов. В этом и есть главное.",
-      "Мне нравится узнавать тебя не по идеальной картинке, а настоящую — со всеми твоими привычками и характером.",
-      "Иногда я ловлю себя на мысли, что хочу сохранить не момент, а целый период нашей жизни.",
-      "Этот сайт выглядит сложнее, чем одна фраза. Наверное, потому что одной фразой это и правда не объяснить.",
-      "Я не хотел делать что-то универсальное. Хотел, чтобы это место напоминало именно о тебе.",
-      "Из всего, что здесь есть, для меня самое важное — человек, ради которого я вообще это сделал.",
-      "Мне спокойно от мысли, что среди всех случайностей мы однажды встретились.",
-      "Пусть здесь останется простая вещь: мне действительно хорошо рядом с тобой."
+      "Мне нравится, что рядом с тобой можно быть собой и не подбирать правильную версию себя.",
+      "Есть люди, с которыми хочется говорить часами. С тобой мне ещё и комфортно молчать.",
+      "Мне нравится, что у нас есть свои интонации, шутки и вещи, которые понятны только нам.",
+      "Рядом с тобой даже обычный день ощущается чуть иначе.",
+      "Мне нравится не только то, какая ты, но и то, каким я становлюсь рядом с тобой.",
+      "Я ценю в нас не идеальность, а то, что всё это настоящее.",
+      "Мне нравится, что мне не нужно придумывать повод, чтобы хотеть увидеть тебя.",
+      "Иногда мне просто хорошо от мысли, что ты есть где-то в этом же мире.",
+      "Мне нравится наше спокойствие сильнее любой громкой романтики.",
+      "Некоторые вещи хочется не объяснять, а просто оставить между двумя людьми. Это одна из них.",
+      "Мне нравится, что с тобой можно обсуждать серьёзное, а через минуту смеяться с какой-нибудь ерунды.",
+      "Ты удивительно органично вписалась в мою жизнь.",
+      "Мне нравится, что с тобой хочется делиться не только важным, но и какой-нибудь мелочью из дня.",
+      "Я не ожидал, что один человек может так естественно стать частью привычного дня.",
+      "Мне нравится ощущение, что у нас постепенно появляется что-то своё.",
+      "Иногда мне достаточно просто услышать твой голос, чтобы день стал немного лучше.",
+      "Мне нравится, как быстро рядом с тобой исчезает необходимость держать лицо.",
+      "С тобой как-то проще быть честным.",
+      "Мне нравится, что у каждого нашего разговора есть свой характер.",
+      "Я бы не стал менять нашу историю на что-то идеально придуманное.",
+      "Мне нравится, что ты не похожа на красивую картинку. Ты гораздо интереснее.",
+      "Есть что-то очень тёплое в осознании, что теперь у нас есть свои воспоминания.",
+      "Мне нравится собирать в голове маленькие детали, связанные с тобой.",
+      "Ты стала одной из тех людей, которых хочется замечать даже в самых обычных днях.",
+      "Мне нравится, что твоё присутствие не утомляет. Наоборот, рядом становится легче.",
+      "Иногда я думаю не о большом будущем, а просто о следующем моменте рядом с тобой.",
+      "Мне нравится, что мы можем не соответствовать какой-то идеальной истории и всё равно быть счастливыми в своей.",
+      "Ты умеешь делать обычное запоминающимся.",
+      "Я ценю моменты с тобой именно потому, что их нельзя повторить один в один.",
+      "Мне нравится знать, что где-то среди миллионов людей есть именно ты.",
+      "Мне нравится твоя улыбка сильнее, чем я обычно показываю.",
+      "У тебя есть способность одним взглядом полностью изменить моё настроение.",
+      "Иногда мне хочется просто обнять тебя и ничего не объяснять.",
+      "Мне нравится твой смех. Особенно тот, который случается неожиданно.",
+      "Есть что-то очень красивое в том, как ты радуешься мелочам.",
+      "Мне нравится запоминать твои привычки, даже самые незначительные.",
+      "Твоя интонация иногда остаётся у меня в голове дольше, чем сама фраза.",
+      "Мне нравится смотреть на тебя, когда ты увлечённо что-то рассказываешь.",
+      "Ты умеешь быть одновременно мягкой и очень характерной. Мне это нравится.",
+      "Мне нравится, когда ты смеёшься над моими глупостями, даже если они действительно глупые.",
+      "Иногда ты даже не замечаешь, насколько сильно влияешь на моё настроение.",
+      "Мне нравится тот момент, когда после долгого дня я понимаю, что хочу рассказать всё именно тебе.",
+      "Есть вещи, которые становятся теплее просто потому, что ты в них рядом.",
+      "Мне нравится, как ты умеешь делать пространство вокруг себя своим.",
+      "Мне нравится твой голос, особенно когда ты говоришь спокойно.",
+      "Ты умеешь быть красивой совершенно без усилий, и это немного нечестно.",
+      "Мне нравится, когда ты смеёшься раньше, чем успеваешь договорить.",
+      "Есть что-то очень уютное в твоём присутствии.",
+      "Мне нравится держать в памяти твои случайные фразы.",
+      "Ты иногда говоришь одну обычную вещь, а я потом почему-то долго её помню.",
+      "Мне нравится, когда ты радуешься чему-то и сразу хочется радоваться вместе с тобой.",
+      "Иногда мне хочется остановить конкретный момент просто потому, что в нём есть ты.",
+      "Мне нравится видеть тебя счастливой. Без каких-то дополнительных причин.",
+      "Ты очень легко становишься частью моих мыслей.",
+      "Мне нравится, как ты можешь быть смешной, серьёзной и немного странной — и всё это за один вечер.",
+      "У тебя есть выражения лица, которые я уже научился узнавать с полуслова.",
+      "Мне нравится, что я постепенно узнаю всё больше твоих маленьких особенностей.",
+      "Иногда я улыбаюсь просто потому, что вспомнил что-то связанное с тобой.",
+      "Мне нравится ощущение, когда ты рядом и никуда не нужно спешить.",
+      "Ты стала для меня очень тёплой частью повседневности.",
+      "Да, иногда ты меня бесишь. К сожалению для меня, мне всё равно очень нравится быть рядом.",
+      "Я официально признаю: спорить с тобой иногда сложнее, чем хотелось бы.",
+      "Мне нравится, что ты умеешь красть моё внимание вообще без предупреждения.",
+      "Ты каким-то образом умудряешься появляться в моих мыслях абсолютно не по расписанию.",
+      "Похоже, ты стала моей самой приятной привычкой.",
+      "Я подозреваю, что ты слишком часто всплываешь у меня в голове для случайного человека.",
+      "Иногда мне кажется, что у тебя отдельный доступ к моему хорошему настроению.",
+      "Я не знаю, как ты это делаешь, но рядом с тобой я чаще улыбаюсь.",
+      "Ты довольно эффективно занимаешь место в моей голове.",
+      "Мне нравится твоя способность превращать нормальный разговор в историю, которую потом вспоминаешь.",
+      "Кажется, у тебя есть талант делать меня более разговорчивым, чем я собирался быть.",
+      "Ты — причина некоторых моих абсолютно необязательных улыбок в течение дня.",
+      "Я не планировал столько думать о тебе. Но план явно провалился.",
+      "Мне нравится, что с тобой даже дурацкие шутки почему-то становятся смешнее.",
+      "Ты подозрительно хорошо умеешь делать мои планы менее скучными.",
+      "Иногда я ловлю себя на мысли: вот это сейчас точно нужно рассказать тебе.",
+      "Не уверен, кто именно дал тебе право настолько прочно поселиться в моём дне.",
+      "Похоже, теперь у меня появился человек, которому я хочу показывать всякую ерунду.",
+      "Мне нравится наша способность обсуждать что-то важное, а потом внезапно уйти в абсолютную глупость.",
+      "С тобой у меня почему-то часто появляется желание сказать ещё пять минут, даже когда вроде уже всё сказал.",
+      "Ты умеешь занимать мысли очень ненавязчиво. Просто факт.",
+      "Иногда ты настолько смешная, что я забываю, что собирался выглядеть серьёзным.",
+      "Мне нравится, что у нас могут быть совершенно глупые маленькие ритуалы.",
+      "Ты очень удобно вписалась в моё чувство юмора.",
+      "Мне кажется, наши лучшие моменты иногда начинаются с какой-нибудь полной ерунды.",
+      "С тобой даже «ничего особенного» иногда становится хорошим воспоминанием.",
+      "Ты — довольно убедительная причина отвлечься от всего остального.",
+      "Мне нравится, что ты можешь рассмешить меня тогда, когда я вообще не собирался смеяться.",
+      "Кажется, рядом с тобой у меня слишком быстро появляется хорошее настроение.",
+      "Я замечаю больше деталей, связанных с тобой, чем, наверное, стоило бы.",
+      "Я помню некоторые твои слова намного дольше, чем ты сама, скорее всего, ожидаешь.",
+      "Мне нравится замечать, как меняется твоё настроение по мелочам.",
+      "Я люблю те моменты, которые вообще не планировались.",
+      "Самые хорошие воспоминания с тобой почему-то часто оказываются совершенно случайными.",
+      "Мне нравится, когда ты рассказываешь что-то, что действительно тебя волнует.",
+      "Я замечаю, когда ты устаёшь, даже если ты пытаешься этого не показывать.",
+      "Мне нравится знать, что тебя радует.",
+      "Я запоминаю не только большие события, но и маленькие детали вокруг них.",
+      "Мне нравится узнавать тебя постепенно, а не пытаться понять всю сразу.",
+      "Есть что-то хорошее в том, чтобы просто наблюдать, как человек становится всё более знакомым.",
+      "Мне нравится, что со временем появляется всё больше фраз, которые не надо объяснять.",
+      "Я ценю наши маленькие внутренние шутки.",
+      "Мне нравится, что некоторые воспоминания теперь автоматически связаны с тобой.",
+      "Я люблю момент, когда ты рассказываешь историю, которую уже рассказывала, но всё равно интересно слушать.",
+      "Мне нравится, что ты можешь заинтересовать меня даже тем, что обычно мне было бы безразлично.",
+      "Я замечаю, когда ты искренне радуешься, и это каждый раз приятно видеть.",
+      "Мне нравится, когда разговор внезапно становится намного дольше, чем планировалось.",
+      "Я люблю тот момент, когда понимаешь: этот день точно запомнится.",
+      "Некоторые наши обычные разговоры уже звучат в памяти как отдельные эпизоды.",
+      "Мне нравится, что у нас накапливаются свои маленькие истории.",
+      "Я ценю каждую новую деталь, которую узнаю о тебе.",
+      "Мне нравится, что ты не заканчиваешься на первом впечатлении.",
+      "Чем больше я тебя узнаю, тем интереснее становится.",
+      "Мне нравится, что в тебе постоянно находится что-то новое.",
+      "Я люблю моменты, когда ты неожиданно показываешь сторону себя, которую я раньше не видел.",
+      "Мне нравится, что наши воспоминания состоят не только из больших событий.",
+      "Я бы сохранил многие обычные наши вечера так же охотно, как самые важные даты.",
+      "Мне нравится замечать то, что обычно никто не фотографирует и не записывает.",
+      "Я уважаю твою способность иметь своё мнение и не подстраиваться под всех подряд.",
+      "Мне нравится, что у тебя есть собственный характер, который не нужно придумывать.",
+      "Мне нравится видеть, как ты добиваешься того, что для тебя действительно важно.",
+      "Я хочу быть человеком, с которым тебе спокойно быть собой.",
+      "Мне нравится, что рядом со мной ты можешь быть не только весёлой, но и уставшей, задумчивой или серьёзной.",
+      "Я ценю твою искренность даже тогда, когда она бывает неудобной.",
+      "Мне нравится, что ты умеешь отстаивать то, во что веришь.",
+      "Я хочу запоминать не только счастливые дни, но и то, как мы справляемся с обычными сложностями.",
+      "Мне важно, чтобы рядом со мной ты чувствовала себя спокойно.",
+      "Мне нравится, когда ты можешь говорить со мной прямо.",
+      "Я ценю доверие намного больше любой красивой фразы.",
+      "Мне нравится, что мы постепенно учимся понимать друг друга лучше.",
+      "Я хочу, чтобы между нами оставалось место для честности.",
+      "Мне нравится, что ты можешь не соглашаться со мной и всё равно оставаться близким человеком.",
+      "Я ценю в тебе не только мягкость, но и силу характера.",
+      "Мне нравится человек, которым ты являешься, а не образ, который можно красиво описать.",
+      "Я хочу быть рядом не только тогда, когда всё легко.",
+      "Мне нравится ощущение, что нам не нужно играть роль идеальной пары.",
+      "Я ценю то, что между нами постепенно становится больше понимания.",
+      "Мне нравится, что у каждого из нас остаётся своё пространство и при этом есть общее.",
+      "Я хочу, чтобы рядом друг с другом мы становились спокойнее, а не сложнее.",
+      "Мне нравится, что ты умеешь сохранять себя.",
+      "Я ценю в тебе самостоятельность сильнее, чем громкие комплименты.",
+      "Мне нравится знать, что тебе можно доверять.",
+      "Мне хорошо оттого, что рядом со мной есть человек, которого не нужно постоянно угадывать.",
+      "Я люблю, когда между людьми можно не только говорить, но и понимать без слов.",
+      "Мне нравится наше чувство меры — без необходимости постоянно доказывать что-то друг другу.",
+      "Я хочу, чтобы у нас оставалось много поводов уважать друг друга.",
+      "Мне нравится, что близость между людьми может быть спокойной и при этом очень сильной.",
+      "Мне интересно, сколько ещё историй у нас впереди.",
+      "Я иногда думаю о будущих моментах, которые мы пока даже не знаем.",
+      "Мне нравится идея однажды вспоминать сегодняшние дни как начало чего-то большего.",
+      "Я бы хотел, чтобы у нас было много обычных будней, которые потом окажутся важными.",
+      "Мне хочется узнавать тебя дальше, а не останавливаться на том, что я уже знаю.",
+      "Я хочу, чтобы через время у нас было ещё больше своих слов и воспоминаний.",
+      "Мне нравится мысль о том, что некоторые сегодняшние мелочи однажды станут нашими историями.",
+      "Я не знаю, что именно нас ждёт дальше, но мне нравится идти туда рядом с тобой.",
+      "Мне хочется ещё много раз говорить: «Помнишь, как тогда?»",
+      "Я бы с удовольствием накопил с тобой ещё сотни самых обычных вечеров.",
+      "Мне нравится думать не только о больших планах, но и о маленьких совместных привычках.",
+      "Я хочу, чтобы у нас было достаточно времени просто жить, смеяться и не торопиться.",
+      "Мне нравится, что впереди ещё так много вещей, которых мы не знаем друг о друге.",
+      "Я надеюсь, что однажды мы будем вспоминать сегодняшние сообщения и улыбаться.",
+      "Мне хочется, чтобы история не заканчивалась на красивых моментах, а продолжалась обычными днями.",
+      "Я хочу ещё много раз удивляться тому, насколько хорошо мне рядом с тобой.",
+      "Мне нравится, что у наших отношений есть не только прошлое, но и пространство для нового.",
+      "Мне интересно, какими мы станем через год, если будем продолжать идти рядом.",
+      "Я хочу, чтобы у нас было больше моментов, которые не планировали заранее.",
+      "Мне нравится перспектива постепенно собирать целую жизнь из маленьких общих историй.",
+      "Мне с тобой хорошо.",
+      "Ты мне очень нравишься. До сих пор.",
+      "Мне нравится быть рядом с тобой.",
+      "Я рад, что именно ты оказалась рядом.",
+      "Ты делаешь мои дни интереснее.",
+      "Мне спокойно рядом с тобой.",
+      "Я люблю наши обычные моменты.",
+      "Мне нравится наше «мы».",
+      "Ты стала важной частью моего дня.",
+      "Мне нравится слышать тебя.",
+      "Я рад каждой встрече с тобой.",
+      "Мне нравится, когда ты рядом.",
+      "Я хочу ещё много таких дней.",
+      "Ты умеешь делать день лучше.",
+      "Мне нравится узнавать тебя дальше.",
+      "Я ценю то, что между нами есть.",
+      "Мне нравится наша история.",
+      "Ты — очень хороший человек для моего мира.",
+      "Я рад, что у нас есть свои маленькие моменты.",
+      "Мне нравится, куда всё это идёт.",
+      "Я бы снова выбрал встретить тебя.",
+      "С тобой мне проще улыбаться.",
+      "Мне нравится твоя энергия.",
+      "Я ценю твоё присутствие.",
+      "Мне нравится, когда день заканчивается разговором с тобой.",
+      "Ты стала привычкой, от которой я не хочу отказываться.",
+      "Мне нравится, что ты есть в моей повседневности.",
+      "Я рад, что могу называть это нашим.",
+      "Мне нравится это чувство: ты рядом.",
+      "Спасибо тебе за обычные хорошие моменты.",
     ];
 
     const SPECIAL_MESSAGE = "Ты дошла до последней страницы.<br><br>Я хотел сделать тебе не открытку и не набор красивых фраз. Просто оставить здесь несколько вещей, которые обычно не успеваешь сказать вслух.<br><br><strong>Спасибо, что ты есть в моей жизни.</strong>";
@@ -2119,9 +1848,7 @@
     music.volume = 0.25;
 
     function updateMusicIcon() {
-      musicBtn.classList.toggle('is-muted', !musicOn);
-      musicBtn.setAttribute('aria-label', musicOn ? 'Выключить музыку' : 'Включить музыку');
-      musicBtn.title = musicOn ? 'Выключить музыку' : 'Включить музыку';
+      musicBtn.textContent = musicOn ? '♫' : '·';
     }
     updateMusicIcon();
 
@@ -2200,30 +1927,23 @@
     applyThemeByTime();
     setInterval(applyThemeByTime, 60000);
 
-    // Лёгкие частицы первого экрана — без эмодзи.
-    for (let i = 0; i < 14; i++) {
-      const particle = document.createElement('span');
-      particle.className = 'first-bg-particle';
-      particle.style.left = (Math.random() * 100) + '%';
-      particle.style.top = (8 + Math.random() * 84) + '%';
-      particle.style.animationDelay = (-Math.random() * 10) + 's';
-      particle.style.animationDuration = (8 + Math.random() * 8) + 's';
-      particle.style.transform = `scale(${(0.55 + Math.random() * 0.8).toFixed(2)})`;
-      document.body.appendChild(particle);
-    }
+    const bgHearts = ['', '', '', '', ''];
+    for (let i = 0; i < 15; i++) {
+      const h = document.createElement('div');
+      h.className = 'heart-bg';
+      h.textContent = bgHearts[Math.floor(Math.random() * bgHearts.length)];
+      h.style.left = Math.random() * 100 + '%';
+      h.style.fontSize = (14 + Math.random() * 24) + 'px';
+      h.style.animationDuration = (10 + Math.random() * 10) + 's';
+      h.style.animationDelay = (Math.random() * 12) + 's';
+      h.style.animationPlayState = 'paused';
+      document.body.appendChild(h);
 
-    const ambientLayer = document.querySelector('.page2-ambient');
-    if (ambientLayer) {
-      for (let i = 0; i < 18; i++) {
-        const mote = document.createElement('span');
-        mote.className = 'ambient-mote';
-        mote.style.left = (4 + Math.random() * 92) + '%';
-        mote.style.top = (10 + Math.random() * 80) + '%';
-        mote.style.animationDuration = (7 + Math.random() * 8) + 's';
-        mote.style.animationDelay = (-Math.random() * 12) + 's';
-        mote.style.opacity = (0.12 + Math.random() * 0.2).toFixed(2);
-        ambientLayer.appendChild(mote);
-      }
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          h.style.animationPlayState = 'running';
+        });
+      });
     }
 
     // ========== ВТОРАЯ СТРАНИЦА ==========
@@ -2239,19 +1959,62 @@
     const startSongBtn = document.getElementById('startSongBtn');
     const songCurrentTime = document.getElementById('songCurrentTime');
     const songDuration = document.getElementById('songDuration');
-    const songProgress = document.querySelector('.song-progress');
-    const songPlayBtn = document.getElementById('songPlayBtn');
-    const skipBackBtn = document.getElementById('skipBackBtn');
-    const skipForwardBtn = document.getElementById('skipForwardBtn');
-    const photoFrame = document.querySelector('.photo-frame');
 
-    // ============================================================
-    // ВСТАВЬ СЮДА СВОЙ УЖЕ ИМЕЮЩИЙСЯ МАССИВ LYRICS.
-    // Формат: { time: 14, text: "твоя строка" }
+    // Вставь сюда свой оригинальный/лицензированный текст и тайминги.
+    // Формат: [{ time: 0, text: "..." }, { time: 14, text: "..." }, ...]
     const LYRICS = [
-      // { time: 0, text: "..." },
-      // { time: 14, text: "твоя строка" },
-      // { time: 17, text: "следующая строка" },
+      { time: 14,   text: "Детка, на мне висит метка, я — твоя мишень" },
+      { time: 17,   text: "Ты — конфетка в упаковке среди муляжей" },
+      { time: 21,   text: "Я приму твой выстрел, не могу терпеть уже" },
+      { time: 24,   text: "Целься в сердце, чтобы оно перестало жечь" },
+      { time: 28,   text: "Детка, ты карамель-карамель" },
+      { time: 29,   text: "Опутала туго чарами-чарами" },
+      { time: 31,   text: "Душа кричит, будто фа-до-соль-ре-ля-ми" },
+      { time: 33,   text: "Губы твои стали алыми-алыми" },
+      { time: 34,   text: "Выпью тебя, и до талого мало мне" },
+      { time: 36,   text: "Мир на миг стал безлик, а мы бокалами" },
+      { time: 38,   text: "Ловим те капли, что самыми-самыми" },
+      { time: 40,   text: "Станут для нас и залечат все раны нам" },
+      { time: 42,   text: "Детка, детка, детка, уа-уэй" },
+      { time: 46,   text: "Я хочу, чтоб ты была моей" },
+      { time: 49,   text: "Пока летаем, тает ночь и день" },
+      { time: 53,   text: "Она — удача, я бегу за ней 💫" },
+      { time: 56,   text: "Как делишки, детка, где твоя улыбка?" },
+      { time: 58,   text: "Ты мой джекпот, я кричу: «Бинго!», детка, нахер Тиндер" },
+      { time: 62,   text: "Заполонила меня моя половинка" },
+      { time: 65,   text: "Мы крутим love, и кружим в ритме, нам не нужен ***" },
+      { time: 69,   text: "Как делишки у моей малышки, алло?" },
+      { time: 73,   text: "Как делишки у моей малышки, алло?" },
+      { time: 76,   text: "Как делишки у моей малышки, алло?" },
+      { time: 80,   text: "Как делишки у моей малышки? Я, я!" },
+      { time: 83,   text: "Как делишки у моей малышки, алло?" },
+      { time: 86,   text: "Как делишки у моей малышки, алло?" },
+      { time: 90,   text: "Как делишки у моей малышки, алло?" },
+      { time: 93,   text: "Как делишки у моей малышки? Я, я!" },
+      { time: 96,   text: "Так часто снишься, о тебе все мои мысли" },
+      { time: 100,  text: "Где мы на радуге зависли, солнца брызги на ней" },
+      { time: 103,  text: "В тебе сок есть, налей, в унисон акварель" },
+      { time: 107,  text: "Мы пишем наши чувства кляксами из ярких, бэй" },
+      { time: 110,  text: "Распахни мне сердце, будто раскладушка-сотик" },
+      { time: 113,  text: "И я нажму на твои кнопки, если ты не против" },
+      { time: 117,  text: "Мы крутим против часовой, детка, ты мой ***котик" },
+      { time: 120,  text: "Я называю это «love», звучит неплохо вроде" },
+      { time: 123,  text: "Я не катаюсь с тобой в метро, ведь ты бомба" },
+      { time: 128,  text: "Мы выше всех, моя малышка — вышка" },
+      { time: 130,  text: "По вечерам провожать её прямо до дома" },
+      { time: 135,  text: "Так клёво, так клёво" },
+      { time: 137,  text: "О нас поют во дворе кошки, малышка" },
+      { time: 140,  text: "Луной свечу тебе в окошко, пока спишь ты" },
+      { time: 144,  text: "В тебе есть чуитс, ты красива, даже слишком" },
+      { time: 147,  text: "Ну, как делишки, детка-детка, как делишки? Е-е" },
+      { time: 151,  text: "Как делишки у моей малышки, алло?" },
+      { time: 155,  text: "Как делишки у моей малышки, алло?" },
+      { time: 158,  text: "Как делишки у моей малышки, алло?" },
+      { time: 162,  text: "Как делишки у моей малышки? Я, я!" },
+      { time: 165,  text: "Как делишки у моей малышки, алло?" },
+      { time: 169,  text: "Как делишки у моей малышки, алло?" },
+      { time: 173,  text: "Как делишки у моей малышки, алло?" },
+      { time: 176,  text: "Как делишки у моей малышки? Я, я!" }
     ];
 
     let lyricIndex = 0;
@@ -2261,8 +2024,8 @@
     // Синхронизация рассчитана на акустическую версию длительностью 3:19 (199 сек).
     // Если локальный MP3 имеет чуть другой хвост/паузы, таймкоды автоматически масштабируются.
     const REFERENCE_DURATION = 199;
-    const LYRIC_LEAD = 0.10;          // строка появляется чуть до вокала
-    const LYRIC_FINISH_EARLY = 0.12;  // только для расчёта внутреннего прогресса; итоговое состояние строки не сбрасывается
+    const LYRIC_LEAD = 0.06;          // строка появляется чуть до вокала
+    const LYRIC_FINISH_EARLY = 0.18;  // последнее слово успевает закончиться до следующей строки
 
     let introOpened = false;
     let songStarted = false;
@@ -2337,40 +2100,29 @@
 
       const line = LYRICS[activeLyricIndex];
       const nextLine = LYRICS[activeLyricIndex + 1];
+
+      // Время начала/конца уже привязано к фактической длительности файла.
       const start = Math.max(0, getScaledLyricTime(line.time, duration) - LYRIC_LEAD);
-      const rawNextStart = nextLine
-        ? getScaledLyricTime(nextLine.time, duration) - LYRIC_LEAD
-        : duration;
+      const naturalEnd = nextLine
+        ? getScaledLyricTime(nextLine.time, duration) - LYRIC_FINISH_EARLY
+        : Math.min(duration, getScaledLyricTime(REFERENCE_DURATION, duration));
 
-      // Never let the word animation itself create a visual reset at the end.
-      // The line remains fully sung until the next line actually replaces it.
-      const end = Math.max(start + 0.5, rawNextStart);
-      const progress = currentTime <= start
-        ? 0
-        : currentTime >= end
-          ? 1
-          : (currentTime - start) / (end - start);
+      /* Если две строки слишком близко, всё равно гарантируем положительный интервал. */
+      const end = Math.max(start + 0.35, naturalEnd);
+      const progress = Math.max(0, Math.min(1, (currentTime - start) / (end - start)));
 
+      let cursor = 0;
       const activeLayer = lyricText.querySelector('.lyric-layer.active');
       if (!activeLayer) return;
 
-      let cursor = 0;
-      const nodes = activeLayer.querySelectorAll('.karaoke-word');
-      nodes.forEach((node, i) => {
+      activeLayer.querySelectorAll('.karaoke-word').forEach((node, i) => {
         const wordStart = cursor / karaokeTotalWeight;
         const wordEnd = (cursor + karaokeWordWeights[i]) / karaokeTotalWeight;
-        const isLast = i === nodes.length - 1;
+        const sung = progress >= wordEnd;
+        const current = !sung && progress >= wordStart;
 
-        node.classList.remove('sung', 'current');
-
-        if (progress >= 1) {
-          node.classList.add(isLast ? 'current' : 'sung');
-        } else if (progress >= wordEnd && !isLast) {
-          node.classList.add('sung');
-        } else if (progress >= wordStart) {
-          node.classList.add('current');
-        }
-
+        node.classList.toggle('sung', sung);
+        node.classList.toggle('current', current);
         cursor += karaokeWordWeights[i];
       });
     }
@@ -2382,58 +2134,47 @@
         return;
       }
 
-      let layers = lyricText.querySelectorAll('.lyric-layer');
-      if (layers.length !== 2) {
-        initLyricLayers();
-        layers = lyricText.querySelectorAll('.lyric-layer');
-      }
+      const layers = lyricText.querySelectorAll('.lyric-layer');
+      if (layers.length !== 2) initLyricLayers();
 
+      const layerNodes = lyricText.querySelectorAll('.lyric-layer');
       const nextLayerIndex = lyricLayerIndex === -1 ? 0 : 1 - lyricLayerIndex;
-      const nextLayer = layers[nextLayerIndex];
-      const oldLayer = lyricLayerIndex >= 0 ? layers[lyricLayerIndex] : null;
+      const nextLayer = layerNodes[nextLayerIndex];
+      const oldLayer = lyricLayerIndex >= 0 ? layerNodes[lyricLayerIndex] : null;
 
       prepareKaraokeLine(LYRICS[index].text, nextLayer);
-      nextLayer.className = 'lyric-layer';
-
-      // Старый слой уходит одновременно с появлением нового. На конце строки
-      // его состояние не сбрасываем отдельно.
-      if (oldLayer) oldLayer.classList.add('leaving');
-      requestAnimationFrame(() => nextLayer.classList.add('active'));
+      nextLayer.classList.remove('active', 'leaving');
+      void nextLayer.offsetWidth;
 
       activeLyricIndex = index;
       lyricLayerIndex = nextLayerIndex;
+
+      if (oldLayer) {
+        oldLayer.classList.remove('active');
+        oldLayer.classList.add('leaving');
+      }
+
+      nextLayer.classList.add('active');
       updateKaraokeWords(currentTime);
 
-      // Очищаем старый слой позже, но не меняем его визуальное состояние преждевременно.
       if (oldLayer) {
-        window.setTimeout(() => {
-          if (oldLayer !== layers[lyricLayerIndex]) oldLayer.className = 'lyric-layer';
-        }, 520);
+        setTimeout(() => oldLayer.classList.remove('leaving'), 560);
       }
     }
 
     function syncLyricToAudio(currentTime) {
-      if (!LYRICS.length) {
-        if (!lyricText.dataset.emptyShown) {
-          initLyricLayers();
-          const firstLayer = lyricText.querySelector('.lyric-layer');
-          firstLayer.classList.add('active');
-          prepareKaraokeLine('Вставь свой массив LYRICS в этот файл', firstLayer);
-          lyricText.dataset.emptyShown = '1';
-        }
-        return;
-      }
-
       const duration = songPlayer.duration && isFinite(songPlayer.duration)
         ? songPlayer.duration
         : REFERENCE_DURATION;
 
-      // На каждой смене строки сравниваемся напрямую с currentTime. Никаких очередей и setTimeout.
       let targetIndex = 0;
       for (let i = 1; i < LYRICS.length; i++) {
         const start = Math.max(0, getScaledLyricTime(LYRICS[i].time, duration) - LYRIC_LEAD);
-        if (currentTime >= start) targetIndex = i;
-        else break;
+        if (currentTime >= start) {
+          targetIndex = i;
+        } else {
+          break;
+        }
       }
 
       if (targetIndex !== activeLyricIndex) {
@@ -2441,7 +2182,6 @@
       } else {
         updateKaraokeWords(currentTime);
       }
-
       lyricIndex = targetIndex;
     }
 
@@ -2479,72 +2219,6 @@
       finalShown = false;
     }
 
-    function updatePlayButton() {
-      const playing = !songPlayer.paused && !songPlayer.ended;
-      songPlayBtn.textContent = playing ? 'Ⅱ' : '▶';
-      songPlayBtn.setAttribute('aria-label', playing ? 'Пауза' : 'Воспроизвести');
-      if (photoFrame) photoFrame.classList.toggle('song-live', playing);
-    }
-
-    function seekTo(seconds) {
-      if (!songStarted || !isFinite(seconds)) return;
-      const duration = songPlayer.duration && isFinite(songPlayer.duration)
-        ? songPlayer.duration
-        : REFERENCE_DURATION;
-      const target = Math.max(0, Math.min(duration, seconds));
-
-      // Seeking must never replay the previous lyric queue.
-      songPlayer.currentTime = target;
-      if (finalShown && target < duration - 0.5) hideFinal();
-      syncLyricToAudio(target);
-      updateKaraokeWords(target);
-      updatePlayButton();
-    }
-
-    function seekBy(delta) {
-      seekTo((songPlayer.currentTime || 0) + delta);
-    }
-
-    function seekFromPointer(clientX) {
-      if (!songPlayer.duration || !isFinite(songPlayer.duration)) return;
-      const rect = songProgress.getBoundingClientRect();
-      const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-      seekTo(ratio * songPlayer.duration);
-    }
-
-    let seekingWithPointer = false;
-
-    songProgress.addEventListener('pointerdown', (e) => {
-      seekingWithPointer = true;
-      songProgress.setPointerCapture?.(e.pointerId);
-      seekFromPointer(e.clientX);
-    });
-    songProgress.addEventListener('pointermove', (e) => {
-      if (seekingWithPointer) seekFromPointer(e.clientX);
-    });
-    songProgress.addEventListener('pointerup', () => { seekingWithPointer = false; });
-    songProgress.addEventListener('pointercancel', () => { seekingWithPointer = false; });
-
-    songPlayBtn.addEventListener('click', () => {
-      if (!songStarted) return;
-      if (songPlayer.paused || songPlayer.ended) {
-        if (songPlayer.ended) songPlayer.currentTime = 0;
-        songPlayer.play().catch(() => {});
-      } else {
-        songPlayer.pause();
-      }
-      updatePlayButton();
-    });
-
-    skipBackBtn.addEventListener('click', () => seekBy(-5));
-    skipForwardBtn.addEventListener('click', () => seekBy(5));
-
-    songPlayer.addEventListener('play', updatePlayButton);
-    songPlayer.addEventListener('pause', updatePlayButton);
-    songPlayer.addEventListener('ended', updatePlayButton);
-
-    updatePlayButton();
-
     function updateSongProgress() {
       if (!page2.classList.contains('active') || !songStarted) {
         progressRafId = null;
@@ -2557,17 +2231,10 @@
       if (songPlayer.duration && isFinite(songPlayer.duration)) {
         const progress = Math.min(100, (currentTime / songPlayer.duration) * 100);
         songFill.style.width = progress + '%';
-        songProgress.style.setProperty('--progress-pos', progress + '%');
         songDuration.textContent = formatTime(songPlayer.duration);
       }
 
       syncLyricToAudio(currentTime);
-
-      if (photoFrame) {
-        const phase = Math.sin(currentTime * Math.PI * 2 / 1.86);
-        photoFrame.classList.toggle('song-beat', phase > 0.92 && !songPlayer.paused);
-      }
-      updatePlayButton();
 
       if (songPlayer.duration && isFinite(songPlayer.duration) && !finalShown) {
         if (currentTime >= songPlayer.duration - 0.12 || songPlayer.ended) {
@@ -2583,7 +2250,6 @@
       songPlayer.currentTime = 0;
       lyricIndex = 0;
       songFill.style.width = '0%';
-      songProgress.style.setProperty('--progress-pos', '0%');
       songCurrentTime.textContent = '0:00';
       songDuration.textContent = '0:00';
       finalShown = false;
@@ -2613,10 +2279,8 @@
       songStarted = true;
 
       initLyricLayers();
-      if (LYRICS.length) {
-        renderLyric(0, 0);
-      }
-      songPlayer.play().then(updatePlayButton).catch(updatePlayButton);
+      renderLyric(0, 0);
+      songPlayer.play().catch(() => {});
 
       if (!progressRafId) {
         progressRafId = requestAnimationFrame(updateSongProgress);
