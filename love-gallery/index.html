@@ -32,8 +32,8 @@
     .orb{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(220,139,168,.11),transparent 72%);animation:orb 22s ease-in-out infinite alternate;will-change:transform}
     .orb.a{width:340px;height:340px;left:-160px;top:16%}.orb.b{width:300px;height:300px;right:-150px;top:42%;animation-delay:-6s}.orb.c{width:380px;height:380px;left:16%;bottom:-230px;animation-delay:-11s}
     @keyframes orb{to{transform:translate3d(34px,-24px,0) scale(1.04)}}
-    .shell{width:min(100%,920px);margin:0 auto;padding:18px max(18px,env(safe-area-inset-left,0px)) 44px max(18px,env(safe-area-inset-right,0px))}
-    .topbar{position:sticky;top:0;z-index:20;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;padding:8px 0 18px;background:linear-gradient(180deg,rgba(9,7,12,.90),rgba(9,7,12,.58),transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+    .shell{width:min(100%,920px);margin:0 auto;padding:0 max(18px,env(safe-area-inset-left,0px)) 44px max(18px,env(safe-area-inset-right,0px))}
+    .topbar{position:sticky;top:0;z-index:20;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;width:100vw;margin-left:calc(50% - 50vw);padding:max(8px,env(safe-area-inset-top,0px)) max(18px,env(safe-area-inset-right,0px)) 15px max(18px,env(safe-area-inset-left,0px));background:linear-gradient(180deg,rgba(9,7,12,.96) 0%,rgba(9,7,12,.82) 58%,rgba(9,7,12,0) 100%);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
     .back{justify-self:start;padding:9px 13px;border:1px solid var(--line);border-radius:999px;background:rgba(13,10,17,.64);color:rgba(255,255,255,.74);text-decoration:none;font-size:12px;box-shadow:0 10px 24px rgba(0,0,0,.20);transition:transform .24s var(--ease),border-color .24s ease,color .24s ease}
     .back:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.17);color:#fff}.top-title{justify-self:center;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.42)}
     .hero{text-align:center;padding:36px 0 28px;animation:heroIn .8s var(--ease) both}.kicker{display:block;margin-bottom:10px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(230,196,211,.54)}
@@ -44,7 +44,8 @@
     .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
     .photo-card{position:relative;display:block;width:100%;padding:0;border:1px solid rgba(255,255,255,.09);border-radius:22px;overflow:hidden;background:#0d0a10;box-shadow:0 18px 34px rgba(0,0,0,.18);opacity:0;transform:translate3d(0,18px,0) scale(.985);transition:opacity .62s var(--ease),transform .72s var(--ease),border-color .24s ease,box-shadow .24s ease;content-visibility:auto;contain:layout paint}
     .photo-card.is-visible{opacity:1;transform:none}.photo-card:hover{transform:translate3d(0,-3px,0) scale(1.006);border-color:rgba(255,255,255,.15);box-shadow:0 25px 48px rgba(0,0,0,.30)}
-    .photo-card img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.015));transition:transform .8s var(--ease),filter .45s ease}.photo-card:hover img{transform:scale(1.025);filter:saturate(1.02)}
+        .photo-card img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.015));transition:transform .8s var(--ease),filter .45s ease}.photo-card:hover img{transform:scale(1.025);filter:saturate(1.02)}
+    .gallery-card{position:relative;overflow:hidden;will-change:transform}.gallery-card::after{content:"";position:absolute;inset:0 auto 0 -120%;width:78%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.08),transparent);transform:skewX(-15deg);transition:transform .8s var(--ease);pointer-events:none}.gallery-card:hover{transform:translate3d(0,-3px,0);border-color:rgba(255,255,255,.17);box-shadow:0 18px 34px rgba(0,0,0,.28);background:linear-gradient(155deg,rgba(255,255,255,.095),rgba(255,255,255,.035))}.gallery-card:hover::after{transform:translateX(250%)}.gallery-card:active{transform:translate3d(0,0,0) scale(.985)}
     .card-copy{position:absolute;left:14px;right:14px;bottom:13px;z-index:2;text-align:left}.card-copy strong{display:block;font-size:13px;line-height:1.25;color:rgba(255,255,255,.90)}.card-copy span{display:block;margin-top:3px;font-size:10px;color:rgba(255,255,255,.47)}
     .empty{display:none;margin:18px 0 0;padding:32px 20px;border:1px dashed rgba(255,255,255,.13);border-radius:22px;background:rgba(255,255,255,.025);text-align:center}.empty.show{display:block}.empty-mark{width:42px;height:42px;margin:0 auto 13px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.11);border-radius:50%;color:var(--accent);font-family:Georgia,serif;font-size:18px}.empty h2{font-size:18px;margin-bottom:7px}.empty p{max-width:430px;margin:0 auto;color:var(--muted);font-size:12px;line-height:1.6}
     .lightbox{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:22px;opacity:0;visibility:hidden;pointer-events:none;background:rgba(5,4,8,.76);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:opacity .35s ease,visibility .35s ease}.lightbox.show{opacity:1;visibility:visible;pointer-events:auto}
@@ -55,7 +56,7 @@
     .lb-loading{position:absolute;left:50%;top:50%;width:24px;height:24px;margin:-12px;border:1px solid rgba(255,255,255,.16);border-top-color:rgba(239,196,211,.86);border-radius:50%;opacity:0;pointer-events:none;animation:spin .9s linear infinite}.lightbox.loading .lb-loading{opacity:1}@keyframes spin{to{transform:rotate(360deg)}}
     @media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.hero{padding-top:27px}.photo-card{border-radius:18px}.card-copy{left:11px;right:11px;bottom:10px}}
     @media(max-width:500px){.shell{padding-inline:12px}.topbar{padding-top:6px}.grid{gap:8px}.hero h1{font-size:32px}.hero p{font-size:13px}.meta-row{padding:10px 12px}.lightbox{padding:12px}.lightbox-stage{height:80vh}.lb-prev{left:2px}.lb-next{right:2px}.lb-caption{bottom:-22px}.lb-close{right:2px}}
-    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.ambient::before,.orb,.hero,.lb-loading{animation:none}.photo-card{opacity:1;transform:none;transition-duration:.01ms}.lightbox,.lightbox-image{transition-duration:.01ms}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.ambient::before,.orb,.hero,.lb-loading{animation:none}.photo-card{opacity:1;transform:none;transition-duration:.01ms}.gallery-card::after{display:none}.lightbox,.lightbox-image{transition-duration:.01ms}}
     @media(pointer:coarse){.lightbox{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}}
   </style>
 </head>
@@ -106,6 +107,14 @@
       Это позволяет открыть новую галерею сразу, не заставляя тебя сначала
       копировать файл. Для полной изоляции проекта замени оба URL на локальные.
     */
+    const galleryItem = (file, title, meta = '', alt = title) => ({
+      preview: `photos/thumbs/${file}`,
+      full: `photos/full/${file}`,
+      title,
+      meta,
+      alt
+    });
+
     const GALLERY_ITEMS = [
       {
         preview: '../photo1.jpg',
@@ -114,14 +123,15 @@
         meta: 'первый снимок',
         alt: 'Фотография из нашей истории'
       }
-      /*,
-      {
-        preview: 'photos/thumbs/02.webp',
-        full: 'photos/full/02.webp',
-        title: 'Ещё один момент',
-        meta: '2026',
-        alt: 'Наша фотография'
-      }
+      /*
+      Для новой фотографии добавь ОДНУ строку:
+      galleryItem('02.webp', 'Название момента', '2026'),
+      А сам файл положи дважды:
+      photos/thumbs/02.webp
+      photos/full/02.webp
+
+      Пример:
+      galleryItem('03.webp', 'Ещё один момент', '2026'),
       */
     ];
 
