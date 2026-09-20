@@ -582,63 +582,29 @@
       50% { opacity: 0.9; }
     }
 
-    /* Фото: геометрия статична, движение только внутри и в свете рамки */
+    /* Фото: один фиксированный круг. Геометрия не масштабируется — анимируется только содержимое и свечение. */
     .photo-frame {
       position: relative;
-      width: 184px;
-      height: 184px;
-      margin-bottom: 22px;
-      flex: 0 0 184px;
+      width: 176px;
+      height: 176px;
+      margin-bottom: 18px;
+      flex: 0 0 176px;
       border-radius: 50%;
-      padding: 4px;
+      padding: 3px;
       background: conic-gradient(
         from 0deg,
-        #ff6b9d 0deg,
-        #ffd700 105deg,
-        #ff7aa8 185deg,
-        #c44569 275deg,
-        #ff6b9d 360deg
+        #dba0b8 0deg,
+        #e8c39e 90deg,
+        #b77998 180deg,
+        #8f6380 270deg,
+        #dba0b8 360deg
       );
       box-shadow:
-        0 0 26px rgba(255, 107, 157, 0.35),
-        0 0 70px rgba(255, 107, 157, 0.16);
-      animation: photoAura 4.8s ease-in-out infinite;
+        0 0 22px rgba(221,172,192,.30),
+        0 0 58px rgba(184,139,166,.16);
+      animation: photoAura 5.2s ease-in-out infinite;
       isolation: isolate;
       overflow: visible;
-    }
-
-    .photo-frame::before {
-      content: '';
-      position: absolute;
-      inset: -2px;
-      border-radius: 50%;
-      background: conic-gradient(
-        from 0deg,
-        rgba(255,255,255,0),
-        rgba(255,215,0,0.75),
-        rgba(255,107,157,0.75),
-        rgba(255,255,255,0),
-        rgba(255,215,0,0.35),
-        rgba(255,255,255,0)
-      );
-      filter: blur(3px);
-      opacity: 0.5;
-      pointer-events: none;
-      z-index: 0;
-      animation: ringSpin 7s linear infinite;
-    }
-
-    .photo-frame::after {
-      content: '';
-      position: absolute;
-      inset: -20px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 107, 157, 0.18) 0%, rgba(255, 107, 157, 0.06) 48%, transparent 72%);
-      filter: blur(9px);
-      opacity: 0.8;
-      pointer-events: none;
-      z-index: -1;
-      animation: auraBreath 4.8s ease-in-out infinite;
     }
 
     .photo-window {
@@ -647,9 +613,9 @@
       height: 100%;
       border-radius: 50%;
       overflow: hidden;
-      background: #1a0a2e;
+      background: #100c14;
       z-index: 2;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14), inset 0 0 24px rgba(0,0,0,0.24);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), inset 0 0 24px rgba(0,0,0,.22);
     }
 
     .photo-frame img {
@@ -663,63 +629,53 @@
       object-fit: cover;
       object-position: center;
       transform-origin: center center;
-      animation: photoFloat 6.5s ease-in-out infinite;
+      animation: photoFloat 7.2s ease-in-out infinite;
       will-change: transform, filter;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
     }
 
     @keyframes photoFloat {
-      0%, 100% { transform: translate3d(0, 0, 0) scale(1.00) rotate(-0.15deg); filter: brightness(1) saturate(1); }
-      50% { transform: translate3d(0, -2px, 0) scale(1.028) rotate(0.15deg); filter: brightness(1.045) saturate(1.04); }
+      0%, 100% { transform: translate3d(0,0,0) scale(1); filter: brightness(1) saturate(1); }
+      50% { transform: translate3d(0,-1px,0) scale(1.025); filter: brightness(1.04) saturate(1.03); }
     }
 
     @keyframes photoAura {
-      0%, 100% { box-shadow: 0 0 26px rgba(255, 107, 157, 0.35), 0 0 70px rgba(255, 107, 157, 0.16); }
-      50% { box-shadow: 0 0 40px rgba(255, 107, 157, 0.52), 0 0 92px rgba(255, 107, 157, 0.24); }
-    }
-
-    @keyframes ringSpin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes auraBreath {
-      0%, 100% { transform: scale(0.96); opacity: 0.58; }
-      50% { transform: scale(1.07); opacity: 0.92; }
+      0%, 100% {
+        box-shadow: 0 0 22px rgba(221,172,192,.30), 0 0 58px rgba(184,139,166,.16);
+      }
+      50% {
+        box-shadow: 0 0 32px rgba(229,182,200,.46), 0 0 78px rgba(184,139,166,.22);
+      }
     }
 
     .frame-heart {
       position: absolute;
-      font-size: 18px;
       z-index: 5;
-      animation: heartFloat 2.4s ease-in-out infinite;
-      filter: drop-shadow(0 0 7px rgba(255, 100, 150, 0.82));
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(241,210,220,.78);
+      box-shadow: 0 0 9px rgba(232,190,207,.55);
       pointer-events: none;
-      line-height: 1;
+      animation: heartFloat 2.8s ease-in-out infinite;
       transform-origin: center;
-      will-change: transform, filter;
+      will-change: transform, opacity;
     }
 
     @keyframes heartFloat {
-      0%, 100% {
-        transform: translate(-50%, -50%) translateY(0) scale(1) rotate(-3deg);
-        filter: drop-shadow(0 0 7px rgba(255,100,150,0.68));
-      }
-      50% {
-        transform: translate(-50%, -50%) translateY(-3px) scale(1.14) rotate(3deg);
-        filter: drop-shadow(0 0 12px rgba(255,120,170,0.96));
-      }
+      0%, 100% { transform: translate(-50%,-50%) translateY(0) scale(.82); opacity:.48; }
+      50% { transform: translate(-50%,-50%) translateY(-3px) scale(1.12); opacity:.95; }
     }
 
-    .frame-heart.h1 { top: -1px; left: 50%; animation-delay: 0s; }
-    .frame-heart.h2 { top: 13%; left: 96%; animation-delay: 0.18s; }
-    .frame-heart.h3 { top: 50%; left: 102%; animation-delay: 0.36s; }
-    .frame-heart.h4 { top: 87%; left: 96%; animation-delay: 0.54s; }
-    .frame-heart.h5 { top: 102%; left: 50%; animation-delay: 0.72s; }
-    .frame-heart.h6 { top: 87%; left: 4%; animation-delay: 0.90s; }
-    .frame-heart.h7 { top: 50%; left: -2%; animation-delay: 1.08s; }
-    .frame-heart.h8 { top: 13%; left: 4%; animation-delay: 1.26s; }
+    .frame-heart.h1 { top: -2px; left: 50%; animation-delay: 0s; }
+    .frame-heart.h2 { top: 14%; left: 95%; animation-delay: .22s; }
+    .frame-heart.h3 { top: 50%; left: 101%; animation-delay: .44s; }
+    .frame-heart.h4 { top: 86%; left: 95%; animation-delay: .66s; }
+    .frame-heart.h5 { top: 102%; left: 50%; animation-delay: .88s; }
+    .frame-heart.h6 { top: 86%; left: 5%; animation-delay: 1.10s; }
+    .frame-heart.h7 { top: 50%; left: -1%; animation-delay: 1.32s; }
+    .frame-heart.h8 { top: 14%; left: 5%; animation-delay: 1.54s; }
 
     .page2-title {
       font-size: 20px;
@@ -1558,17 +1514,278 @@
     }
 
     @media (max-height:700px) {
-      .song-controls { margin-top: 5px; gap: 14px; }
-      .song-skip { height: 34px; min-width: 44px; }
-      .song-play { width: 40px !important; height: 40px; }
+      #page2 .inner { justify-content: flex-start; padding-top: 12px; padding-bottom: 20px; }
+      .photo-frame { width: 150px; height: 150px; flex-basis: 150px; margin-bottom: 12px; }
+      .page2-title { font-size: 17px; margin-bottom: 9px; }
+      .lyric-container { height: 72px; margin-bottom: 7px; }
+      .lyric-text { height: 68px; }
+      .lyric-line { font-size: 15px; }
+      .song-time { margin-top: -7px; margin-bottom: 2px; }
+      .song-controls { margin-top: 2px; gap: 12px; }
+      .song-skip { height: 32px; min-width: 42px; }
+      .song-play { width: 38px !important; height: 38px; }
     }
 
-  </style>
+
+    /* === FINAL STABILITY OVERRIDES === */
+    /* One true geometry for the photo ring. No pseudo-rings, no scaling of the frame. */
+    .photo-frame {
+      width: 176px !important;
+      height: 176px !important;
+      flex-basis: 176px !important;
+      padding: 3px !important;
+      border-radius: 50% !important;
+      overflow: visible !important;
+      animation: photoAura 5.2s ease-in-out infinite !important;
+    }
+    .photo-frame::before,
+    .photo-frame::after {
+      display: none !important;
+      content: none !important;
+    }
+    .photo-window {
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 50% !important;
+      overflow: hidden !important;
+      transform: none !important;
+    }
+    .photo-frame img {
+      width: 112% !important;
+      height: 112% !important;
+      max-width: none !important;
+      border-radius: 50% !important;
+      margin: -6% 0 0 -6% !important;
+      animation: photoFloat 7.2s ease-in-out infinite !important;
+    }
+
+    /* Controls must stay visible on short phone viewports. */
+    #page2 .inner {
+      position: relative;
+      z-index: 5;
+      width: min(100%, 380px);
+    }
+    .song-controls {
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      position: relative;
+      z-index: 20;
+    }
+
+    @media (max-height: 700px) {
+      #page2 .inner {
+        justify-content: flex-start !important;
+        padding-top: 10px !important;
+        padding-bottom: 16px !important;
+      }
+      .photo-frame {
+        width: 148px !important;
+        height: 148px !important;
+        flex-basis: 148px !important;
+        margin-bottom: 10px !important;
+      }
+      .page2-title {
+        font-size: 17px !important;
+        margin-bottom: 8px !important;
+      }
+      .lyric-container {
+        height: 70px !important;
+        margin-bottom: 6px !important;
+      }
+      .lyric-text {
+        height: 66px !important;
+      }
+      .lyric-line {
+        font-size: 15px !important;
+        line-height: 1.45 !important;
+      }
+      .song-time {
+        margin-top: -6px !important;
+        margin-bottom: 2px !important;
+      }
+      .song-controls {
+        margin-top: 3px !important;
+        gap: 12px !important;
+      }
+      .song-skip {
+        height: 32px !important;
+        min-width: 42px !important;
+      }
+      .song-play {
+        width: 38px !important;
+        height: 38px !important;
+      }
+    }
+  
+    /* === FINAL POLISH / FIRST SCREEN + STABLE PHOTO === */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: -18% -10% -8%;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(220,170,195,.10), transparent 26%),
+        radial-gradient(circle at 84% 76%, rgba(109,91,160,.10), transparent 28%);
+      filter: blur(22px);
+      animation: firstAmbientDrift 18s ease-in-out infinite alternate;
+      z-index: 0;
+    }
+    @keyframes firstAmbientDrift {
+      from { transform: translate3d(-1%, 0, 0) scale(1); opacity: .65; }
+      to { transform: translate3d(1.5%, -1%, 0) scale(1.04); opacity: 1; }
+    }
+    .content { z-index: 3; }
+
+    .utility-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 2px 0 16px;
+    }
+    .utility-card {
+      min-height: 70px;
+      border: 1px solid rgba(255,255,255,.095);
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(255,255,255,.062), rgba(255,255,255,.018));
+      box-shadow: 0 10px 28px rgba(0,0,0,.14), inset 0 1px 0 rgba(255,255,255,.045);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 12px 14px;
+      color: rgba(255,255,255,.88);
+      text-align: left;
+    }
+    .utility-card-action {
+      width: 100%;
+      margin: 0;
+      cursor: pointer;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
+    }
+    .utility-card-action:active { transform: scale(.985); }
+    .utility-card-action:hover { border-color: rgba(235,195,211,.22); }
+    .utility-kicker {
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.42);
+      margin-bottom: 4px;
+    }
+    .utility-card strong {
+      font-size: 19px;
+      line-height: 1.15;
+      font-weight: 700;
+      color: rgba(255,255,255,.95);
+      font-variant-numeric: tabular-nums;
+    }
+    .utility-card > span:last-child {
+      font-size: 11px;
+      margin-top: 3px;
+      color: rgba(255,255,255,.48);
+    }
+
+    .music-btn svg { width: 21px; height: 21px; display: block; }
+    .music-btn.is-muted { opacity: .62; }
+    .music-btn.is-muted svg { opacity: .72; }
+
+    .first-bg-particle {
+      position: fixed;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: rgba(245,225,233,.58);
+      box-shadow: 0 0 10px rgba(230,183,204,.28);
+      opacity: .0;
+      pointer-events: none;
+      z-index: 1;
+      animation: firstParticleFloat linear infinite;
+    }
+    @keyframes firstParticleFloat {
+      0% { opacity: 0; transform: translate3d(0, 18px, 0) scale(.65); }
+      16% { opacity: .30; }
+      70% { opacity: .16; }
+      100% { opacity: 0; transform: translate3d(12px, -40px, 0) scale(1.05); }
+    }
+
+    /* One immutable circle. Animate only the image inside the clip. */
+    .photo-frame {
+      width: 176px !important;
+      height: 176px !important;
+      flex-basis: 176px !important;
+      padding: 4px !important;
+      border-radius: 50% !important;
+      overflow: visible !important;
+      transform: none !important;
+      animation: photoAura 6.5s ease-in-out infinite !important;
+      will-change: box-shadow;
+    }
+    .photo-window {
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 50% !important;
+      overflow: hidden !important;
+      clip-path: circle(50% at 50% 50%);
+    }
+    .photo-frame img {
+      width: 100% !important;
+      height: 100% !important;
+      margin: 0 !important;
+      border-radius: 50% !important;
+      object-fit: cover !important;
+      transform-origin: center !important;
+      animation: photoFloatClean 8s cubic-bezier(.4,0,.2,1) infinite !important;
+      will-change: transform, filter;
+    }
+    @keyframes photoFloatClean {
+      0%,100% { transform: scale(1.025) translate3d(0,0,0); filter: brightness(.98) saturate(.97); }
+      50% { transform: scale(1.055) translate3d(-1px,-1px,0); filter: brightness(1.035) saturate(1.02); }
+    }
+    .photo-frame::before, .photo-frame::after { pointer-events:none; }
+
+    .lyric-layer {
+      transition:
+        opacity .34s cubic-bezier(.22,1,.36,1),
+        transform .48s cubic-bezier(.22,1,.36,1),
+        filter .34s ease;
+    }
+    .lyric-layer.leaving {
+      opacity: 0 !important;
+      transform: translate3d(0,-5px,0) scale(.997) !important;
+      filter: blur(.9px) !important;
+    }
+    .karaoke-word {
+      filter: blur(.65px);
+      opacity: .50;
+    }
+    .karaoke-word.sung { filter: blur(0); opacity: .94; }
+    .karaoke-word.current {
+      filter: blur(0);
+      opacity: 1;
+      transform: translateY(-1px) scale(1.018);
+    }
+
+    .song-progress { cursor: pointer; touch-action: none; }
+
+    @media (max-height:700px) {
+      .utility-grid { gap: 8px; margin-bottom: 10px; }
+      .utility-card { min-height: 62px; padding: 10px 12px; }
+      .utility-card strong { font-size: 16px; }
+      .photo-frame { width: 152px !important; height: 152px !important; flex-basis: 152px !important; }
+    }
+</style>
 </head>
 <body>
 
   <button class="back-btn" id="backBtn">←</button>
-  <button class="music-btn" id="musicBtn" title="Музыка">♫</button>
+  <button class="music-btn" id="musicBtn" title="Музыка" aria-label="Музыка">
+    <svg id="musicIcon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M5 13a7 7 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+      <path d="M5 12v5.5A2.5 2.5 0 0 0 7.5 20H9v-8H6.5A1.5 1.5 0 0 0 5 13.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      <path d="M19 12v5.5A2.5 2.5 0 0 1 16.5 20H15v-8h2.5a1.5 1.5 0 0 1 1.5 1.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+    </svg>
+  </button>
 
   <div class="content">
     <h1>Мы вместе уже</h1>
@@ -1579,6 +1796,19 @@
       <div class="time-block"><span class="time-value" id="hours">0</span><span class="time-label">Часов</span></div>
       <div class="time-block"><span class="time-value" id="minutes">0</span><span class="time-label">Минут</span></div>
       <div class="time-block"><span class="time-value" id="seconds">0</span><span class="time-label">Секунд</span></div>
+    </div>
+
+    <div class="utility-grid" aria-label="Дополнительная информация">
+      <button class="utility-card utility-card-action" id="totalTimeCard" type="button">
+        <span class="utility-kicker">Общее время</span>
+        <strong id="totalTimeValue">0</strong>
+        <span id="totalTimeUnit">часов</span>
+      </button>
+      <div class="utility-card">
+        <span class="utility-kicker">Следующая дата</span>
+        <strong id="nextDateValue">—</strong>
+        <span id="nextDateCountdown">—</span>
+      </div>
     </div>
 
     <button id="loveBtn">Открыть сообщение</button>
@@ -1675,8 +1905,24 @@
     <source src="music-love.mp3" type="audio/mpeg">
   </audio>
 
-  <script src="lyrics.js"></script>
   <script>
+    /*
+      ============================================================
+      ТЕКСТ ПЕСНИ
+      ============================================================
+      Вставь сюда СВОЙ уже имеющийся массив LYRICS целиком.
+      Формат: { time: 14, text: "..." }
+
+      Пример структуры (не текст песни):
+      const LYRICS = [
+        { time: 0, text: "..." },
+        { time: 14, text: "твоя строка" },
+        { time: 17, text: "следующая строка" }
+      ];
+
+      Ничего больше в логике ниже менять не нужно.
+    */
+
     if (window.Telegram && window.Telegram.WebApp) {
       const tg = window.Telegram.WebApp;
       tg.ready();
@@ -1699,6 +1945,46 @@
     }
     updateTimer();
     setInterval(updateTimer, 1000);
+
+    // Дополнительные функции первого экрана
+    const totalTimeCard = document.getElementById('totalTimeCard');
+    const totalTimeValue = document.getElementById('totalTimeValue');
+    const totalTimeUnit = document.getElementById('totalTimeUnit');
+    const nextDateValue = document.getElementById('nextDateValue');
+    const nextDateCountdown = document.getElementById('nextDateCountdown');
+    const totalTimeModes = [
+      { unit: 'часов', calc: diff => Math.floor(diff / 3600000) },
+      { unit: 'минут', calc: diff => Math.floor(diff / 60000) },
+      { unit: 'секунд', calc: diff => Math.floor(diff / 1000) }
+    ];
+    let totalTimeMode = 0;
+
+    function updateFirstScreenUtilities() {
+      const now = new Date();
+      const diff = Math.max(0, now - START_DATE);
+      const mode = totalTimeModes[totalTimeMode];
+      totalTimeValue.textContent = mode.calc(diff).toLocaleString('ru-RU');
+      totalTimeUnit.textContent = mode.unit;
+
+      const next = new Date(START_DATE);
+      next.setDate(19);
+      next.setHours(21, 34, 0, 0);
+      next.setMonth(now.getMonth(), 19);
+      if (next <= now) next.setMonth(next.getMonth() + 1, 19);
+
+      const months = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+      nextDateValue.textContent = `${next.getDate()} ${months[next.getMonth()]}`;
+      const daysLeft = Math.ceil((next - now) / 86400000);
+      nextDateCountdown.textContent = daysLeft === 1 ? 'завтра' : `через ${daysLeft} дн.`;
+    }
+
+    totalTimeCard.addEventListener('click', () => {
+      totalTimeMode = (totalTimeMode + 1) % totalTimeModes.length;
+      updateFirstScreenUtilities();
+    });
+
+    updateFirstScreenUtilities();
+    setInterval(updateFirstScreenUtilities, 1000);
 
     const MESSAGES = [
       "Мне нравится, что рядом с тобой не приходится изображать кого-то другого.",
@@ -1812,7 +2098,9 @@
     music.volume = 0.25;
 
     function updateMusicIcon() {
-      musicBtn.textContent = musicOn ? '♫' : '·';
+      musicBtn.classList.toggle('is-muted', !musicOn);
+      musicBtn.setAttribute('aria-label', musicOn ? 'Выключить музыку' : 'Включить музыку');
+      musicBtn.title = musicOn ? 'Выключить музыку' : 'Включить музыку';
     }
     updateMusicIcon();
 
@@ -1891,23 +2179,16 @@
     applyThemeByTime();
     setInterval(applyThemeByTime, 60000);
 
-    const bgHearts = ['', '', '', '', ''];
-    for (let i = 0; i < 15; i++) {
-      const h = document.createElement('div');
-      h.className = 'heart-bg';
-      h.textContent = bgHearts[Math.floor(Math.random() * bgHearts.length)];
-      h.style.left = Math.random() * 100 + '%';
-      h.style.fontSize = (14 + Math.random() * 24) + 'px';
-      h.style.animationDuration = (10 + Math.random() * 10) + 's';
-      h.style.animationDelay = (Math.random() * 12) + 's';
-      h.style.animationPlayState = 'paused';
-      document.body.appendChild(h);
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          h.style.animationPlayState = 'running';
-        });
-      });
+    // Лёгкие частицы первого экрана — без эмодзи.
+    for (let i = 0; i < 14; i++) {
+      const particle = document.createElement('span');
+      particle.className = 'first-bg-particle';
+      particle.style.left = (Math.random() * 100) + '%';
+      particle.style.top = (8 + Math.random() * 84) + '%';
+      particle.style.animationDelay = (-Math.random() * 10) + 's';
+      particle.style.animationDuration = (8 + Math.random() * 8) + 's';
+      particle.style.transform = `scale(${(0.55 + Math.random() * 0.8).toFixed(2)})`;
+      document.body.appendChild(particle);
     }
 
     const ambientLayer = document.querySelector('.page2-ambient');
@@ -1943,9 +2224,14 @@
     const skipForwardBtn = document.getElementById('skipForwardBtn');
     const photoFrame = document.querySelector('.photo-frame');
 
-    // Вставь сюда свой оригинальный/лицензированный текст и тайминги.
-    // Формат: [{ time: 0, text: "..." }, { time: 14, text: "..." }, ...]
-    const LYRICS = window.LYRICS || [];
+    // ============================================================
+    // ВСТАВЬ СВОЙ МАССИВ LYRICS СЮДА
+    // ============================================================
+    const LYRICS = [
+      // { time: 0, text: "..." },
+      // { time: 14, text: "..." },
+      // { time: 17, text: "..." },
+    ];
 
     let lyricIndex = 0;
     let progressRafId = null;
@@ -1954,8 +2240,8 @@
     // Синхронизация рассчитана на акустическую версию длительностью 3:19 (199 сек).
     // Если локальный MP3 имеет чуть другой хвост/паузы, таймкоды автоматически масштабируются.
     const REFERENCE_DURATION = 199;
-    const LYRIC_LEAD = 0.06;          // строка появляется чуть до вокала
-    const LYRIC_FINISH_EARLY = 0.18;  // последнее слово успевает закончиться до следующей строки
+    const LYRIC_LEAD = 0.10;          // строка появляется чуть до вокала
+    const LYRIC_FINISH_EARLY = 0.12;  // только для расчёта внутреннего прогресса; итоговое состояние строки не сбрасывается
 
     let introOpened = false;
     let songStarted = false;
@@ -2031,12 +2317,18 @@
       const line = LYRICS[activeLyricIndex];
       const nextLine = LYRICS[activeLyricIndex + 1];
       const start = Math.max(0, getScaledLyricTime(line.time, duration) - LYRIC_LEAD);
-      const nextStart = nextLine
-        ? Math.max(start + 0.12, getScaledLyricTime(nextLine.time, duration) - LYRIC_LEAD)
-        : Math.max(start + 0.8, duration);
+      const rawNextStart = nextLine
+        ? getScaledLyricTime(nextLine.time, duration) - LYRIC_LEAD
+        : duration;
 
-      const span = Math.max(0.35, nextStart - start);
-      const progress = Math.max(0, Math.min(1, (currentTime - start) / span));
+      // Never let the word animation itself create a visual reset at the end.
+      // The line remains fully sung until the next line actually replaces it.
+      const end = Math.max(start + 0.5, rawNextStart);
+      const progress = currentTime <= start
+        ? 0
+        : currentTime >= end
+          ? 1
+          : (currentTime - start) / (end - start);
 
       const activeLayer = lyricText.querySelector('.lyric-layer.active');
       if (!activeLayer) return;
@@ -2048,13 +2340,16 @@
         const wordEnd = (cursor + karaokeWordWeights[i]) / karaokeTotalWeight;
         const isLast = i === nodes.length - 1;
 
-        // The last word deliberately stays CURRENT until the line is replaced.
-        // This prevents the ugly state change at the exact end of every line.
-        const current = progress >= wordStart && (isLast ? true : progress < wordEnd);
-        const sung = !isLast && progress >= wordEnd;
+        node.classList.remove('sung', 'current');
 
-        node.classList.toggle('sung', sung);
-        node.classList.toggle('current', current && !sung);
+        if (progress >= 1) {
+          node.classList.add(isLast ? 'current' : 'sung');
+        } else if (progress >= wordEnd && !isLast) {
+          node.classList.add('sung');
+        } else if (progress >= wordStart) {
+          node.classList.add('current');
+        }
+
         cursor += karaokeWordWeights[i];
       });
     }
@@ -2066,47 +2361,52 @@
         return;
       }
 
-      const layers = lyricText.querySelectorAll('.lyric-layer');
-      if (layers.length !== 2) initLyricLayers();
+      let layers = lyricText.querySelectorAll('.lyric-layer');
+      if (layers.length !== 2) {
+        initLyricLayers();
+        layers = lyricText.querySelectorAll('.lyric-layer');
+      }
 
-      const layerNodes = lyricText.querySelectorAll('.lyric-layer');
       const nextLayerIndex = lyricLayerIndex === -1 ? 0 : 1 - lyricLayerIndex;
-      const nextLayer = layerNodes[nextLayerIndex];
-      const oldLayer = lyricLayerIndex >= 0 ? layerNodes[lyricLayerIndex] : null;
+      const nextLayer = layers[nextLayerIndex];
+      const oldLayer = lyricLayerIndex >= 0 ? layers[lyricLayerIndex] : null;
 
       prepareKaraokeLine(LYRICS[index].text, nextLayer);
-      nextLayer.classList.remove('active', 'leaving');
-      void nextLayer.offsetWidth;
+      nextLayer.className = 'lyric-layer';
+
+      // Старый слой уходит одновременно с появлением нового. На конце строки
+      // его состояние не сбрасываем отдельно.
+      if (oldLayer) oldLayer.classList.add('leaving');
+      requestAnimationFrame(() => nextLayer.classList.add('active'));
 
       activeLyricIndex = index;
       lyricLayerIndex = nextLayerIndex;
-
-      if (oldLayer) {
-        oldLayer.classList.remove('active');
-        oldLayer.classList.add('leaving');
-      }
-
-      nextLayer.classList.add('active');
       updateKaraokeWords(currentTime);
 
+      // Очищаем старый слой позже, но не меняем его визуальное состояние преждевременно.
       if (oldLayer) {
-        setTimeout(() => oldLayer.classList.remove('leaving'), 430);
+        window.setTimeout(() => {
+          if (oldLayer !== layers[lyricLayerIndex]) oldLayer.className = 'lyric-layer';
+        }, 520);
       }
     }
 
     function syncLyricToAudio(currentTime) {
+      if (!LYRICS.length) {
+        lyricText.querySelectorAll('.lyric-layer').forEach(layer => layer.classList.remove('active', 'leaving'));
+        return;
+      }
+
       const duration = songPlayer.duration && isFinite(songPlayer.duration)
         ? songPlayer.duration
         : REFERENCE_DURATION;
 
+      // На каждой смене строки сравниваемся напрямую с currentTime. Никаких очередей и setTimeout.
       let targetIndex = 0;
       for (let i = 1; i < LYRICS.length; i++) {
         const start = Math.max(0, getScaledLyricTime(LYRICS[i].time, duration) - LYRIC_LEAD);
-        if (currentTime >= start) {
-          targetIndex = i;
-        } else {
-          break;
-        }
+        if (currentTime >= start) targetIndex = i;
+        else break;
       }
 
       if (targetIndex !== activeLyricIndex) {
@@ -2114,6 +2414,7 @@
       } else {
         updateKaraokeWords(currentTime);
       }
+
       lyricIndex = targetIndex;
     }
 
@@ -2285,7 +2586,9 @@
       songStarted = true;
 
       initLyricLayers();
-      renderLyric(0, 0);
+      if (LYRICS.length) {
+        renderLyric(0, 0);
+      }
       songPlayer.play().then(updatePlayButton).catch(updatePlayButton);
 
       if (!progressRafId) {
