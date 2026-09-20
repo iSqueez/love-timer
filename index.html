@@ -2636,8 +2636,19 @@
       localStorage.removeItem('musicOn');
     }
 
-    let shownCount = parseInt(localStorage.getItem('loveCount') || '0');
-    let usedIndexes = JSON.parse(localStorage.getItem('usedIndexes') || '[]');
+    let shownCount = parseInt(localStorage.getItem('loveCount') || '0', 10);
+    if (!Number.isFinite(shownCount) || shownCount < 0) shownCount = 0;
+
+    let usedIndexes = [];
+    try {
+      const parsedIndexes = JSON.parse(localStorage.getItem('usedIndexes') || '[]');
+      if (Array.isArray(parsedIndexes)) {
+        usedIndexes = parsedIndexes.filter(index => Number.isInteger(index) && index >= 0 && index < MESSAGES.length);
+      }
+    } catch (_) {
+      usedIndexes = [];
+    }
+
     let specialShown = localStorage.getItem('specialShown') === 'true';
 
     const card = document.getElementById('messageCard');
@@ -3252,8 +3263,9 @@
     }
 
     function resizePhotoEqualizer() {
-      if (!photoEqualizer) return;
+      if (!photoEqualizer) return false;
       const rect = photoEqualizer.getBoundingClientRect();
+      if (rect.width < 2 || rect.height < 2) return false;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const width = Math.max(1, Math.round(rect.width * dpr));
       const height = Math.max(1, Math.round(rect.height * dpr));
@@ -3261,24 +3273,26 @@
         photoEqualizer.width = width;
         photoEqualizer.height = height;
       }
+      return true;
     }
 
     function drawPhotoEqualizer(idle = false) {
       if (!photoEqualizer) return;
-      resizePhotoEqualizer();
+      if (!resizePhotoEqualizer()) return;
 
       const ctx = photoEqualizer.getContext('2d');
       if (!ctx) return;
 
       const w = photoEqualizer.width;
       const h = photoEqualizer.height;
+      if (w < 4 || h < 4) return;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const cx = w / 2;
       const cy = h / 2;
       // Радиус вынесен за пределы самой фотографии:
       // внешний край рамки ≈ 96px на базовом размере, поэтому эквалайзер
       // начинается с небольшим зазором уже снаружи неё.
-      const baseRadius = Math.min(w, h) * 0.405;
+      const baseRadius = Math.max(12 * dpr, Math.min(w, h) * 0.405);
       const barCount = 52;
       const maxBar = Math.min(w, h) * 0.105;
 
@@ -3287,7 +3301,7 @@
       // Мягкое базовое кольцо: эквалайзер остаётся визуально собранным
       // даже в тихих местах трека.
       ctx.beginPath();
-      ctx.arc(cx, cy, baseRadius - 1.5 * dpr, 0, Math.PI * 2);
+      ctx.arc(cx, cy, Math.max(1, baseRadius - 1.5 * dpr), 0, Math.PI * 2);
       ctx.lineWidth = 1.6 * dpr;
       ctx.strokeStyle = `rgba(236, 192, 208, ${idle ? 0.16 : 0.23})`;
       ctx.shadowBlur = 9 * dpr;
@@ -3366,7 +3380,8 @@
       drawPhotoEqualizer(!songStarted);
     });
 
-    drawPhotoEqualizer(true);
+    // Первый кадр эквалайзера рисуем только после открытия второй страницы,
+    // когда canvas уже имеет реальные размеры.
 
     //  Послушать заново
     replayBtn.addEventListener('click', () => {
@@ -3419,6 +3434,7 @@
     // ===== Дополнительный функционал =====
     const timerTotal = document.getElementById('timerTotal');
     const nextDateCard = document.getElementById('nextDateCard');
+    const nextMilestoneCard = document.getElementById('nextMilestoneCard');
     const nextDateValue = document.getElementById('nextDateValue');
     const nextDateMeta = document.getElementById('nextDateMeta');
     const milestoneValue = document.getElementById('milestoneValue');
@@ -3660,5 +3676,125 @@
     startSongBtn.addEventListener('click', () => requestAnimationFrame(updateMusicAtmosphere), { once: true });
 
   </script>
+  <script>
+    // ===== Защитный запуск интерфейса =====
+    // Этот отдельный блок не зависит от остального кода: если какой-то
+    // дополнительный эффект остановит основной скрипт, даты и переход
+    // на вторую страницу всё равно останутся рабочими.
+    (function () {
+      const rescueStartDate = new Date('2026-08-19T21:34:00+03:00');
+
+      function rescueUpdateHomeTools() {
+        const nextDateValue = document.getElementById('nextDateValue');
+        const nextDateMeta = document.getElementById('nextDateMeta');
+        const milestoneValue = document.getElementById('milestoneValue');
+        const milestoneMeta = document.getElementById('milestoneMeta');
+        if (!nextDateValue || !nextDateMeta || !milestoneValue || !milestoneMeta) return;
+
+        try {
+          // Сначала используем основной обработчик, если он успешно загрузился.
+          if (typeof updateHomeTools === 'function') {
+            updateHomeTools();
+            return;
+          }
+        } catch (_) {}
+
+        const now = new Date();
+        let day = rescueStartDate.getDate();
+        let next = new Date(now.getFullYear(), now.getMonth(), day, rescueStartDate.getHours(), rescueStartDate.getMinutes(), 0, 0);
+        if (next.getTime() <= now.getTime()) {
+          next = new Date(now.getFullYear(), now.getMonth() + 1, day, rescueStartDate.getHours(), rescueStartDate.getMinutes(), 0, 0);
+        }
+
+        const delta = Math.max(0, next.getTime() - now.getTime());
+        const days = Math.floor(delta / 86400000);
+        const hours = Math.floor((delta / 3600000) % 24);
+        const monthDiff = (next.getFullYear() - rescueStartDate.getFullYear()) * 12 + (next.getMonth() - rescueStartDate.getMonth());
+
+        nextDateValue.textContent = next.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+        nextDateMeta.textContent = days > 0 ? `через ${days} д. ${String(hours).padStart(2, '0')} ч.` : 'совсем скоро';
+        milestoneValue.textContent = `${Math.max(1, monthDiff)}-й месяц`;
+        milestoneMeta.textContent = `до ${next.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' })}`;
+      }
+
+      function rescueBindNavigation() {
+        const openButton = document.getElementById('openPage2');
+        const page2 = document.getElementById('page2');
+        const intro = document.getElementById('page2Intro');
+        const startButton = document.getElementById('startSongBtn');
+        const song = document.getElementById('songPlayer');
+        const backButton = document.getElementById('page2Back');
+        const bgMusic = document.getElementById('bgMusic');
+
+        if (openButton && page2 && !openButton.dataset.rescueBound) {
+          openButton.dataset.rescueBound = '1';
+          openButton.addEventListener('click', function () {
+            try {
+              if (typeof openPage2 === 'function') {
+                openPage2();
+                return;
+              }
+            } catch (_) {}
+
+            try { if (bgMusic) bgMusic.pause(); } catch (_) {}
+            page2.classList.add('active');
+            page2.scrollTop = 0;
+            if (intro) intro.classList.remove('hidden');
+          });
+        }
+
+        if (startButton && !startButton.dataset.rescueBound) {
+          startButton.dataset.rescueBound = '1';
+          startButton.addEventListener('click', function () {
+            try {
+              if (typeof startSong === 'function') {
+                startSong();
+                return;
+              }
+            } catch (_) {}
+
+            if (intro) intro.classList.add('hidden');
+            try {
+              if (song) {
+                song.currentTime = 0;
+                song.volume = 0.4;
+                song.play().catch(() => {});
+              }
+            } catch (_) {}
+          });
+        }
+
+        if (backButton && page2 && !backButton.dataset.rescueBound) {
+          backButton.dataset.rescueBound = '1';
+          backButton.addEventListener('click', function () {
+            try {
+              if (typeof closePage2 === 'function') {
+                closePage2();
+                return;
+              }
+            } catch (_) {}
+            page2.classList.remove('active');
+            if (intro) intro.classList.remove('hidden');
+          });
+        }
+      }
+
+      function rescueBoot() {
+        rescueUpdateHomeTools();
+        rescueBindNavigation();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', rescueBoot, { once: true });
+      } else {
+        rescueBoot();
+      }
+
+      setTimeout(rescueBoot, 250);
+      setTimeout(rescueBoot, 900);
+      setInterval(rescueUpdateHomeTools, 60000);
+    })();
+  </script>
+
 </body>
 </html>
