@@ -1420,6 +1420,149 @@
       .lyric-text { height:72px; }
       .lyric-container { height:84px; }
     }
+  
+    /* === REFINED PLAYER / KARAOKE PASS === */
+    .song-controls {
+      width: 90%;
+      max-width: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      margin-top: 8px;
+    }
+    .song-controls button {
+      width: auto;
+      margin: 0;
+      border: 0;
+      font-family: inherit;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .song-skip {
+      min-width: 46px;
+      height: 36px;
+      padding: 0 10px !important;
+      border-radius: 999px;
+      background: rgba(255,255,255,.055) !important;
+      color: rgba(255,255,255,.66) !important;
+      border: 1px solid rgba(255,255,255,.10) !important;
+      box-shadow: none !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      letter-spacing: .02em;
+    }
+    .song-play {
+      width: 42px !important;
+      height: 42px;
+      padding: 0 !important;
+      border-radius: 50%;
+      background: rgba(235,183,201,.10) !important;
+      color: rgba(255,255,255,.92) !important;
+      border: 1px solid rgba(235,183,201,.32) !important;
+      box-shadow: 0 0 20px rgba(224,169,191,.10) !important;
+      font-size: 14px !important;
+      line-height: 1;
+    }
+    .song-controls button:active {
+      transform: scale(.93) !important;
+    }
+    .song-progress {
+      position: relative;
+      cursor: pointer;
+      touch-action: none;
+      height: 5px;
+      overflow: visible;
+    }
+    .song-progress::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 100%;
+      height: 22px;
+      transform: translateY(-50%);
+      border-radius: 999px;
+    }
+    .song-progress-fill {
+      position: relative;
+      z-index: 1;
+      pointer-events: none;
+      transition: none;
+    }
+    .song-progress::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: var(--progress-pos, 0%);
+      width: 10px;
+      height: 10px;
+      transform: translate(-50%,-50%);
+      border-radius: 50%;
+      background: #e7b3c7;
+      box-shadow: 0 0 0 3px rgba(231,179,199,.08), 0 0 12px rgba(231,179,199,.38);
+      z-index: 2;
+      pointer-events: none;
+      transition: left .08s linear;
+    }
+
+    /* Last word stays in the highlighted/current state until the next line starts.
+       This removes the ugly "end-of-line" visual reset. */
+    .karaoke-word.current {
+      transform: translateY(-1px) scale(1.018);
+    }
+    .karaoke-word.current::after {
+      opacity: .72;
+    }
+    .karaoke-word.sung.current {
+      color: #f0c5d4;
+      filter: blur(0);
+      opacity: 1;
+    }
+
+    /* Slightly softer future-word blur. */
+    .karaoke-word {
+      filter: blur(.8px);
+      opacity: .52;
+    }
+    .karaoke-word.sung { filter: blur(0); }
+    .karaoke-word.current { filter: blur(0); }
+
+    /* Subtle music-state breathing. The geometry never changes. */
+    .photo-frame.song-live {
+      animation-duration: 5.8s;
+    }
+    .photo-frame.song-beat .photo-window {
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.14),
+        inset 0 0 34px rgba(0,0,0,.30),
+        0 0 22px rgba(230,173,194,.08);
+    }
+
+    /* Extra depth in the atmosphere, kept intentionally subtle. */
+    .ambient-mote {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.58);
+      box-shadow: 0 0 8px rgba(231,194,210,.35);
+      opacity: 0;
+      animation: moteFloat linear infinite;
+    }
+    @keyframes moteFloat {
+      0% { transform: translate3d(0,18px,0) scale(.7); opacity: 0; }
+      18% { opacity: .35; }
+      72% { opacity: .22; }
+      100% { transform: translate3d(12px,-36px,0) scale(1.1); opacity: 0; }
+    }
+
+    @media (max-height:700px) {
+      .song-controls { margin-top: 5px; gap: 14px; }
+      .song-skip { height: 34px; min-width: 44px; }
+      .song-play { width: 40px !important; height: 40px; }
+    }
+
   </style>
 </head>
 <body>
@@ -1500,6 +1643,12 @@
       <div class="song-time">
         <span id="songCurrentTime">0:00</span>
         <span id="songDuration">0:00</span>
+      </div>
+
+      <div class="song-controls" id="songControls" aria-label="Управление треком">
+        <button type="button" class="song-skip" id="skipBackBtn" aria-label="Назад на 5 секунд">−5</button>
+        <button type="button" class="song-play" id="songPlayBtn" aria-label="Пауза">Ⅱ</button>
+        <button type="button" class="song-skip" id="skipForwardBtn" aria-label="Вперёд на 5 секунд">+5</button>
       </div>
     </div>
   </div>
@@ -1761,6 +1910,20 @@
       });
     }
 
+    const ambientLayer = document.querySelector('.page2-ambient');
+    if (ambientLayer) {
+      for (let i = 0; i < 18; i++) {
+        const mote = document.createElement('span');
+        mote.className = 'ambient-mote';
+        mote.style.left = (4 + Math.random() * 92) + '%';
+        mote.style.top = (10 + Math.random() * 80) + '%';
+        mote.style.animationDuration = (7 + Math.random() * 8) + 's';
+        mote.style.animationDelay = (-Math.random() * 12) + 's';
+        mote.style.opacity = (0.12 + Math.random() * 0.2).toFixed(2);
+        ambientLayer.appendChild(mote);
+      }
+    }
+
     // ========== ВТОРАЯ СТРАНИЦА ==========
     const page2 = document.getElementById('page2');
     const backBtn = document.getElementById('backBtn');
@@ -1774,6 +1937,11 @@
     const startSongBtn = document.getElementById('startSongBtn');
     const songCurrentTime = document.getElementById('songCurrentTime');
     const songDuration = document.getElementById('songDuration');
+    const songProgress = document.querySelector('.song-progress');
+    const songPlayBtn = document.getElementById('songPlayBtn');
+    const skipBackBtn = document.getElementById('skipBackBtn');
+    const skipForwardBtn = document.getElementById('skipForwardBtn');
+    const photoFrame = document.querySelector('.photo-frame');
 
     // Вставь сюда свой оригинальный/лицензированный текст и тайминги.
     // Формат: [{ time: 0, text: "..." }, { time: 14, text: "..." }, ...]
@@ -1862,29 +2030,31 @@
 
       const line = LYRICS[activeLyricIndex];
       const nextLine = LYRICS[activeLyricIndex + 1];
-
-      // Время начала/конца уже привязано к фактической длительности файла.
       const start = Math.max(0, getScaledLyricTime(line.time, duration) - LYRIC_LEAD);
-      const naturalEnd = nextLine
-        ? getScaledLyricTime(nextLine.time, duration) - LYRIC_FINISH_EARLY
-        : Math.min(duration, getScaledLyricTime(REFERENCE_DURATION, duration));
+      const nextStart = nextLine
+        ? Math.max(start + 0.12, getScaledLyricTime(nextLine.time, duration) - LYRIC_LEAD)
+        : Math.max(start + 0.8, duration);
 
-      /* Если две строки слишком близко, всё равно гарантируем положительный интервал. */
-      const end = Math.max(start + 0.35, naturalEnd);
-      const progress = Math.max(0, Math.min(1, (currentTime - start) / (end - start)));
+      const span = Math.max(0.35, nextStart - start);
+      const progress = Math.max(0, Math.min(1, (currentTime - start) / span));
 
-      let cursor = 0;
       const activeLayer = lyricText.querySelector('.lyric-layer.active');
       if (!activeLayer) return;
 
-      activeLayer.querySelectorAll('.karaoke-word').forEach((node, i) => {
+      let cursor = 0;
+      const nodes = activeLayer.querySelectorAll('.karaoke-word');
+      nodes.forEach((node, i) => {
         const wordStart = cursor / karaokeTotalWeight;
         const wordEnd = (cursor + karaokeWordWeights[i]) / karaokeTotalWeight;
-        const sung = progress >= wordEnd;
-        const current = !sung && progress >= wordStart;
+        const isLast = i === nodes.length - 1;
+
+        // The last word deliberately stays CURRENT until the line is replaced.
+        // This prevents the ugly state change at the exact end of every line.
+        const current = progress >= wordStart && (isLast ? true : progress < wordEnd);
+        const sung = !isLast && progress >= wordEnd;
 
         node.classList.toggle('sung', sung);
-        node.classList.toggle('current', current);
+        node.classList.toggle('current', current && !sung);
         cursor += karaokeWordWeights[i];
       });
     }
@@ -1920,7 +2090,7 @@
       updateKaraokeWords(currentTime);
 
       if (oldLayer) {
-        setTimeout(() => oldLayer.classList.remove('leaving'), 560);
+        setTimeout(() => oldLayer.classList.remove('leaving'), 430);
       }
     }
 
@@ -1981,6 +2151,72 @@
       finalShown = false;
     }
 
+    function updatePlayButton() {
+      const playing = !songPlayer.paused && !songPlayer.ended;
+      songPlayBtn.textContent = playing ? 'Ⅱ' : '▶';
+      songPlayBtn.setAttribute('aria-label', playing ? 'Пауза' : 'Воспроизвести');
+      if (photoFrame) photoFrame.classList.toggle('song-live', playing);
+    }
+
+    function seekTo(seconds) {
+      if (!songStarted || !isFinite(seconds)) return;
+      const duration = songPlayer.duration && isFinite(songPlayer.duration)
+        ? songPlayer.duration
+        : REFERENCE_DURATION;
+      const target = Math.max(0, Math.min(duration, seconds));
+
+      // Seeking must never replay the previous lyric queue.
+      songPlayer.currentTime = target;
+      if (finalShown && target < duration - 0.5) hideFinal();
+      syncLyricToAudio(target);
+      updateKaraokeWords(target);
+      updatePlayButton();
+    }
+
+    function seekBy(delta) {
+      seekTo((songPlayer.currentTime || 0) + delta);
+    }
+
+    function seekFromPointer(clientX) {
+      if (!songPlayer.duration || !isFinite(songPlayer.duration)) return;
+      const rect = songProgress.getBoundingClientRect();
+      const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      seekTo(ratio * songPlayer.duration);
+    }
+
+    let seekingWithPointer = false;
+
+    songProgress.addEventListener('pointerdown', (e) => {
+      seekingWithPointer = true;
+      songProgress.setPointerCapture?.(e.pointerId);
+      seekFromPointer(e.clientX);
+    });
+    songProgress.addEventListener('pointermove', (e) => {
+      if (seekingWithPointer) seekFromPointer(e.clientX);
+    });
+    songProgress.addEventListener('pointerup', () => { seekingWithPointer = false; });
+    songProgress.addEventListener('pointercancel', () => { seekingWithPointer = false; });
+
+    songPlayBtn.addEventListener('click', () => {
+      if (!songStarted) return;
+      if (songPlayer.paused || songPlayer.ended) {
+        if (songPlayer.ended) songPlayer.currentTime = 0;
+        songPlayer.play().catch(() => {});
+      } else {
+        songPlayer.pause();
+      }
+      updatePlayButton();
+    });
+
+    skipBackBtn.addEventListener('click', () => seekBy(-5));
+    skipForwardBtn.addEventListener('click', () => seekBy(5));
+
+    songPlayer.addEventListener('play', updatePlayButton);
+    songPlayer.addEventListener('pause', updatePlayButton);
+    songPlayer.addEventListener('ended', updatePlayButton);
+
+    updatePlayButton();
+
     function updateSongProgress() {
       if (!page2.classList.contains('active') || !songStarted) {
         progressRafId = null;
@@ -1993,10 +2229,17 @@
       if (songPlayer.duration && isFinite(songPlayer.duration)) {
         const progress = Math.min(100, (currentTime / songPlayer.duration) * 100);
         songFill.style.width = progress + '%';
+        songProgress.style.setProperty('--progress-pos', progress + '%');
         songDuration.textContent = formatTime(songPlayer.duration);
       }
 
       syncLyricToAudio(currentTime);
+
+      if (photoFrame) {
+        const phase = Math.sin(currentTime * Math.PI * 2 / 1.86);
+        photoFrame.classList.toggle('song-beat', phase > 0.92 && !songPlayer.paused);
+      }
+      updatePlayButton();
 
       if (songPlayer.duration && isFinite(songPlayer.duration) && !finalShown) {
         if (currentTime >= songPlayer.duration - 0.12 || songPlayer.ended) {
@@ -2012,6 +2255,7 @@
       songPlayer.currentTime = 0;
       lyricIndex = 0;
       songFill.style.width = '0%';
+      songProgress.style.setProperty('--progress-pos', '0%');
       songCurrentTime.textContent = '0:00';
       songDuration.textContent = '0:00';
       finalShown = false;
@@ -2042,7 +2286,7 @@
 
       initLyricLayers();
       renderLyric(0, 0);
-      songPlayer.play().catch(() => {});
+      songPlayer.play().then(updatePlayButton).catch(updatePlayButton);
 
       if (!progressRafId) {
         progressRafId = requestAnimationFrame(updateSongProgress);
