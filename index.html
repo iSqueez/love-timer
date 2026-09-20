@@ -1736,7 +1736,7 @@
     .song-seek { width:90%; max-width:320px; height:18px; position:relative; margin:-3px auto 6px; cursor:pointer; touch-action:none; }
     .song-seek-track, .song-seek-fill { position:absolute; left:0; right:0; top:7px; height:4px; border-radius:99px; }
     .song-seek-track { background:rgba(255,255,255,.09); }
-    .song-seek-fill { right:auto; width:0; background:linear-gradient(90deg,#8a647b,#d6a0b3,#c6a47e); box-shadow:0 0 10px rgba(220,167,188,.22); }
+    .song-seek-fill { right:auto; width:100%; transform-origin:left center; transform:scaleX(0); background:linear-gradient(90deg,#8a647b,#d6a0b3,#c6a47e); box-shadow:0 0 10px rgba(220,167,188,.22); will-change:transform; }
     .song-seek-thumb { position:absolute; top:3px; left:0; width:12px; height:12px; border-radius:50%; transform:translateX(-50%) scale(.9); background:#e6b1c2; box-shadow:0 0 12px rgba(230,177,194,.55); transition:transform .18s ease; }
     .song-seek:hover .song-seek-thumb, .song-seek.dragging .song-seek-thumb { transform:translateX(-50%) scale(1.12); }
     .song-controls { width:90%; max-width:320px; display:grid; grid-template-columns:56px 56px 56px 1fr; gap:9px; align-items:center; margin-top:2px; }
@@ -2582,11 +2582,10 @@
        для мобильного GPU режим: статичные градиенты + несколько transform-слоёв. */
     #page2 {
       isolation:isolate;
-      contain:paint;
+      contain:layout style;
     }
     .page2-ambient {
-      contain:paint;
-      transform:translateZ(0);
+      contain:layout style;
     }
 
     /* Самый дорогой эффект — большие анимируемые/размытые псевдо-слои страницы.
@@ -2885,6 +2884,499 @@
     }
 
 
+
+    /* ===== PERFORMANCE OPTIMIZATION FINAL — same look, cheaper rendering ===== */
+    #page2 { contain:layout style !important; }
+    .page2-ambient { contain:layout style !important; }
+
+    /* During playback keep atmosphere visually present but freeze the expensive layers.
+       The photo/EQ/lyrics supply the motion the eye needs. */
+    body.audio-first .page2-lightfield,
+    body.audio-first .page2-bloom,
+    body.audio-first .ambient-orb,
+    body.audio-first .ambient-glow,
+    body.audio-first .light-streak,
+    body.audio-first .page2-particle,
+    body.audio-first .page2-starfield,
+    body.audio-first .page2-ambient::before,
+    body.audio-first .page2-ambient::after,
+    body.audio-first .photo-frame::before,
+    body.audio-first .photo-frame::after,
+    body.audio-first .frame-particle { 
+      animation:none !important;
+    }
+
+    body.audio-first .page2-lightfield {
+      opacity:.78 !important;
+      filter:none !important;
+    }
+    body.audio-first .page2-bloom {
+      opacity:.13 !important;
+      filter:none !important;
+      mix-blend-mode:normal !important;
+    }
+    body.audio-first .ambient-orb {
+      opacity:.08 !important;
+      filter:none !important;
+      mix-blend-mode:normal !important;
+    }
+    body.audio-first .ambient-glow { opacity:.42 !important; filter:none !important; }
+    body.audio-first .photo-frame { animation:none !important; }
+    body.audio-first .photo-frame img {
+      animation:photoFloatCheapPlayback 30s ease-in-out infinite !important;
+      filter:none !important;
+      will-change:transform;
+    }
+    @keyframes photoFloatCheapPlayback {
+      0%,100% { transform:translate3d(0,0,0) scale(1.016); }
+      50% { transform:translate3d(-.6px,-.5px,0) scale(1.024); }
+    }
+
+    /* Keep the EQ canvas small in physical pixels. The glow is drawn inside the canvas,
+       so it still looks soft when the browser scales it up around the frame. */
+    .photo-equalizer {
+      width:calc(100% + 94px) !important;
+      height:calc(100% + 94px) !important;
+      inset:-47px !important;
+      mix-blend-mode:normal !important;
+      filter:none !important;
+    }
+
+    /* Word glow: use opacity/color only; the line-level container carries the atmosphere. */
+    .karaoke-word {
+      filter:none !important;
+      text-shadow:none !important;
+      transition:color .14s ease, opacity .14s ease, transform .14s ease !important;
+    }
+    .karaoke-word.current {
+      text-shadow:0 0 7px rgba(235,165,191,.30) !important;
+    }
+
+    /* Progress fill is compositor-friendly now. */
+    .song-seek-fill { width:100% !important; transform-origin:left center; }
+
+    @media (pointer:coarse) {
+      /* Mobile cards stay visually dense but do not sample the moving backdrop. */
+      .page2-nav-btn,
+      .lyric-text,
+      .intro-card,
+      .tool-card,
+      .time-block,
+      .message-card,
+      .history-sheet,
+      .timer-total.static {
+        -webkit-backdrop-filter:none !important;
+        backdrop-filter:none !important;
+      }
+
+      /* One soft composite glow instead of many large live blur surfaces. */
+      .page2-ambient .page2-lightfield,
+      .page2-ambient .page2-bloom,
+      .page2-ambient .ambient-orb,
+      .page2-ambient .ambient-glow {
+        filter:none !important;
+        mix-blend-mode:normal !important;
+      }
+
+      .photo-frame::before,
+      .photo-frame::after { filter:none !important; }
+    }
+
+    @media (max-width:700px) {
+      .photo-equalizer { width:calc(100% + 82px) !important; height:calc(100% + 82px) !important; inset:-41px !important; }
+    }
+
+
+    /* Soft bloom without live blur: the gradients already contain their feathered edges. */
+    .home-bloom,
+    .page2-bloom,
+    .home-orb,
+    .ambient-orb {
+      filter:none !important;
+      mix-blend-mode:normal !important;
+    }
+    .home-bloom-a {
+      background:radial-gradient(circle, rgba(224,103,151,.22) 0%, rgba(224,103,151,.10) 34%, transparent 72%) !important;
+    }
+    .home-bloom-b {
+      background:radial-gradient(circle, rgba(115,87,191,.20) 0%, rgba(115,87,191,.08) 36%, transparent 74%) !important;
+    }
+    .home-orb-a {
+      background:radial-gradient(circle, rgba(207,117,150,.23) 0%, rgba(207,117,150,.08) 38%, transparent 72%) !important;
+    }
+    .home-orb-b {
+      background:radial-gradient(circle, rgba(115,89,180,.16) 0%, rgba(115,89,180,.055) 40%, transparent 74%) !important;
+    }
+    .home-orb-c {
+      background:radial-gradient(circle, rgba(142,71,120,.15) 0%, rgba(142,71,120,.05) 40%, transparent 74%) !important;
+    }
+    .page2-bloom-a {
+      background:radial-gradient(circle, rgba(222,104,155,.19) 0%, rgba(222,104,155,.075) 34%, transparent 72%) !important;
+    }
+    .page2-bloom-b {
+      background:radial-gradient(circle, rgba(112,86,191,.18) 0%, rgba(112,86,191,.065) 36%, transparent 74%) !important;
+    }
+    .orb-a {
+      background:radial-gradient(circle, rgba(227,111,154,.16) 0%, rgba(227,111,154,.05) 40%, transparent 74%) !important;
+    }
+    .orb-b {
+      background:radial-gradient(circle, rgba(114,81,190,.13) 0%, rgba(114,81,190,.045) 41%, transparent 75%) !important;
+    }
+    .orb-c {
+      background:radial-gradient(circle, rgba(163,59,133,.11) 0%, rgba(163,59,133,.035) 42%, transparent 76%) !important;
+    }
+
+    /* Playback keeps one soft lightfield and the EQ moving; the rest is visually frozen. */
+    body.audio-first .page2-lightfield,
+    body.audio-first .page2-ambient::before,
+    body.audio-first #page2::before,
+    body.audio-first .photo-frame::before,
+    body.audio-first .photo-frame::after {
+      filter:none !important;
+    }
+    body.audio-first .page2-lightfield { animation:none !important; opacity:.78 !important; }
+    body.audio-first .photo-frame {
+      box-shadow:0 0 20px rgba(225,147,177,.18), 0 0 54px rgba(112,79,145,.08) !important;
+    }
+
+    /* Avoid per-frame layer promotion on decoration that is no longer animated. */
+    body.audio-first .page2-lightfield,
+    body.audio-first .photo-frame img {
+      will-change:auto !important;
+    }
+    body.audio-first .photo-equalizer { will-change:auto !important; }
+
+
+    /* ===== DEEP PERFORMANCE PASS — preserve appearance, reduce mobile/desktop paint ===== */
+    /* Glass remains, but the expensive sampling radius is kept deliberately small. */
+    @media (pointer: coarse) {
+      .page2-nav-btn,
+      .lyric-text,
+      .intro-card,
+      .tool-card,
+      .time-block,
+      .message-card,
+      .reset-btn,
+      .timer-total.static,
+      .history-sheet,
+      .easter-toast {
+        -webkit-backdrop-filter: blur(4px) !important;
+        backdrop-filter: blur(4px) !important;
+      }
+    }
+
+    /* While audio is playing, keep the atmosphere visually present but make it a static
+       composition. The EQ + photo motion + karaoke remain the only continuous motion. */
+    body.audio-first .page2-ambient,
+    body.audio-first .page2-ambient::before,
+    body.audio-first .page2-ambient::after,
+    body.audio-first #page2::before,
+    body.audio-first #page2::after,
+    body.audio-first .page2-lightfield,
+    body.audio-first .page2-bloom,
+    body.audio-first .ambient-orb,
+    body.audio-first .ambient-glow,
+    body.audio-first .light-streak,
+    body.audio-first .page2-particle,
+    body.audio-first .page2-starfield,
+    body.audio-first .photo-frame::before,
+    body.audio-first .photo-frame::after,
+    body.audio-first .frame-particle {
+      animation: none !important;
+    }
+
+    /* One soft static layer carries the bloom instead of live blur filters. */
+    body.audio-first .page2-lightfield {
+      opacity: .76 !important;
+      filter: none !important;
+      background:
+        radial-gradient(ellipse at 14% 22%, rgba(224,112,161,.13) 0%, transparent 22%),
+        radial-gradient(ellipse at 84% 18%, rgba(111,83,188,.12) 0%, transparent 24%),
+        radial-gradient(ellipse at 54% 82%, rgba(208,132,148,.09) 0%, transparent 22%),
+        radial-gradient(ellipse at 24% 68%, rgba(86,73,145,.07) 0%, transparent 19%) !important;
+    }
+    body.audio-first .page2-bloom-a,
+    body.audio-first .page2-bloom-b,
+    body.audio-first .ambient-orb,
+    body.audio-first .ambient-glow {
+      filter: none !important;
+      mix-blend-mode: normal !important;
+    }
+    body.audio-first .page2-bloom-a {
+      opacity: .14 !important;
+      background: radial-gradient(circle, rgba(222,104,155,.16) 0%, rgba(222,104,155,.055) 34%, transparent 76%) !important;
+    }
+    body.audio-first .page2-bloom-b {
+      opacity: .11 !important;
+      background: radial-gradient(circle, rgba(112,86,191,.15) 0%, rgba(112,86,191,.05) 36%, transparent 78%) !important;
+    }
+    body.audio-first .ambient-orb { opacity: .055 !important; }
+    body.audio-first .ambient-glow { opacity: .34 !important; }
+    body.audio-first #page2::before {
+      filter: none !important;
+      opacity: .66 !important;
+    }
+    body.audio-first #page2::after {
+      animation: none !important;
+      opacity: .42 !important;
+    }
+
+    /* The karaoke card keeps the glass impression, but its moving sheen is frozen. */
+    body.audio-first .lyric-text::before {
+      animation: none !important;
+      opacity: .32 !important;
+      transform: translateX(-18%) !important;
+    }
+    body.audio-first .lyric-layer,
+    body.audio-first .lyric-layer.leaving,
+    body.audio-first .karaoke-word {
+      filter: none !important;
+    }
+    body.audio-first .karaoke-word {
+      text-shadow: none !important;
+      transition: color .12s ease, opacity .12s ease, transform .12s ease !important;
+    }
+    body.audio-first .karaoke-word.current {
+      text-shadow: 0 0 6px rgba(235,165,191,.24) !important;
+    }
+
+    /* Photo movement stays, but all expensive shadow/filter animation is static. */
+    body.audio-first .photo-frame {
+      animation: none !important;
+      box-shadow: 0 0 22px rgba(225,147,177,.19), 0 0 70px rgba(112,79,145,.09) !important;
+    }
+    body.audio-first .photo-frame::before {
+      opacity: .34 !important;
+      filter: none !important;
+    }
+    body.audio-first .photo-frame::after {
+      opacity: .44 !important;
+      filter: none !important;
+      background: radial-gradient(circle, rgba(225,147,177,.15) 0%, rgba(225,147,177,.045) 42%, transparent 76%) !important;
+    }
+    body.audio-first .photo-frame img {
+      animation: photoFloatUltraCheap 28s ease-in-out infinite !important;
+      filter: none !important;
+      will-change: transform;
+    }
+    @keyframes photoFloatUltraCheap {
+      0%,100% { transform: translate3d(0,0,0) scale(1.016); }
+      50% { transform: translate3d(-.55px,-.45px,0) scale(1.024); }
+    }
+
+    /* Smaller physical canvas: the EQ is deliberately glowy, so this keeps the same visual
+       softness while greatly reducing pixels and draw calls. */
+    .photo-equalizer {
+      width: calc(100% + 94px) !important;
+      height: calc(100% + 94px) !important;
+      inset: -47px !important;
+      mix-blend-mode: normal !important;
+      filter: none !important;
+    }
+    @media (max-width:700px) {
+      .photo-equalizer {
+        width: calc(100% + 82px) !important;
+        height: calc(100% + 82px) !important;
+        inset: -41px !important;
+      }
+    }
+
+    /* Avoid unnecessary layer promotion once motion has been reduced. */
+    body.audio-first .photo-equalizer,
+    body.audio-first .photo-frame img { will-change: auto !important; }
+
+
+    /* ===== FINAL PERFORMANCE TUNING ===== */
+    /* Keep mobile glass, just use a small sampling kernel. */
+    @media (pointer: coarse) {
+      body.perf-mobile .page2-nav-btn,
+      body.perf-mobile .lyric-text,
+      body.perf-mobile .intro-card,
+      body.perf-mobile .tool-card,
+      body.perf-mobile .time-block,
+      body.perf-mobile .message-card,
+      body.perf-mobile .reset-btn,
+      body.perf-mobile .timer-total.static,
+      body.perf-mobile .history-sheet,
+      body.perf-mobile .easter-toast,
+      body.perf-low .page2-nav-btn,
+      body.perf-low .lyric-text,
+      body.perf-low .intro-card {
+        -webkit-backdrop-filter: blur(4px) !important;
+        backdrop-filter: blur(4px) !important;
+      }
+    }
+
+    /* During playback the ambience remains visible but becomes a single static composition. */
+    body.audio-first .page2-ambient,
+    body.audio-first .page2-ambient::before,
+    body.audio-first .page2-ambient::after,
+    body.audio-first #page2::before,
+    body.audio-first #page2::after,
+    body.audio-first .page2-lightfield,
+    body.audio-first .page2-bloom,
+    body.audio-first .ambient-orb,
+    body.audio-first .ambient-glow,
+    body.audio-first .light-streak,
+    body.audio-first .page2-particle,
+    body.audio-first .page2-starfield,
+    body.audio-first .photo-frame::before,
+    body.audio-first .photo-frame::after,
+    body.audio-first .frame-particle {
+      animation: none !important;
+    }
+
+    /* Small, soft gradients replace live blur on the large atmospheric layers. */
+    body.audio-first .page2-lightfield,
+    body.audio-first .page2-bloom,
+    body.audio-first .ambient-orb,
+    body.audio-first .ambient-glow,
+    body.audio-first #page2::before {
+      filter: none !important;
+      mix-blend-mode: normal !important;
+    }
+    body.audio-first .page2-lightfield { opacity: .74 !important; }
+    body.audio-first .page2-bloom-a { opacity: .15 !important; }
+    body.audio-first .page2-bloom-b { opacity: .11 !important; }
+    body.audio-first .ambient-orb { opacity: .055 !important; }
+    body.audio-first .ambient-glow { opacity: .34 !important; }
+    body.audio-first #page2::after { opacity: .40 !important; }
+
+    /* Freeze the lyric card sheen: this full-card moving gradient is unnecessary while music plays. */
+    body.audio-first .lyric-text::before {
+      animation: none !important;
+      transform: translateX(-18%) !important;
+      opacity: .26 !important;
+    }
+
+    /* Keep one tiny glass blur on the lyric card; it is small enough not to dominate paint time. */
+    body.audio-first .lyric-text {
+      -webkit-backdrop-filter: blur(5px) !important;
+      backdrop-filter: blur(5px) !important;
+    }
+
+    /* Photo: one static shadow + slow transform-only motion. */
+    body.audio-first .photo-frame {
+      animation: none !important;
+      box-shadow: 0 0 22px rgba(225,147,177,.18), 0 0 68px rgba(112,79,145,.09) !important;
+    }
+    body.audio-first .photo-frame::before { filter:none !important; opacity:.32 !important; }
+    body.audio-first .photo-frame::after {
+      filter:none !important;
+      opacity:.42 !important;
+      background: radial-gradient(circle, rgba(225,147,177,.14) 0%, rgba(225,147,177,.04) 44%, transparent 76%) !important;
+    }
+    body.audio-first .photo-frame img {
+      animation: photoFloatUltraCheap2 32s ease-in-out infinite !important;
+      filter:none !important;
+      will-change: transform;
+    }
+    @keyframes photoFloatUltraCheap2 {
+      0%,100% { transform: translate3d(0,0,0) scale(1.016); }
+      50% { transform: translate3d(-.5px,-.4px,0) scale(1.023); }
+    }
+
+    /* Static resting state for the EQ canvas. */
+    .photo-equalizer { mix-blend-mode:normal !important; filter:none !important; }
+    body.audio-first .photo-equalizer { will-change:auto !important; }
+
+    /* No expensive per-word blur/shadow during karaoke. */
+    .karaoke-word {
+      filter:none !important;
+      text-shadow:none !important;
+      transition: color .12s ease, opacity .12s ease, transform .12s ease !important;
+    }
+    .karaoke-word.current { text-shadow: 0 0 6px rgba(235,165,191,.23) !important; }
+
+
+    /* Заголовок уже находится на экране; во время трека ему не нужен бесконечный
+       background-position shimmer — это лишняя постоянная перерисовка текста. */
+    body.audio-first .page2-title {
+      animation: none !important;
+      background: none !important;
+      -webkit-text-fill-color: initial !important;
+      color: rgba(255,255,255,.90) !important;
+    }
+
+    /* ===== FINAL RENDER BUDGET =====
+       Красота остаётся, но во время трека браузер обновляет только то,
+       что действительно нужно для восприятия. */
+    body.audio-first .page2-lightfield,
+    body.audio-first .page2-bloom,
+    body.audio-first .ambient-orb,
+    body.audio-first .ambient-glow,
+    body.audio-first #page2::before,
+    body.audio-first #page2::after {
+      animation: none !important;
+    }
+
+    body.audio-first .page2-lightfield,
+    body.audio-first .page2-bloom,
+    body.audio-first .ambient-orb,
+    body.audio-first .ambient-glow,
+    body.audio-first #page2::before {
+      filter: none !important;
+      mix-blend-mode: normal !important;
+    }
+
+    /* Не меняем геометрию EQ/фото — только уменьшаем динамическую работу. */
+    body.audio-first .photo-frame::before,
+    body.audio-first .photo-frame::after,
+    body.audio-first .frame-particle {
+      animation: none !important;
+    }
+
+    body.audio-first .photo-frame img {
+      animation: photoFloatPlaybackFinal 34s ease-in-out infinite !important;
+      filter: none !important;
+    }
+
+    @keyframes photoFloatPlaybackFinal {
+      0%,100% { transform: translate3d(0,0,0) scale(1.016); }
+      50% { transform: translate3d(-.45px,-.35px,0) scale(1.022); }
+    }
+
+    /* Караоке остаётся выразительным, но не просит браузер размывать каждое слово. */
+    body.audio-first .karaoke-word {
+      filter: none !important;
+      text-shadow: none !important;
+      transition: color .10s ease, opacity .10s ease !important;
+      transform: none !important;
+    }
+    body.audio-first .karaoke-word.current {
+      color: #f0c5d4 !important;
+      text-shadow: 0 0 5px rgba(235,165,191,.20) !important;
+    }
+
+    /* Небольшой blur оставляем только на маленькой карточке текста. */
+    body.audio-first .lyric-text {
+      -webkit-backdrop-filter: blur(3px) !important;
+      backdrop-filter: blur(3px) !important;
+    }
+
+    /* Seek обновляется редко, поэтому не держим постоянную CSS-анимацию fill. */
+    body.audio-first .song-seek-fill {
+      transition: none !important;
+    }
+
+    @media (pointer: coarse) {
+      /* На touch-устройствах glass-эффект остаётся, но ядро выборки совсем небольшое. */
+      .lyric-text,
+      .page2-nav-btn,
+      .tool-card,
+      .intro-card,
+      .time-block,
+      .message-card {
+        -webkit-backdrop-filter: blur(3px) !important;
+        backdrop-filter: blur(3px) !important;
+      }
+
+      /* Не даём системному DPR раздувать canvas EQ. */
+      .photo-equalizer {
+        image-rendering: auto;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -3103,7 +3595,7 @@
     const perfLowMemory = typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4;
     const perfSaveData = !!navigator.connection?.saveData;
     const perfLowTier = perfLowCpu || perfLowMemory || perfSaveData;
-    const audioSafeDevice = perfMobile && (perfLowTier || (typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 8));
+    const audioSafeDevice = perfLowTier || perfMobile || (typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 8);
     if (perfMobile) document.body.classList.add('perf-mobile');
     if (perfSaveData || (perfMobile && (perfLowCpu || perfLowMemory))) {
       document.body.classList.add('perf-low');
@@ -3634,6 +4126,7 @@
     let karaokeLastSungCount = 0;
     let karaokeLastCurrentIndex = -1;
     let lyricDisplayStarts = [];
+    let lyricNextTimerId = null;
 
     function formatTime(seconds) {
       if (!isFinite(seconds) || seconds < 0) return '0:00';
@@ -3714,9 +4207,10 @@
       layer.appendChild(lineWrap);
     }
 
+    // Линии привязаны к абсолютным таймкодам самого трека.
+    // Не растягиваем всю шкалу под длительность файла: разница в хвосте/вступлении
+    // иначе постепенно накапливает заметный сдвиг к концу песни.
     function getLyricTime(time) {
-      // Тайминги относятся к самому MP3. Не растягиваем их под хвост файла:
-      // даже небольшой дрейф длительности иначе накапливается по всему треку.
       return Number(time) || 0;
     }
 
@@ -3724,41 +4218,36 @@
       const current = LYRICS[index];
       const next = LYRICS[index + 1];
       if (!current || !next) return MIN_LYRIC_LEAD;
-      const gap = Math.max(0.25, next.time - current.time);
+      const gap = Math.max(0.25, getLyricTime(next.time) - getLyricTime(current.time));
       return Math.min(MAX_LYRIC_LEAD, Math.max(MIN_LYRIC_LEAD, gap * 0.18));
     }
 
     rebuildLyricDisplayStarts();
 
     function updateKaraokeWords(currentTime) {
-      if (activeLyricIndex < 0 || activeLyricIndex >= LYRICS.length) return;
-      if (!karaokeWordWeights.length || !karaokeTotalWeight || !activeWordNodes.length) return;
+      if (activeLyricIndex < 0 || activeLyricIndex >= LYRICS.length) return null;
+      if (!karaokeWordWeights.length || !karaokeTotalWeight || !activeWordNodes.length) return null;
 
       const line = LYRICS[activeLyricIndex];
       const nextLine = LYRICS[activeLyricIndex + 1];
       const start = getLyricTime(line.time);
-      const nextDisplayStart = nextLine
-        ? getLyricTime(nextLine.time) - getLyricLead(activeLyricIndex + 1)
+      const nextVocalStart = nextLine
+        ? getLyricTime(nextLine.time)
         : Math.min(songPlayer.duration || REFERENCE_DURATION, REFERENCE_DURATION);
-      const naturalEnd = nextLine
-        ? nextDisplayStart - LYRIC_FINISH_EARLY
-        : nextDisplayStart;
-      const end = Math.max(start + 0.35, naturalEnd);
-      const progress = Math.max(0, Math.min(1, (currentTime - start) / (end - start)));
+      // Слова идут по реальному интервалу между соседними таймкодами.
+      // Переход строки может начаться чуть раньше, но word-fill больше не зависит
+      // от lead следующей строки и поэтому не накапливает рассинхрон.
+      const end = Math.max(start + 0.30, nextVocalStart - LYRIC_FINISH_EARLY);
+      const span = Math.max(0.30, end - start);
+      const progress = Math.max(0, Math.min(1, (currentTime - start) / span));
 
-      // После перемотки назад/резкого скачка проще один раз синхронизировать
-      // все слова, чем заставлять браузер выполнять лишние переходы.
       const seekedBack = karaokeLastProgress >= 0 && progress + 0.03 < karaokeLastProgress;
-
       let sungCount = 0;
       while (sungCount < karaokeWordEnds.length && progress >= karaokeWordEnds[sungCount]) sungCount++;
-
-      let currentIndex = sungCount < karaokeWordEnds.length ? sungCount : -1;
+      const currentIndex = sungCount < karaokeWordEnds.length ? sungCount : -1;
 
       if (seekedBack) {
-        activeWordNodes.forEach(node => {
-          node.classList.remove('sung', 'current');
-        });
+        activeWordNodes.forEach(node => node.classList.remove('sung', 'current'));
         karaokeLastSungCount = 0;
         karaokeLastCurrentIndex = -1;
       }
@@ -3782,16 +4271,43 @@
       }
 
       if (currentIndex !== karaokeLastCurrentIndex) {
-        if (karaokeLastCurrentIndex >= 0) {
-          activeWordNodes[karaokeLastCurrentIndex]?.classList.remove('current');
-        }
-        if (currentIndex >= 0) {
-          activeWordNodes[currentIndex]?.classList.add('current');
-        }
+        if (karaokeLastCurrentIndex >= 0) activeWordNodes[karaokeLastCurrentIndex]?.classList.remove('current');
+        if (currentIndex >= 0) activeWordNodes[currentIndex]?.classList.add('current');
         karaokeLastCurrentIndex = currentIndex;
       }
 
       karaokeLastProgress = progress;
+
+      // Return the next exact moment at which the visible word state must change.
+      if (currentTime < start) return start;
+      if (currentIndex >= 0 && karaokeWordEnds[currentIndex] != null) {
+        return start + span * karaokeWordEnds[currentIndex];
+      }
+      return end;
+    }
+
+    function cancelLyricScheduler() {
+      if (lyricNextTimerId) {
+        clearTimeout(lyricNextTimerId);
+        lyricNextTimerId = null;
+      }
+    }
+
+    function scheduleLyricSync(currentTime = songPlayer.currentTime || 0) {
+      cancelLyricScheduler();
+      if (document.hidden || !page2.classList.contains('active') || !songStarted || songPlayer.paused || finalShown) return;
+
+      syncLyricToAudio(currentTime, true);
+    }
+
+    function scheduleNextLyricBoundary(boundary, currentTime) {
+      cancelLyricScheduler();
+      if (!isFinite(boundary) || document.hidden || songPlayer.paused || !songStarted || finalShown) return;
+      const delay = Math.max(18, Math.min(900, (boundary - currentTime) * 1000));
+      lyricNextTimerId = setTimeout(() => {
+        lyricNextTimerId = null;
+        if (!songPlayer.paused && songStarted && !document.hidden) syncLyricToAudio(songPlayer.currentTime || 0, true);
+      }, delay);
     }
 
     function renderLyric(index, currentTime) {
@@ -3810,7 +4326,7 @@
 
       const nextLine = LYRICS[index + 1];
       const gap = nextLine ? Math.max(0.25, nextLine.time - LYRICS[index].time) : 2;
-      const transition = Math.min(0.30, Math.max(0.16, gap * 0.16));
+      const transition = Math.min(0.18, Math.max(0.11, gap * 0.12));
       nextLayer.style.setProperty('--lyric-transition', `${transition}s`);
       if (oldLayer) oldLayer.style.setProperty('--lyric-transition', `${transition}s`);
 
@@ -3836,7 +4352,7 @@
       }
     }
 
-    function syncLyricToAudio(currentTime) {
+    function syncLyricToAudio(currentTime, schedule = false) {
       let targetIndex = activeLyricIndex;
 
       if (targetIndex < 0) {
@@ -3858,14 +4374,19 @@
       }
 
       if (targetIndex !== activeLyricIndex) renderLyric(targetIndex, currentTime);
-      else updateKaraokeWords(currentTime);
+      const boundary = updateKaraokeWords(currentTime);
       lyricIndex = targetIndex;
+
+      if (schedule) {
+        scheduleNextLyricBoundary(boundary, currentTime);
+      }
     }
 
     function showFinal() {
       if (finalShown) return;
       document.body.classList.add('final-open');
       finalShown = true;
+      cancelLyricScheduler();
       songPlayer.pause();
       stopPhotoEqualizer();
       if (photoFrameEl) photoFrameEl.classList.add('eq-idle');
@@ -3897,13 +4418,14 @@
       }
       finalScreen.classList.remove('active');
       finalShown = false;
+      cancelLyricScheduler();
     }
 
     function getProgressInterval() {
-      if (document.body.classList.contains('perf-low')) return 84;
-      if (document.body.classList.contains('audio-safe')) return 72;
-      if (document.body.classList.contains('perf-mobile')) return 68;
-      return 44;
+      if (document.body.classList.contains('perf-low')) return 165;
+      if (document.body.classList.contains('audio-safe')) return 150;
+      if (document.body.classList.contains('perf-mobile')) return 145;
+      return 120;
     }
 
     function updateSongProgress() {
@@ -3921,11 +4443,9 @@
 
       if (songPlayer.duration && isFinite(songPlayer.duration)) {
         const progress = Math.min(100, Math.max(0, currentTime / songPlayer.duration * 100));
-        songSeekFill.style.width = progress + '%';
+        songSeekFill.style.transform = `scaleX(${progress / 100})`;
         songSeekThumb.style.left = progress + '%';
       }
-
-      syncLyricToAudio(currentTime);
 
       if (songPlayer.duration && isFinite(songPlayer.duration) && !finalShown) {
         if (currentTime >= songPlayer.duration - 0.12 || songPlayer.ended) showFinal();
@@ -3937,11 +4457,13 @@
 
     function resetSongView() {
       stopPhotoEqualizer();
+      cancelLyricScheduler();
+      if (progressTimerId) { clearTimeout(progressTimerId); progressTimerId = null; }
       if (photoFrameEl) photoFrameEl.classList.add('eq-idle');
       songPlayer.pause();
       songPlayer.currentTime = 0;
       lyricIndex = 0;
-      songSeekFill.style.width = '0%';
+      songSeekFill.style.transform = 'scaleX(0)';
       songCurrentTime.textContent = '0:00';
       songDuration.textContent = '0:00';
       finalShown = false;
@@ -3978,14 +4500,10 @@
 
       initLyricLayers();
       renderLyric(0, 0);
+      updateKaraokeWords(0);
       songPlayer.play().catch(() => {});
-      startPhotoEqualizer();
       updatePlayButton();
       updateSeekVisual();
-
-      if (!progressTimerId) {
-        progressTimerId = setTimeout(updateSongProgress, getProgressInterval());
-      }
     }
 
     function closePage2() {
@@ -4013,191 +4531,198 @@
       if (!document.hidden && !document.body.classList.contains('page2-open') && !timerWakeId) scheduleTimerUpdate();
     });
 
-    // ===== Круговой эквалайзер вокруг фото =====
+    // ===== Лёгкий круговой эквалайзер вокруг фото =====
+    // Визуальный EQ намеренно не использует RAF: таймер 70–90 ms не будит
+    // JavaScript 60 раз в секунду и заметно дешевле для слабых устройств.
     let photoAudioContext = null;
     let photoAnalyser = null;
     let photoAudioSource = null;
-    let photoEqFrame = null;
+    let photoEqTimer = null;
     let photoEqData = null;
     let photoEqReady = false;
+    let photoEqGeometry = null;
+    let photoEqLevels = null;
 
     const photoFrameEl = document.querySelector('.photo-frame');
     const photoEqualizer = document.getElementById('photoEqualizer');
 
-    function initPhotoAudioAnalyser() {
-      if (!photoEqualizer || !songPlayer) return;
-      if (document.body.classList.contains('audio-safe')) {
-        // Live Web Audio analyser отключён на телефонах/слабых устройствах.
-        // Это не влияет на MP3, а освобождает CPU/GPU для плавного воспроизведения.
-        photoEqReady = false;
-        return;
-      }
-      if (photoEqReady) {
-        if (photoAudioContext && photoAudioContext.state === 'suspended') {
-          photoAudioContext.resume().catch(() => {});
-        }
-        return;
-      }
+    // Реальный FFT оставляем только действительно мощным desktop-устройствам.
+    const LIVE_EQ_ALLOWED = !perfMobile && !perfLowTier && !perfSaveData &&
+      !perfLowCpu && !perfLowMemory &&
+      (typeof navigator.hardwareConcurrency === 'number' ? navigator.hardwareConcurrency >= 12 : false) &&
+      (typeof navigator.deviceMemory === 'number' ? navigator.deviceMemory >= 8 : true);
 
+    function initPhotoAudioAnalyser() {
+      if (!LIVE_EQ_ALLOWED || !photoEqualizer || !songPlayer || photoEqReady) return;
       try {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         if (!AudioCtx) return;
-
         photoAudioContext = new AudioCtx();
         photoAnalyser = photoAudioContext.createAnalyser();
-        photoAnalyser.fftSize = 128;
-        photoAnalyser.smoothingTimeConstant = 0.82;
+        photoAnalyser.fftSize = 32;
+        photoAnalyser.smoothingTimeConstant = 0.90;
         photoAudioSource = photoAudioContext.createMediaElementSource(songPlayer);
         photoAudioSource.connect(photoAnalyser);
         photoAnalyser.connect(photoAudioContext.destination);
         photoEqData = new Uint8Array(photoAnalyser.frequencyBinCount);
         photoEqReady = true;
-
         photoAudioContext.resume().catch(() => {});
-        drawPhotoEqualizer(true);
       } catch (_) {
         photoEqReady = false;
+        photoAudioContext = null;
+        photoAnalyser = null;
+        photoAudioSource = null;
       }
     }
 
     function resizePhotoEqualizer() {
-      if (!photoEqualizer) return false;
-      const rect = photoEqualizer.getBoundingClientRect();
-      if (rect.width < 2 || rect.height < 2) return false;
-      const dpr = document.body.classList.contains('perf-mobile') ? 1 : (document.body.classList.contains('perf-low') ? 1 : Math.min(window.devicePixelRatio || 1, 1.75));
-      const width = Math.max(1, Math.round(rect.width * dpr));
-      const height = Math.max(1, Math.round(rect.height * dpr));
-      if (photoEqualizer.width !== width || photoEqualizer.height !== height) {
-        photoEqualizer.width = width;
-        photoEqualizer.height = height;
+      if (!photoEqualizer || !photoFrameEl) return false;
+      const rect = photoFrameEl.getBoundingClientRect();
+      if (rect.width < 2) return false;
+
+      // Небольшой фиксированный bitmap: canvas не масштабируется под DPR телефона.
+      const size = 144;
+      photoEqualizer.width = size;
+      photoEqualizer.height = size;
+
+      const cssSize = photoEqualizer.getBoundingClientRect().width || (rect.width + 94);
+      const scale = size / cssSize;
+      const frameRadius = rect.width * 0.5 * scale;
+      const baseRadius = frameRadius + 10 * scale;
+      const maxBar = 7 * scale;
+      const barCount = 28;
+      const cx = size * 0.5;
+      const cy = size * 0.5;
+      const bars = new Array(barCount);
+      const tonePaths = [[], [], []];
+      const tones = [
+        'rgba(211,151,180,.90)',
+        'rgba(239,183,202,.86)',
+        'rgba(223,181,151,.80)'
+      ];
+
+      for (let i = 0; i < barCount; i++) {
+        const angle = Math.PI * 2 * i / barCount - Math.PI / 2;
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+        bars[i] = {
+          cos,
+          sin,
+          phase: i * 0.73 + 0.45,
+          tone: i % 3,
+          x1: cx + cos * baseRadius,
+          y1: cy + sin * baseRadius
+        };
+        tonePaths[i % 3].push(i);
       }
+      photoEqGeometry = { size, cx, cy, baseRadius, maxBar, barCount, bars, tonePaths, tones };
+      photoEqLevels = new Float32Array(barCount);
       return true;
     }
 
     function drawPhotoEqualizer(idle = false) {
       if (!photoEqualizer) return;
-      if (!resizePhotoEqualizer()) return;
+      if (!photoEqGeometry && !resizePhotoEqualizer()) return;
 
+      const g = photoEqGeometry;
       const ctx = photoEqualizer.getContext('2d');
       if (!ctx) return;
+      const t = songPlayer?.currentTime || 0;
 
-      const w = photoEqualizer.width;
-      const h = photoEqualizer.height;
-      if (w < 4 || h < 4) return;
-      const dpr = document.body.classList.contains('perf-mobile') ? 1 : (document.body.classList.contains('perf-low') ? 1 : Math.min(window.devicePixelRatio || 1, 1.75));
-      const cx = w / 2;
-      const cy = h / 2;
-      // Геометрия привязана к реальному размеру рамки, а не к canvas.
-      // Поэтому на телефоне и на десктопе эквалайзер всегда остаётся
-      // снаружи рамки и не упирается в край canvas.
-      const frameRect = photoFrameEl ? photoFrameEl.getBoundingClientRect() : null;
-      const frameRadius = frameRect ? (frameRect.width * dpr) / 2 : Math.min(w, h) * 0.34;
-      const baseRadius = Math.max(12 * dpr, frameRadius + 15 * dpr);
-      const barCount = document.body.classList.contains('perf-low') ? 24 : (document.body.classList.contains('perf-mobile') ? 30 : 36);
-      const maxBar = Math.min(w, h) * 0.082;
+      ctx.clearRect(0, 0, g.size, g.size);
+      ctx.lineCap = 'round';
 
-      ctx.clearRect(0, 0, w, h);
-
-      // Сначала мягкое внешнее свечение. Оно рисуется самим canvas, поэтому
-      // не зависит от CSS blur и не исчезает в audio-first / mobile режимах.
-      const ringRadius = Math.max(1, baseRadius - 2.5 * dpr);
+      // Базовое кольцо — один дешёвый stroke.
       ctx.beginPath();
-      ctx.arc(cx, cy, ringRadius, 0, Math.PI * 2);
-      ctx.lineWidth = 5.5 * dpr;
-      ctx.strokeStyle = `rgba(229, 166, 194, ${idle ? 0.045 : 0.075})`;
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(cx, cy, ringRadius, 0, Math.PI * 2);
-      ctx.lineWidth = 1.2 * dpr;
-      ctx.strokeStyle = `rgba(241, 196, 208, ${idle ? 0.13 : 0.20})`;
+      ctx.arc(g.cx, g.cy, g.baseRadius - 1.5, 0, Math.PI * 2);
+      ctx.lineWidth = 2.2;
+      ctx.strokeStyle = idle ? 'rgba(229,166,194,.055)' : 'rgba(229,166,194,.085)';
       ctx.stroke();
 
-      if (photoAnalyser && photoEqData && !idle) {
-        photoAnalyser.getByteFrequencyData(photoEqData);
+      // Один проход собирает координаты. На слабых устройствах здесь нет FFT:
+      // живость создаётся несколькими дешёвыми волнами.
+      const levels = photoEqLevels || (photoEqLevels = new Float32Array(g.barCount));
+      for (let i = 0; i < g.barCount; i++) {
+        const b = g.bars[i];
+        let level;
+        if (idle) {
+          level = 0.18 + 0.025 * Math.sin(i * 0.9);
+        } else if (photoAnalyser && photoEqData) {
+          const idx = Math.min(photoEqData.length - 1, (i * photoEqData.length / g.barCount) | 0);
+          const raw = (photoEqData[idx] || 0) / 255;
+          level = 0.17 + Math.pow(raw, 0.78) * 0.74;
+        } else {
+          const beat = 0.5 + 0.5 * Math.sin(t * 5.4);
+          const motion = 0.5 + 0.5 * Math.sin(t * 1.4 + b.phase);
+          const detail = 0.5 + 0.5 * Math.sin(t * 8.6 + b.phase * 1.7);
+          level = 0.15 + beat * (0.34 + 0.10 * motion) + detail * 0.11;
+        }
+        levels[i] = Math.max(0.10, Math.min(0.98, level));
       }
 
-      for (let i = 0; i < barCount; i++) {
-        const angle = (Math.PI * 2 * i / barCount) - Math.PI / 2;
-        const freqIndex = Math.floor((i / barCount) * Math.min(photoEqData?.length || 64, 56));
-        const raw = !idle && photoEqData ? (photoEqData[freqIndex] || 0) / 255 : 0.045;
-        const tonal = 0.96 + 0.10 * Math.sin((i / barCount) * Math.PI * 2 + 0.45);
-        const level = idle ? 0.24 : Math.pow(raw, 0.68) * tonal;
-        const length = Math.max(4 * dpr, (0.16 + level * 0.84) * maxBar);
-        const inner = baseRadius;
-        const outer = inner + length;
+      // Мягкое свечение и ядро — всего по одному/три batched stroke вместо
+      // создания временных объектов для каждого сегмента на каждом тике.
+      ctx.beginPath();
+      for (let i = 0; i < g.barCount; i++) {
+        const b = g.bars[i];
+        const length = (0.20 + levels[i] * 0.80) * g.maxBar;
+        ctx.moveTo(b.x1, b.y1);
+        ctx.lineTo(g.cx + b.cos * (g.baseRadius + length), g.cy + b.sin * (g.baseRadius + length));
+      }
+      ctx.lineWidth = 5.4;
+      ctx.strokeStyle = idle ? 'rgba(232,161,191,.040)' : 'rgba(232,161,191,.065)';
+      ctx.stroke();
 
-        const x1 = cx + Math.cos(angle) * inner;
-        const y1 = cy + Math.sin(angle) * inner;
-        const x2 = cx + Math.cos(angle) * outer;
-        const y2 = cy + Math.sin(angle) * outer;
-
-        // Широкий полупрозрачный ореол + компактное ядро.
+      for (let tone = 0; tone < 3; tone++) {
         ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.lineCap = 'round';
-        ctx.lineWidth = 9 * dpr;
-        ctx.strokeStyle = `rgba(232, 161, 191, ${idle ? 0.055 : Math.min(0.14, 0.035 + level * 0.11)})`;
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.lineWidth = 4.8 * dpr;
-
-        const tone = i % 4;
-        const alpha = idle ? 0.28 : Math.min(0.94, 0.34 + level * 0.76);
-        ctx.strokeStyle = tone === 0
-          ? `rgba(211, 151, 180, ${alpha})`
-          : tone === 1
-            ? `rgba(239, 183, 202, ${alpha * 0.98})`
-            : tone === 2
-              ? `rgba(223, 181, 151, ${alpha * 0.88})`
-              : `rgba(196, 144, 173, ${alpha * 0.92})`;
+        const indices = g.tonePaths[tone];
+        for (let j = 0; j < indices.length; j++) {
+          const i = indices[j];
+          const b = g.bars[i];
+          const length = (0.20 + levels[i] * 0.80) * g.maxBar;
+          ctx.moveTo(b.x1, b.y1);
+          ctx.lineTo(g.cx + b.cos * (g.baseRadius + length), g.cy + b.sin * (g.baseRadius + length));
+        }
+        ctx.lineWidth = 3.55;
+        ctx.strokeStyle = idle
+          ? g.tones[tone].replace(/\.\d+\)/, '.23)')
+          : g.tones[tone];
         ctx.stroke();
       }
-
-      ctx.shadowBlur = 0;
     }
 
-    let photoEqLastFrame = 0;
-    function photoEqualizerLoop(timestamp = 0) {
-      if (document.hidden || !page2.classList.contains('active') || !songStarted || finalShown) {
-        photoEqFrame = null;
-        drawPhotoEqualizer(true);
+    function photoEqualizerLoop() {
+      if (document.hidden || !page2.classList.contains('active') || !songStarted || finalShown || songPlayer.paused) {
+        photoEqTimer = null;
         return;
       }
-      const frameInterval = document.body.classList.contains('perf-low') ? 66 : (document.body.classList.contains('perf-mobile') ? 45 : 33);
-      if (timestamp - photoEqLastFrame >= frameInterval) {
-        drawPhotoEqualizer(false);
-        photoEqLastFrame = timestamp;
-      }
-      photoEqFrame = requestAnimationFrame(photoEqualizerLoop);
+
+      if (photoAnalyser && photoEqData) photoAnalyser.getByteFrequencyData(photoEqData);
+      drawPhotoEqualizer(false);
+
+      // 8–11 FPS достаточно для атмосферного EQ. Он не обязан быть 60 FPS.
+      const interval = perfLowTier ? 130 : (perfMobile ? 110 : 95);
+      photoEqTimer = setTimeout(photoEqualizerLoop, interval);
     }
 
     function startPhotoEqualizer() {
       if (!photoEqualizer || !photoFrameEl) return;
       photoFrameEl.classList.remove('eq-idle');
-      if (photoEqFrame) cancelAnimationFrame(photoEqFrame);
-      if (document.body.classList.contains('audio-safe')) {
-        // На мобильных не запускаем live-анализатор: аудио важнее анимации.
-        drawPhotoEqualizer(true);
-        photoEqFrame = null;
-        return;
-      }
-      photoEqLastFrame = 0;
-      photoEqFrame = requestAnimationFrame(photoEqualizerLoop);
+      if (!photoEqGeometry) resizePhotoEqualizer();
+      if (photoEqTimer) clearTimeout(photoEqTimer);
+      photoEqualizerLoop();
     }
 
     function stopPhotoEqualizer() {
-      if (photoEqFrame) {
-        cancelAnimationFrame(photoEqFrame);
-        photoEqFrame = null;
+      if (photoEqTimer) {
+        clearTimeout(photoEqTimer);
+        photoEqTimer = null;
       }
       drawPhotoEqualizer(true);
     }
 
     window.addEventListener('resize', () => {
+      photoEqGeometry = null;
       resizePhotoEqualizer();
       drawPhotoEqualizer(!songStarted);
     });
@@ -4380,7 +4905,7 @@
       if (!songPlayer.duration || !isFinite(songPlayer.duration)) return;
       const nextTime = Math.max(0, Math.min(songPlayer.duration, ratio * songPlayer.duration));
       songPlayer.currentTime = nextTime;
-      if (typeof syncLyricToAudio === 'function') syncLyricToAudio(nextTime);
+      if (typeof syncLyricToAudio === 'function') syncLyricToAudio(nextTime, true);
       updateSeekVisual();
     }
 
@@ -4392,7 +4917,7 @@
     function updateSeekVisual() {
       if (!songPlayer.duration || !isFinite(songPlayer.duration)) return;
       const ratio = Math.max(0, Math.min(1, songPlayer.currentTime / songPlayer.duration));
-      songSeekFill.style.width = `${ratio * 100}%`;
+      songSeekFill.style.transform = `scaleX(${ratio})`;
       songSeekThumb.style.left = `${ratio * 100}%`;
       songSeek.setAttribute('aria-valuenow', String(Math.round(ratio * 100)));
     }
@@ -4411,8 +4936,8 @@
     songSeek.addEventListener('pointercancel', () => { seekDragging = false; songSeek.classList.remove('dragging'); });
     songSeek.addEventListener('keydown', (e) => {
       if (!songStarted) return;
-      if (e.key === 'ArrowLeft') { e.preventDefault(); songPlayer.currentTime = Math.max(0, songPlayer.currentTime - 5); syncLyricToAudio(songPlayer.currentTime); updateSeekVisual(); }
-      if (e.key === 'ArrowRight') { e.preventDefault(); songPlayer.currentTime = Math.min(songPlayer.duration || Infinity, songPlayer.currentTime + 5); syncLyricToAudio(songPlayer.currentTime); updateSeekVisual(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); songPlayer.currentTime = Math.max(0, songPlayer.currentTime - 5); syncLyricToAudio(songPlayer.currentTime, true); updateSeekVisual(); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); songPlayer.currentTime = Math.min(songPlayer.duration || Infinity, songPlayer.currentTime + 5); syncLyricToAudio(songPlayer.currentTime, true); updateSeekVisual(); }
     });
 
     rewindBtn.addEventListener('click', () => {
@@ -4437,10 +4962,30 @@
       updatePlayButton();
     });
 
-    songPlayer.addEventListener('play', () => { updatePlayButton(); setAudioFirstMode(true); });
-    songPlayer.addEventListener('pause', () => { updatePlayButton(); setAudioFirstMode(false); });
+    songPlayer.addEventListener('play', () => {
+      updatePlayButton();
+      setAudioFirstMode(true);
+      startPhotoEqualizer();
+      if (!progressTimerId && page2.classList.contains('active') && songStarted) {
+        progressTimerId = setTimeout(updateSongProgress, getProgressInterval());
+      }
+      scheduleLyricSync(songPlayer.currentTime || 0);
+    });
+    songPlayer.addEventListener('pause', () => {
+      updatePlayButton();
+      setAudioFirstMode(false);
+      cancelLyricScheduler();
+      stopPhotoEqualizer();
+      if (progressTimerId) {
+        clearTimeout(progressTimerId);
+        progressTimerId = null;
+      }
+    });
     songPlayer.addEventListener('loadedmetadata', () => {
       songDuration.textContent = formatTime(songPlayer.duration);
+      // Таймкоды остаются абсолютными; длительность файла используется только
+      // интерфейсом и финальным состоянием, а не для растяжения караоке-шкалы.
+      rebuildLyricDisplayStarts();
       updateSeekVisual();
     });
 
@@ -4488,15 +5033,14 @@
 
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
-        if (photoEqFrame) {
-          cancelAnimationFrame(photoEqFrame);
-          photoEqFrame = null;
+        if (photoEqTimer) {
+          clearTimeout(photoEqTimer);
+          photoEqTimer = null;
         }
-      } else if (songStarted && page2.classList.contains('active') && !finalShown) {
-          startPhotoEqualizer();
-        if (!progressTimerId) {
-          progressTimerId = setTimeout(updateSongProgress, getProgressInterval());
-        }
+      } else if (songStarted && page2.classList.contains('active') && !finalShown && !songPlayer.paused) {
+        startPhotoEqualizer();
+        if (!progressTimerId) progressTimerId = setTimeout(updateSongProgress, getProgressInterval());
+        scheduleLyricSync(songPlayer.currentTime || 0);
       }
     });
 
