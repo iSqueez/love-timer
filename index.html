@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#1a0a2e">
   <title>Мы вместе</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
 
   <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -107,7 +107,7 @@ h1{font-size:28px;font-weight:800;line-height:1.1;margin-bottom:10px;text-align:
 .easter-toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,16px);padding:10px 14px;border-radius:999px;background:rgba(20,14,21,.86);border:1px solid rgba(255,255,255,.10);color:rgba(255,255,255,.78);font-size:12px;opacity:0;pointer-events:none;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);z-index:100000;transition:opacity .28s ease,transform .35s cubic-bezier(.22,1,.36,1)}.easter-toast.show{opacity:1;transform:translate(-50%,0)}
 
 /* Дополнительные карточки */
-.home-tools{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.tool-card{width:100%;min-height:88px;margin:0;padding:14px;border-radius:18px;background:linear-gradient(155deg,rgba(255,255,255,.075),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.10);box-shadow:0 10px 24px rgba(0,0,0,.18);color:#fff;text-align:left;display:flex;flex-direction:column;align-items:flex-start;transition:transform .24s ease,border-color .24s ease}.tool-card-wide{grid-column:1/-1;min-height:72px}.tool-card strong{font-size:15px;line-height:1.2;color:rgba(255,255,255,.92)}.tool-card small{margin-top:5px;font-size:11px;color:rgba(255,255,255,.50)}.tool-kicker{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,.42);margin-bottom:7px}.tool-card:active{transform:scale(.985)}
+.home-tools{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.tool-card{width:100%;min-height:88px;text-decoration:none;cursor:pointer;margin:0;padding:14px;border-radius:18px;background:linear-gradient(155deg,rgba(255,255,255,.075),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.10);box-shadow:0 10px 24px rgba(0,0,0,.18);color:#fff;text-align:left;display:flex;flex-direction:column;align-items:flex-start;transition:transform .24s ease,border-color .24s ease}.tool-card-wide{grid-column:1/-1;min-height:72px}.tool-card strong{font-size:15px;line-height:1.2;color:rgba(255,255,255,.92)}.tool-card small{margin-top:5px;font-size:11px;color:rgba(255,255,255,.50)}.tool-kicker{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,.42);margin-bottom:7px}.tool-card:active{transform:scale(.985)}
 .home-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%;margin-top:6px}.home-action{width:100%;margin:0;padding:9px 12px;border-radius:13px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.075);color:rgba(255,255,255,.52);box-shadow:none;font-size:11px}.home-action::after{display:none}.home-action:active{transform:scale(.985)}
 
 .history-sheet{position:fixed;inset:0;z-index:100000;display:flex;align-items:flex-end;justify-content:center;padding:20px;background:rgba(7,5,10,.70);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s ease,visibility .3s ease}.history-sheet.show{opacity:1;visibility:visible;pointer-events:auto}.history-card{width:min(100%,380px);max-height:min(78vh,620px);overflow:auto;border-radius:26px;padding:22px;background:linear-gradient(160deg,rgba(35,25,39,.96),rgba(13,10,17,.98));border:1px solid rgba(255,255,255,.10);box-shadow:0 30px 90px rgba(0,0,0,.45);transform:translateY(18px);transition:transform .42s cubic-bezier(.22,1,.36,1)}.history-sheet.show .history-card{transform:none}.history-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:16px}.history-head h2{font-size:21px;color:rgba(255,255,255,.93);margin-top:3px}.history-close{width:36px;height:36px;padding:0;margin:0;background:rgba(255,255,255,.05);color:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.09);box-shadow:none}.history-close::after{display:none}.history-list{display:flex;flex-direction:column;gap:9px}.history-item{display:grid;grid-template-columns:78px 1fr;gap:12px;padding:13px 0;border-top:1px solid rgba(255,255,255,.075)}.history-item:first-child{border-top:0}.history-date{font-size:11px;color:rgba(255,255,255,.42);line-height:1.4}.history-item strong{display:block;margin-bottom:4px;font-size:14px;color:rgba(255,255,255,.88)}.history-item span{font-size:12px;color:rgba(255,255,255,.48)}
@@ -325,9 +325,12 @@ body.page2-open #page2 .inner{opacity:1;transform:translate3d(0,0,0) scale(1)}
         <strong id="historyValue">С этой даты всё началось</strong>
         <small id="historyMeta">Посмотреть даты и будущие рубежи</small>
       </button>
+      <a class="tool-card tool-card-wide gallery-card" id="galleryLink" href="./love-gallery/" aria-label="Открыть нашу галерею">
+        <span class="tool-kicker">Наши фотографии</span>
+        <strong>Открыть галерею</strong>
+        <small>Отдельное место для наших общих моментов</small>
+      </a>
     </div>
-
-    
 
     <div class="home-actions" aria-label="Полезные действия">
       <button class="home-action" id="shareBtn" type="button">Поделиться</button>
@@ -453,7 +456,7 @@ body.page2-open #page2 .inner{opacity:1;transform:translate3d(0,0,0) scale(1)}
     <source src="https://klopec.ru/sounds/2023-11/sound_125753.mp3" type="audio/mpeg">
   </audio>
 
-  <audio id="songPlayer" preload="auto">
+  <audio id="songPlayer" preload="none">
     <source src="music-love.mp3" type="audio/mpeg">
   </audio>
 
@@ -1405,7 +1408,6 @@ if (window.Telegram && window.Telegram.WebApp) {
       page2.classList.add('active');
       page2.classList.remove('page2-visible');
       page2.scrollTop = 0;
-      try { songPlayer.load(); } catch (_) {}
       resetSongView();
       page2Intro.classList.remove('hidden');
       introOpened = false;
