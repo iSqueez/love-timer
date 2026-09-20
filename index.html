@@ -207,6 +207,21 @@ body.audio-first .photo-frame{box-shadow:0 0 22px rgba(225,147,177,.18),0 0 68px
 body.audio-first .lyric-text{backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
 body.audio-first .page2-title{color:rgba(255,255,255,.90)}
 
+/* Пауза не должна переключать визуальный режим: замораживаем текущий кадр без скачка фона. */
+body.audio-paused .page2-lightfield,
+body.audio-paused .page2-bloom-a,
+body.audio-paused .page2-bloom-b,
+body.audio-paused .ambient-orb,
+body.audio-paused .ambient-glow,
+body.audio-paused .light-streak,
+body.audio-paused .page2-particle,
+body.audio-paused .page2-starfield,
+body.audio-paused .photo-frame::before,
+body.audio-paused .photo-frame::after,
+body.audio-paused .photo-frame img,
+body.audio-paused .frame-heart {
+  animation-play-state: paused !important;
+}
 
 /* ===== Плавность интерфейса ===== */
 /* Вторая страница мягко въезжает под intro, без reflow. */
@@ -924,6 +939,9 @@ if (window.Telegram && window.Telegram.WebApp) {
     // Формат: [{ time: 0, text: "..." }, { time: 14, text: "..." }, ...]
     const LYRICS = [
       { time: 0,    text: "..." },
+      { time: 8,    text: "3.." },
+      { time: 10,    text: "2.." },
+      { time: 12,    text: "1.." },
       { time: 14,   text: "Детка, на мне висит метка, я — твоя мишень" },
       { time: 17,   text: "Ты — конфетка в упаковке среди муляжей" },
       { time: 21,   text: "Я приму твой выстрел, не могу терпеть уже" },
@@ -1303,7 +1321,7 @@ if (window.Telegram && window.Telegram.WebApp) {
     }
 
     function hideFinal() {
-      document.body.classList.remove('final-open', 'audio-first');
+      document.body.classList.remove('final-open', 'audio-first', 'audio-paused');
       if (finalTimeoutId) {
         clearTimeout(finalTimeoutId);
         finalTimeoutId = null;
@@ -1366,7 +1384,7 @@ if (window.Telegram && window.Telegram.WebApp) {
     }
 
     function openPage2() {
-      document.body.classList.remove('page2-open', 'final-open', 'audio-first');
+      document.body.classList.remove('page2-open', 'final-open', 'audio-first', 'audio-paused');
       music.pause();
       page2.classList.add('active');
       page2.classList.remove('page2-visible');
@@ -1385,6 +1403,7 @@ if (window.Telegram && window.Telegram.WebApp) {
 
     function setAudioFirstMode(active) {
       document.body.classList.toggle('audio-first', !!active);
+      if (active) document.body.classList.remove('audio-paused');
     }
 
     function showEndingLoader() {
@@ -1427,7 +1446,7 @@ if (window.Telegram && window.Telegram.WebApp) {
     let page2CloseTimerId = null;
 
     function closePage2() {
-      document.body.classList.remove('page2-open', 'final-open', 'audio-first');
+      document.body.classList.remove('page2-open', 'final-open', 'audio-first', 'audio-paused');
       if (progressTimerId) {
         clearTimeout(progressTimerId);
         progressTimerId = null;
@@ -1689,7 +1708,8 @@ if (window.Telegram && window.Telegram.WebApp) {
     });
     songPlayer.addEventListener('pause', () => {
       updatePlayButton();
-      setAudioFirstMode(false);
+      // Не меняем визуальный режим при паузе: просто замораживаем текущий кадр фона.
+      document.body.classList.add('audio-paused');
       cancelLyricScheduler();
       if (progressTimerId) {
         clearTimeout(progressTimerId);
