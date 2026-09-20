@@ -1495,6 +1495,120 @@
     }
   
 
+
+    /* ===== FINAL SCREEN ISOLATION ===== */
+    .final-screen {
+      background:
+        radial-gradient(circle at 50% 18%, rgba(157,105,139,.16), transparent 28%),
+        radial-gradient(circle at 18% 82%, rgba(76,58,104,.12), transparent 30%),
+        linear-gradient(180deg, #0b080f 0%, #100b14 48%, #07060b 100%);
+      isolation:isolate;
+      backdrop-filter: blur(26px) saturate(.72);
+      -webkit-backdrop-filter: blur(26px) saturate(.72);
+    }
+    .final-screen::after {
+      content:'';
+      position:absolute;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(222,165,191,.065), transparent 24%),
+        linear-gradient(180deg, rgba(255,255,255,.018), transparent 28%, rgba(0,0,0,.10));
+    }
+    .final-screen > :not(.final-ambient) { position:relative; z-index:2; }
+    .final-ambient { z-index:1; }
+
+    .final-panel {
+      width:min(430px, calc(100vw - 34px));
+      min-height:0;
+      box-sizing:border-box;
+      padding:30px 24px 24px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      border-radius:30px;
+      border:1px solid rgba(255,255,255,.075);
+      background:
+        linear-gradient(160deg, rgba(255,255,255,.055), rgba(255,255,255,.018)),
+        rgba(13,9,16,.94);
+      box-shadow:
+        0 34px 100px rgba(0,0,0,.62),
+        0 10px 34px rgba(0,0,0,.28),
+        inset 0 1px 0 rgba(255,255,255,.055);
+      position:relative;
+      overflow:hidden;
+    }
+    .final-panel::before {
+      content:'';
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(225,177,197,.075), transparent 34%),
+        radial-gradient(circle at 100% 100%, rgba(113,83,139,.055), transparent 34%);
+    }
+    .final-panel > * { position:relative; z-index:1; }
+
+    .final-heart {
+      width:22px;
+      height:22px;
+      margin:0 0 18px;
+      border:1px solid rgba(240,196,213,.74);
+      border-radius:50%;
+      box-shadow:0 0 22px rgba(235,166,194,.34);
+      animation:finalDot 2.5s ease-in-out infinite;
+    }
+    .final-title {
+      margin:0 0 13px;
+      font-size:26px;
+      line-height:1.14;
+      letter-spacing:-.2px;
+      color:rgba(255,255,255,.97);
+      background:none;
+      -webkit-text-fill-color:initial;
+    }
+    .final-text {
+      margin:0 0 24px;
+      max-width:310px;
+      font-size:15px;
+      line-height:1.58;
+      color:rgba(255,255,255,.66);
+    }
+    .final-text strong { color:#dfb3c5; }
+    .final-actions {
+      width:100%;
+      max-width:300px;
+      display:grid;
+      gap:10px;
+    }
+    .final-actions .final-btn {
+      width:100%;
+      min-width:0;
+      margin:0;
+      box-sizing:border-box;
+      padding:14px 20px;
+    }
+    .final-btn.secondary {
+      background:rgba(255,255,255,.045);
+      border-color:rgba(255,255,255,.12);
+      color:rgba(255,255,255,.78);
+    }
+
+    @media (max-width:430px) {
+      .final-panel { width:calc(100vw - 26px); padding:26px 19px 20px; border-radius:26px; }
+      .final-title { font-size:24px; }
+      .final-text { font-size:14px; max-width:290px; }
+    }
+    @media (max-height:700px) {
+      .final-panel { padding-top:22px; padding-bottom:18px; }
+      .final-heart { margin-bottom:13px; }
+      .final-title { margin-bottom:9px; }
+      .final-text { margin-bottom:16px; }
+    }
+
     /* ===== MOTION + FUNCTIONAL PASS ===== */
     .home-ambient { position: fixed; inset: 0; overflow: hidden; pointer-events:none; z-index:0; isolation:isolate; }
     .home-lightfield {
@@ -1917,6 +2031,127 @@
       animation-play-state:paused !important;
     }
 
+
+    /* ===== FINAL SCREEN — FULL ISOLATION ===== */
+    .final-screen {
+      z-index: 9999 !important;
+      background: #09070c !important;
+      opacity: 1 !important;
+      isolation: isolate !important;
+      backdrop-filter: blur(28px) brightness(.28) saturate(.55) !important;
+      -webkit-backdrop-filter: blur(28px) brightness(.28) saturate(.55) !important;
+    }
+
+    .final-screen::before {
+      content: '' !important;
+      position: absolute !important;
+      inset: -14% !important;
+      background:
+        radial-gradient(circle at 50% 22%, rgba(222,165,191,.15) 0%, transparent 25%),
+        radial-gradient(circle at 17% 76%, rgba(108,78,143,.13) 0%, transparent 28%),
+        radial-gradient(circle at 86% 66%, rgba(169,91,124,.10) 0%, transparent 24%) !important;
+      filter: blur(34px) !important;
+      animation: finalBgDrift 14s ease-in-out infinite !important;
+      pointer-events: none !important;
+      z-index: 0 !important;
+    }
+
+    .final-screen::after {
+      content: '' !important;
+      position: absolute !important;
+      inset: 0 !important;
+      background: linear-gradient(180deg, rgba(255,255,255,.018), transparent 28%, rgba(0,0,0,.16)) !important;
+      pointer-events: none !important;
+      z-index: 1 !important;
+    }
+
+    .final-ambient { z-index: 2 !important; }
+
+    .final-panel {
+      position: relative !important;
+      z-index: 3 !important;
+      width: min(390px, calc(100vw - 28px)) !important;
+      padding: 30px 22px 22px !important;
+      border-radius: 28px !important;
+      background: #100b12 !important;
+      border: 1px solid rgba(255,255,255,.105) !important;
+      box-shadow:
+        0 36px 110px rgba(0,0,0,.72),
+        0 0 0 1px rgba(255,255,255,.018),
+        0 0 70px rgba(117,72,105,.10),
+        inset 0 1px 0 rgba(255,255,255,.065) !important;
+      overflow: hidden !important;
+    }
+
+    .final-panel::before {
+      content: '' !important;
+      position: absolute !important;
+      inset: 0 !important;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(231,186,205,.075), transparent 34%),
+        linear-gradient(145deg, rgba(255,255,255,.022), transparent 42%) !important;
+      pointer-events: none !important;
+    }
+
+    .final-panel > * {
+      position: relative !important;
+      z-index: 1 !important;
+    }
+
+    .final-heart {
+      width: 20px !important;
+      height: 20px !important;
+      margin-bottom: 17px !important;
+      border-color: rgba(240,196,213,.82) !important;
+      box-shadow: 0 0 24px rgba(235,166,194,.34) !important;
+    }
+
+    .final-title {
+      margin-bottom: 12px !important;
+      font-size: 27px !important;
+      color: rgba(255,255,255,.98) !important;
+    }
+
+    .final-text {
+      margin-bottom: 23px !important;
+      color: rgba(255,255,255,.68) !important;
+    }
+
+    .final-actions {
+      width: min(100%, 285px) !important;
+      display: grid !important;
+      gap: 9px !important;
+    }
+
+    .final-actions .final-btn {
+      width: 100% !important;
+      min-width: 0 !important;
+      margin: 0 !important;
+      padding: 13px 18px !important;
+    }
+
+    .final-btn.secondary {
+      background: #171219 !important;
+      border-color: rgba(255,255,255,.115) !important;
+      color: rgba(255,255,255,.80) !important;
+    }
+
+    @media (max-width:430px) {
+      .final-panel {
+        width: calc(100vw - 24px) !important;
+        padding: 25px 18px 19px !important;
+        border-radius: 25px !important;
+      }
+      .final-title { font-size: 24px !important; }
+      .final-text { font-size: 14px !important; }
+    }
+
+    @media (max-height:700px) {
+      .final-panel { padding-top: 21px !important; padding-bottom: 17px !important; }
+      .final-heart { margin-bottom: 12px !important; }
+      .final-text { margin-bottom: 16px !important; }
+    }
+
   </style>
 </head>
 <body>
@@ -2096,16 +2331,20 @@
     <div class="final-ambient" aria-hidden="true">
       <span></span><span></span><span></span>
     </div>
-    <div class="final-heart" aria-hidden="true"></div>
-    <h2 class="final-title">И всё-таки...</h2>
-    <p class="final-text">
-      Не буду делать из этого большую речь.<br>
-      Просто хотел оставить здесь то,<br>
-      что для меня действительно важно.<br><br>
-      <strong>Мне хорошо рядом с тобой.</strong>
-    </p>
-    <button class="final-btn" id="replayBtn">Послушать ещё раз</button>
-    <button class="final-btn secondary" id="finalExitBtn">Вернуться</button>
+    <div class="final-panel">
+      <div class="final-heart" aria-hidden="true"></div>
+      <h2 class="final-title">И всё-таки...</h2>
+      <p class="final-text">
+        Не буду делать из этого большую речь.<br>
+        Просто хотел оставить здесь то,<br>
+        что для меня действительно важно.<br><br>
+        <strong>Мне хорошо рядом с тобой.</strong>
+      </p>
+      <div class="final-actions">
+        <button class="final-btn" id="replayBtn">Послушать ещё раз</button>
+        <button class="final-btn secondary" id="finalExitBtn">Вернуться</button>
+      </div>
+    </div>
   </div>
 
   <audio id="bgMusic" loop preload="auto">
@@ -2575,7 +2814,7 @@
       { time: 56,   text: "Как делишки, детка, где твоя улыбка?" },
       { time: 58,   text: "Ты мой джекпот, я кричу: «Бинго!», детка, нахер Тиндер" },
       { time: 62,   text: "Заполонила меня моя половинка" },
-      { time: 65,   text: "Мы крутим love, и кружим в ритме, нам не нужен гриндер" },
+      { time: 65,   text: "Мы крутим love, и кружим в ритме, нам не нужен ***" },
       { time: 69,   text: "Как делишки у моей малышки, алло?" },
       { time: 73,   text: "Как делишки у моей малышки, алло?" },
       { time: 76,   text: "Как делишки у моей малышки, алло?" },
@@ -2590,7 +2829,7 @@
       { time: 107,  text: "Мы пишем наши чувства кляксами из ярких, бэй" },
       { time: 110,  text: "Распахни мне сердце, будто раскладушка-сотик" },
       { time: 113,  text: "И я нажму на твои кнопки, если ты не против" },
-      { time: 117,  text: "Мы крутим против часовой, детка, ты мой наркотик" },
+      { time: 117,  text: "Мы крутим против часовой, детка, ты мой ***котик" },
       { time: 120,  text: "Я называю это «love», звучит неплохо вроде" },
       { time: 123,  text: "Я не катаюсь с тобой в метро, ведь ты бомба" },
       { time: 128,  text: "Мы выше всех, моя малышка — вышка" },
