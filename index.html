@@ -45,7 +45,7 @@ body.gallery-leaving .music-btn{animation:galleryControlOut .34s ease both}
 @keyframes galleryPageOut{from{opacity:1;transform:translate3d(0,0,0) scale(1)}to{opacity:0;transform:translate3d(0,-10px,0) scale(.992)}}
 @keyframes galleryControlOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
 .gallery-card{position:relative;overflow:hidden}
-.gallery-card::after{content:'';position:absolute;inset:0 auto 0 -100%;width:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);transition:left .6s ease;pointer-events:none}
+.gallery-card::after{content:'';position:absolute;z-index:10;inset:0 auto 0 -100%;width:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);transition:left .6s ease;pointer-events:none}
 @media(hover:hover){.gallery-card:hover{transform:translateY(-2px)}.gallery-card:hover::after{left:100%}}
 @media(prefers-reduced-motion:reduce){
   body.gallery-leaving .content,body.gallery-leaving .music-btn{animation:none;opacity:.85}
