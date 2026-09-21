@@ -875,7 +875,7 @@ if (window.Telegram && window.Telegram.WebApp) {
     const musicBtn = document.getElementById('musicBtn');
     let musicStarted = false;
     let musicOn = localStorage.getItem('musicOn') !== 'false';
-    music.volume = 0.25;
+    music.volume = 0.15;
 
     function updateMusicIcon() {
       musicBtn.textContent = musicOn ? '♪' : '×';
