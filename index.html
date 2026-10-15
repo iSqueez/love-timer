@@ -995,7 +995,7 @@ if (window.Telegram && window.Telegram.WebApp) {
     let finalTimeoutId = null;
     // Синхронизация рассчитана на акустическую версию длительностью 3:19 (199 сек).
     // Если локальный MP3 имеет чуть другой хвост/паузы, таймкоды автоматически масштабируются.
-    const REFERENCE_DURATION = 199;
+    const REFERENCE_DURATION = 279.301;
     const MAX_LYRIC_LEAD = 0.34;      // короткий запас на входную анимацию, без преждевременной смены строки
     const MIN_LYRIC_LEAD = 0.12;
     const LYRIC_FINISH_EARLY = 0.05;
@@ -1009,6 +1009,9 @@ if (window.Telegram && window.Telegram.WebApp) {
     let activeWordNodes = [];
     let lyricLayerNodes = [];
     let karaokeWordEnds = [];
+    let karaokeWordIntervals = [];
+    let karaokePreciseTiming = false;
+    let karaokeSilentLine = false;
     let karaokeLastProgress = -1;
     let karaokeLastSungCount = 0;
     let karaokeLastCurrentIndex = -1;
@@ -1040,12 +1043,16 @@ if (window.Telegram && window.Telegram.WebApp) {
       activeWordNodes = [];
       lyricLayerNodes = Array.from(lyricText.querySelectorAll('.lyric-layer'));
       karaokeWordEnds = [];
+      karaokeWordIntervals = [];
+      karaokePreciseTiming = false;
+      karaokeSilentLine = false;
       karaokeLastProgress = -1;
       karaokeLastSungCount = 0;
       karaokeLastCurrentIndex = -1;
     }
 
-    function prepareKaraokeLine(text, layer) {
+    function prepareKaraokeLine(lineData, layer) {
+      const text = typeof lineData === 'string' ? lineData : (lineData?.text || '');
       layer.innerHTML = '';
 
       const lineWrap = document.createElement('span');
@@ -1067,6 +1074,9 @@ if (window.Telegram && window.Telegram.WebApp) {
         karaokeWordWeights = [];
         karaokeTotalWeight = 0;
         karaokeWordEnds = [];
+        karaokeWordIntervals = [];
+        karaokePreciseTiming = false;
+        karaokeSilentLine = true;
         karaokeLastProgress = -1;
         karaokeLastSungCount = 0;
         karaokeLastCurrentIndex = -1;
@@ -1076,6 +1086,21 @@ if (window.Telegram && window.Telegram.WebApp) {
       layer.classList.remove('loading');
 
       const words = text.trim().split(/\s+/);
+      karaokeSilentLine = lineData?.silent === true || text.trim() === '♡♡♡';
+      const rawWordTimings = lineData && typeof lineData === 'object' && Array.isArray(lineData.wordTimings)
+        ? lineData.wordTimings
+        : null;
+      karaokePreciseTiming = !!rawWordTimings &&
+        rawWordTimings.length === words.length &&
+        rawWordTimings.every((pair, i) =>
+          Array.isArray(pair) && pair.length >= 2 &&
+          Number.isFinite(Number(pair[0])) && Number.isFinite(Number(pair[1])) &&
+          Number(pair[1]) > Number(pair[0]) &&
+          (i === 0 || Number(pair[0]) >= Number(rawWordTimings[i - 1][1]))
+        );
+      karaokeWordIntervals = karaokePreciseTiming
+        ? rawWordTimings.map(pair => ({ start: Number(pair[0]), end: Number(pair[1]) }))
+        : [];
       karaokeWordWeights = words.map(word => {
         const clean = word.replace(/[^\p{L}\p{N}]+/gu, '');
         return Math.max(1, clean.length * 0.92);
@@ -1124,22 +1149,57 @@ if (window.Telegram && window.Telegram.WebApp) {
       if (!karaokeWordWeights.length || !karaokeTotalWeight || !activeWordNodes.length) return null;
 
       const line = LYRICS[activeLyricIndex];
-      const nextLine = LYRICS[activeLyricIndex + 1];
-      const start = getLyricTime(line.time);
-      const nextVocalStart = nextLine
-        ? getLyricTime(nextLine.time)
-        : Math.min(songPlayer.duration || REFERENCE_DURATION, REFERENCE_DURATION);
-      // Слова идут по реальному интервалу между соседними таймкодами.
-      // Переход строки может начаться чуть раньше, но word-fill больше не зависит
-      // от lead следующей строки и поэтому не накапливает рассинхрон.
-      const end = Math.max(start + 0.30, nextVocalStart - LYRIC_FINISH_EARLY);
-      const span = Math.max(0.30, end - start);
-      const progress = Math.max(0, Math.min(1, (currentTime - start) / span));
+      const nextLineTime = lyricDisplayStarts[activeLyricIndex + 1] ?? Infinity;
 
-      const seekedBack = karaokeLastProgress >= 0 && progress + 0.03 < karaokeLastProgress;
+      // Decorative placeholders are not sung lyrics: never animate them as one long word.
+      if (karaokeSilentLine) {
+        activeWordNodes.forEach(node => node.classList.remove('sung', 'current'));
+        karaokeLastProgress = -1;
+        karaokeLastSungCount = 0;
+        karaokeLastCurrentIndex = -1;
+        return Number.isFinite(nextLineTime) ? nextLineTime : null;
+      }
+
+      let progress;
       let sungCount = 0;
-      while (sungCount < karaokeWordEnds.length && progress >= karaokeWordEnds[sungCount]) sungCount++;
-      const currentIndex = sungCount < karaokeWordEnds.length ? sungCount : -1;
+      let currentIndex = -1;
+      let preciseNextBoundary = Infinity;
+
+      if (karaokePreciseTiming) {
+        // Exact mode: each word has its own [start, end] interval in track seconds.
+        // No interpolation across instrumentals or pauses.
+        progress = currentTime;
+        for (let i = 0; i < karaokeWordIntervals.length; i++) {
+          const word = karaokeWordIntervals[i];
+          if (currentTime >= word.end) sungCount++;
+          else break;
+        }
+        currentIndex = karaokeWordIntervals.findIndex(word =>
+          currentTime >= word.start && currentTime < word.end
+        );
+        for (const word of karaokeWordIntervals) {
+          if (word.start > currentTime + 0.002) preciseNextBoundary = Math.min(preciseNextBoundary, word.start);
+          if (word.end > currentTime + 0.002) preciseNextBoundary = Math.min(preciseNextBoundary, word.end);
+        }
+        if (Number.isFinite(nextLineTime) && nextLineTime > currentTime + 0.002) {
+          preciseNextBoundary = Math.min(preciseNextBoundary, nextLineTime);
+        }
+      } else {
+        // Backward-compatible fallback for lines that do not yet have wordTimings.
+        const start = getLyricTime(line.time);
+        const nextLine = LYRICS[activeLyricIndex + 1];
+        const nextVocalStart = nextLine
+          ? getLyricTime(nextLine.time)
+          : (songPlayer.duration || REFERENCE_DURATION);
+        const end = Math.max(start + 0.30, nextVocalStart - LYRIC_FINISH_EARLY);
+        const span = Math.max(0.30, end - start);
+        progress = Math.max(0, Math.min(1, (currentTime - start) / span));
+        while (sungCount < karaokeWordEnds.length && progress >= karaokeWordEnds[sungCount]) sungCount++;
+        currentIndex = sungCount < karaokeWordEnds.length ? sungCount : -1;
+      }
+
+      const seekedBack = karaokeLastProgress >= 0 &&
+        progress + 0.03 < karaokeLastProgress;
 
       if (seekedBack) {
         activeWordNodes.forEach(node => node.classList.remove('sung', 'current'));
@@ -1173,7 +1233,19 @@ if (window.Telegram && window.Telegram.WebApp) {
 
       karaokeLastProgress = progress;
 
-      // Return the next exact moment at which the visible word state must change.
+      // Exact mode schedules every word start/end and the next lyric line boundary.
+      if (karaokePreciseTiming) {
+        return Number.isFinite(preciseNextBoundary) ? preciseNextBoundary : null;
+      }
+
+      // Fallback for lines without manually supplied word intervals.
+      const start = getLyricTime(line.time);
+      const nextLine = LYRICS[activeLyricIndex + 1];
+      const nextVocalStart = nextLine
+        ? getLyricTime(nextLine.time)
+        : (songPlayer.duration || REFERENCE_DURATION);
+      const end = Math.max(start + 0.30, nextVocalStart - LYRIC_FINISH_EARLY);
+      const span = Math.max(0.30, end - start);
       if (currentTime < start) return start;
       if (currentIndex >= 0 && karaokeWordEnds[currentIndex] != null) {
         return start + span * karaokeWordEnds[currentIndex];
@@ -1225,7 +1297,7 @@ if (window.Telegram && window.Telegram.WebApp) {
       nextLayer.style.setProperty('--lyric-transition', `${transition}s`);
       if (oldLayer) oldLayer.style.setProperty('--lyric-transition', `${transition}s`);
 
-      prepareKaraokeLine(LYRICS[index].text, nextLayer);
+      prepareKaraokeLine(LYRICS[index], nextLayer);
       if (LYRICS[index].text !== '...') nextLayer.classList.remove('loading');
       nextLayer.classList.remove('active', 'lyric-enter', 'lyric-leave');
       void nextLayer.offsetWidth;
