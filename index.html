@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#1a0a2e">
   <title>Мы вместе</title>
-  <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -38,29 +38,6 @@ button:active{transform:scale(.97)}
 
 .content{position:relative;z-index:2;width:100%;max-width:380px;display:flex;flex-direction:column;align-items:center;animation:contentIn .9s cubic-bezier(.22,1,.36,1) both}
 @keyframes contentIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-
-/* Переход с главной в галерею */
-body.gallery-leaving .content{animation:galleryPageOut .44s cubic-bezier(.65,0,.84,.12) both;pointer-events:none}
-body.gallery-leaving .music-btn{animation:galleryControlOut .34s ease both}
-@keyframes galleryPageOut{from{opacity:1;transform:translate3d(0,0,0) scale(1)}to{opacity:0;transform:translate3d(0,-10px,0) scale(.992)}}
-@keyframes galleryControlOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
-.gallery-card{position:relative;overflow:hidden}
-.gallery-card::after{content:'';position:absolute;z-index:20;top:-50%;left:-55%;width:34%;height:200%;background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,.10) 35%,rgba(255,255,255,.42) 50%,rgba(255,255,255,.10) 65%,transparent 100%);transform:skewX(-18deg) translateX(0);pointer-events:none;opacity:0}
-@media(hover:hover){
-  .gallery-card:hover{transform:translateY(-2px)}
-  .gallery-card:hover::after{animation:gallerySheen .72s cubic-bezier(.22,1,.36,1) 1}
-}
-@keyframes gallerySheen{
-  0%{transform:skewX(-18deg) translateX(0);opacity:0}
-  10%{opacity:1}
-  85%{opacity:1}
-  100%{transform:skewX(-18deg) translateX(390%);opacity:0}
-}
-@media(prefers-reduced-motion:reduce){
-  body.gallery-leaving .content,body.gallery-leaving .music-btn{animation:none;opacity:.85}
-  .gallery-card::after{display:none}
-  .gallery-card{transition:none}
-}
 h1{font-size:28px;font-weight:800;line-height:1.1;margin-bottom:10px;text-align:center;color:rgba(255,255,255,.94);letter-spacing:.2px;text-shadow:0 4px 26px rgba(0,0,0,.28)}
 .subtitle{font-size:14px;margin-bottom:26px;text-align:center;color:rgba(255,255,255,.58);text-shadow:0 2px 8px rgba(0,0,0,.3)}
 
@@ -130,7 +107,7 @@ h1{font-size:28px;font-weight:800;line-height:1.1;margin-bottom:10px;text-align:
 .easter-toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,16px);padding:10px 14px;border-radius:999px;background:rgba(20,14,21,.86);border:1px solid rgba(255,255,255,.10);color:rgba(255,255,255,.78);font-size:12px;opacity:0;pointer-events:none;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);z-index:100000;transition:opacity .28s ease,transform .35s cubic-bezier(.22,1,.36,1)}.easter-toast.show{opacity:1;transform:translate(-50%,0)}
 
 /* Дополнительные карточки */
-.home-tools{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.tool-card{width:100%;min-height:88px;text-decoration:none;cursor:pointer;margin:0;padding:14px;border-radius:18px;background:linear-gradient(155deg,rgba(255,255,255,.075),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.10);box-shadow:0 10px 24px rgba(0,0,0,.18);color:#fff;text-align:left;display:flex;flex-direction:column;align-items:flex-start;transition:transform .24s ease,border-color .24s ease}.tool-card-wide{grid-column:1/-1;min-height:72px}.tool-card strong{font-size:15px;line-height:1.2;color:rgba(255,255,255,.92)}.tool-card small{margin-top:5px;font-size:11px;color:rgba(255,255,255,.50)}.tool-kicker{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,.42);margin-bottom:7px}.tool-card:active{transform:scale(.985)}
+.home-tools{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.tool-card{width:100%;min-height:88px;margin:0;padding:14px;border-radius:18px;background:linear-gradient(155deg,rgba(255,255,255,.075),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.10);box-shadow:0 10px 24px rgba(0,0,0,.18);color:#fff;text-align:left;display:flex;flex-direction:column;align-items:flex-start;transition:transform .24s ease,border-color .24s ease}.tool-card-wide{grid-column:1/-1;min-height:72px}.tool-card strong{font-size:15px;line-height:1.2;color:rgba(255,255,255,.92)}.tool-card small{margin-top:5px;font-size:11px;color:rgba(255,255,255,.50)}.tool-kicker{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,.42);margin-bottom:7px}.tool-card:active{transform:scale(.985)}
 .home-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%;margin-top:6px}.home-action{width:100%;margin:0;padding:9px 12px;border-radius:13px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.075);color:rgba(255,255,255,.52);box-shadow:none;font-size:11px}.home-action::after{display:none}.home-action:active{transform:scale(.985)}
 
 .history-sheet{position:fixed;inset:0;z-index:100000;display:flex;align-items:flex-end;justify-content:center;padding:20px;background:rgba(7,5,10,.70);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s ease,visibility .3s ease}.history-sheet.show{opacity:1;visibility:visible;pointer-events:auto}.history-card{width:min(100%,380px);max-height:min(78vh,620px);overflow:auto;border-radius:26px;padding:22px;background:linear-gradient(160deg,rgba(35,25,39,.96),rgba(13,10,17,.98));border:1px solid rgba(255,255,255,.10);box-shadow:0 30px 90px rgba(0,0,0,.45);transform:translateY(18px);transition:transform .42s cubic-bezier(.22,1,.36,1)}.history-sheet.show .history-card{transform:none}.history-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:16px}.history-head h2{font-size:21px;color:rgba(255,255,255,.93);margin-top:3px}.history-close{width:36px;height:36px;padding:0;margin:0;background:rgba(255,255,255,.05);color:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.09);box-shadow:none}.history-close::after{display:none}.history-list{display:flex;flex-direction:column;gap:9px}.history-item{display:grid;grid-template-columns:78px 1fr;gap:12px;padding:13px 0;border-top:1px solid rgba(255,255,255,.075)}.history-item:first-child{border-top:0}.history-date{font-size:11px;color:rgba(255,255,255,.42);line-height:1.4}.history-item strong{display:block;margin-bottom:4px;font-size:14px;color:rgba(255,255,255,.88)}.history-item span{font-size:12px;color:rgba(255,255,255,.48)}
@@ -348,12 +325,9 @@ body.page2-open #page2 .inner{opacity:1;transform:translate3d(0,0,0) scale(1)}
         <strong id="historyValue">С этой даты всё началось</strong>
         <small id="historyMeta">Посмотреть даты и будущие рубежи</small>
       </button>
-      <a class="tool-card tool-card-wide gallery-card" id="galleryLink" href="./love-gallery/" aria-label="Открыть нашу галерею">
-        <span class="tool-kicker">Наши фотографии</span>
-        <strong>Открыть галерею</strong>
-        <small>Отдельное место для наших общих моментов</small>
-      </a>
     </div>
+
+    
 
     <div class="home-actions" aria-label="Полезные действия">
       <button class="home-action" id="shareBtn" type="button">Поделиться</button>
@@ -476,10 +450,10 @@ body.page2-open #page2 .inner{opacity:1;transform:translate3d(0,0,0) scale(1)}
   </div>
 
   <audio id="bgMusic" loop preload="none">
-    <source src="./background-love.mp3?v=2" type="audio/mpeg">
+    <source src="https://klopec.ru/sounds/2023-11/sound_125753.mp3" type="audio/mpeg">
   </audio>
 
-  <audio id="songPlayer" preload="none">
+  <audio id="songPlayer" preload="auto">
     <source src="music-love.mp3" type="audio/mpeg">
   </audio>
 
@@ -874,7 +848,7 @@ if (window.Telegram && window.Telegram.WebApp) {
     const musicBtn = document.getElementById('musicBtn');
     let musicStarted = false;
     let musicOn = localStorage.getItem('musicOn') !== 'false';
-    music.volume = 0.15;
+    music.volume = 0.25;
 
     function updateMusicIcon() {
       musicBtn.textContent = musicOn ? '♪' : '×';
@@ -974,65 +948,37 @@ if (window.Telegram && window.Telegram.WebApp) {
 
     // Вставь сюда свой оригинальный/лицензированный текст и тайминги.
     // Формат: [{ time: 0, text: "..." }, { time: 14, text: "..." }, ...]
-const LYRICS = [
+    const LYRICS = [
       { time: 0,    text: "♡♡♡" },
-      { time: 8,    text: "3" },
-      { time: 10,   text: "2" },
-      { time: 12,   text: "1" },
-      { time: 13,   text: "Детка, на мне висит метка, я — твоя мишень" },
-      { time: 17,   text: "Ты — конфетка в упаковке среди муляжей" },
-      { time: 20,   text: "Я приму твой выстрел, не могу терпеть уже" },
-      { time: 24,   text: "Целься в сердце, чтобы оно перестало жечь" },
-      { time: 28,   text: "Детка, ты карамель-карамель" },
-      { time: 29,   text: "Опутала туго чарами-чарами" },
-      { time: 31,   text: "Душа кричит, будто фа-до-соль-ре-ля-ми" },
-      { time: 32,   text: "Губы твои стали алыми-алыми" },
-      { time: 33,   text: "Выпью тебя, и до талого мало мне" },
-      { time: 36,   text: "Мир на миг стал безлик, а мы бокалами" },
-      { time: 37,   text: "Ловим те капли, что самыми-самыми" },
-      { time: 38,   text: "Станут для нас и залечат все раны нам" },
-      { time: 41,   text: "Детка, детка, детка, уа-уэй" },
-      { time: 45,   text: "Я хочу, чтоб ты была моей" },
-      { time: 48,   text: "Пока летаем, тает ночь и день" },
-      { time: 52,   text: "Она — удача, я бегу за ней 💫" },
-      { time: 56,   text: "Как делишки, детка, где твоя улыбка?" },
-      { time: 58,   text: "Ты мой джекпот, я кричу: «Бинго!», детка, нахер Тиндер" },
-      { time: 62,   text: "Заполонила меня моя половинка" },
-      { time: 65,   text: "Мы крутим love, и кружим в ритме, нам не нужен гриндер" },
-      { time: 68,   text: "Как делишки у моей малышки, алло?" },
-      { time: 72,   text: "Как делишки у моей малышки, алло?" },
-      { time: 75,   text: "Как делишки у моей малышки, алло?" },
-      { time: 78,   text: "Как делишки у моей малышки? Я, я!" },
-      { time: 83,   text: "Как делишки у моей малышки, алло?" },
-      { time: 87,   text: "Как делишки у моей малышки, алло?" },
-      { time: 89,   text: "Как делишки у моей малышки, алло?" },
-      { time: 92,   text: "Как делишки у моей малышки? Я, я!" },
-      { time: 95,   text: "Так часто снишься, о тебе все мои мысли" },
-      { time: 99,   text: "Где мы на радуге зависли, солнца брызги на ней" },
-      { time: 103,  text: "В тебе сок есть, налей, в унисон акварель" },
-      { time: 106,  text: "Мы пишем наши чувства кляксами из ярких, бэй" },
-      { time: 110,  text: "Распахни мне сердце, будто раскладушка-сотик" },
-      { time: 113,  text: "И я нажму на твои кнопки, если ты не против" },
-      { time: 117,  text: "Мы крутим против часовой, детка, ты мой наркотик" },
-      { time: 120,  text: "Я называю это «love», звучит неплохо вроде" },
-      { time: 123,  text: "Я не катаюсь с тобой в метро, ведь ты бомба" },
-      { time: 128,  text: "Мы выше всех, моя малышка — вышка" },
-      { time: 130,  text: "По вечерам провожать её прямо до дома" },
-      { time: 134,  text: "Так клёво, так клёво" },
-      { time: 137,  text: "О нас поют во дворе кошки, малышка" },
-      { time: 140,  text: "Луной свечу тебе в окошко, пока спишь ты" },
-      { time: 144,  text: "В тебе есть чуитс, ты красива, даже слишком" },
-      { time: 147,  text: "Ну, как делишки, детка-детка, как делишки? Е-е" },
-      { time: 150,  text: "Как делишки у моей малышки, алло?" },
-      { time: 154,  text: "Как делишки у моей малышки, алло?" },
-      { time: 157,  text: "Как делишки у моей малышки, алло?" },
-      { time: 161,  text: "Как делишки у моей малышки?" },
-      { time: 163,  text: "Я, я!" },
-      { time: 164,  text: "Как делишки у моей малышки, алло?" },
-      { time: 168,  text: "Как делишки у моей малышки, алло?" },
-      { time: 171,  text: "Как делишки у моей малышки, алло?" },
-      { time: 175,  text: "Как делишки у моей малышки? Я, я!" },
-      { time: 178,  text: "♡♡♡" }
+      { time: 31.23, text: "Я опять на районе потерял себя в одном из дворов." },
+      { time: 36.69, text: "Ты опять мне трезвонишь, чтобы знать, что я жив и здоров." },
+      { time: 41.74, text: "Среди тех пацанов, барыг и быков, машин, мусоров." },
+      { time: 47.22, text: "Я пообещал бросить дуть и пить, ведь это любовь." },
+      { time: 52.90, text: "Руки в петли, руки прямо как узлы, руки на замок." },
+      { time: 57.76, text: "Руки в пепле, губы об твои губы, глаза в потолок." },
+      { time: 62.90, text: "Я снова в дверях, руки врозь, прости, что валюсь с ног." },
+      { time: 67.57, text: "Я снова пообещал все, что смог, ведь это любовь." },
+      { time: 72.75, text: "Ещё одной темной ночью, каждый твой вдох." },
+      { time: 78.30, text: "И каждый твой выдох, кричит об одном." },
+      { time: 82.85, text: "Еще одним холодным утром - руки без слов." },
+      { time: 87.96, text: "Кричат об одном - это любовь." },
+      { time: 92.74, text: "Ты опять в телефоне ищешь сообщения шлюх, пока сплю." },
+      { time: 97.82, text: "Ты опять их находишь, будишь и орёшь, все нервы к нулю." },
+      { time: 102.96, text: "Среди кресел, столов и полок посуды в пол, я тебя ловлю." },
+      { time: 108.48, text: "Ты снова прощаешь все, руки говорят - люблю." },
+      { time: 113.94, text: "Я опять с самолета в самолет, в поезда." },
+      { time: 118.93, text: "Ты опять в переезде 5 часов, не устав." },
+      { time: 123.68, text: "Я с дороги в дом, ты туда же, всё в привычных цветах." },
+      { time: 129.28, text: "Ты опять оторвешь, не удержав - Я люблю." },
+      { time: 133.86, text: "Ещё одной темной ночью, каждый твой вдох." },
+      { time: 139.41, text: "И каждый твой выдох, кричит об одном." },
+      { time: 144.19, text: "Еще одним холодным утром - руки без слов." },
+      { time: 149.30, text: "Кричат об одном - это любовь." },
+      { time: 152.00, text: "♡♡♡"},
+      { time: 238.12, text: "Я опять на районе потерял себя в одном из дворов." },
+      { time: 243.36, text: "Ты опять мне трезвонишь, чтобы знать что я жив и здоров." },
+      { time: 248.42, text: "Среди тех пацанов, барыг и быков, машин, мусоров." },
+      { time: 253.97, text: "Я пообещал бросить дуть и пить, ведь это любовь." },
     ];
 
     // Защита от случайной перестановки таймкодов при дальнейших правках.
@@ -1431,6 +1377,7 @@ const LYRICS = [
       page2.classList.add('active');
       page2.classList.remove('page2-visible');
       page2.scrollTop = 0;
+      try { songPlayer.load(); } catch (_) {}
       resetSongView();
       page2Intro.classList.remove('hidden');
       introOpened = false;
@@ -1560,22 +1507,6 @@ const LYRICS = [
 
     document.getElementById('openPage2').addEventListener('click', openPage2);
     page2Back.addEventListener('click', closePage2);
-
-    // Плавный переход в отдельную страницу галереи.
-    const galleryLink = document.getElementById('galleryLink');
-    if (galleryLink) {
-      galleryLink.addEventListener('click', (event) => {
-        if (event.defaultPrevented) return;
-        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-        event.preventDefault();
-        const target = galleryLink.href;
-        document.body.classList.add('gallery-leaving');
-        const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-        window.setTimeout(() => {
-          window.location.href = target;
-        }, prefersReduced ? 0 : 440);
-      });
-    }
 
     // ===== Дополнительный функционал =====
     const nextDateCard = document.getElementById('nextDateCard');
